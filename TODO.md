@@ -51,7 +51,7 @@
         3. Temporarily add a formatting issue that ESLint might catch but Prettier allows/fixes differently; verify ESLint does *not* report it due to `eslint-config-prettier`.
     - **Depends‑on:** [T001, CLR002]
 
-- [ ] **T005 · Chore · P1: add lint, format, and prepare scripts to `package.json`**
+- [x] **T005 · Chore · P1: add lint, format, and prepare scripts to `package.json`**
     - **Context:** PLAN.md > Detailed Build Steps > 4
     - **Action:**
         1. Add/update `lint`, `lint:fix`, `format`, `format:check`, and `prepare` scripts in `package.json` exactly as specified.
