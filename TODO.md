@@ -22,7 +22,7 @@
         1. Run `pnpm prettier --check .` on a file known to conform to the rules; command passes.
     - **Depends‑on:** [T001]
 
-- [ ] **T003 · Chore · P1: create prettier ignore file**
+- [x] **T003 · Chore · P1: create prettier ignore file**
     - **Context:** PLAN.md > Detailed Build Steps > 2
     - **Action:**
         1. Create `.prettierignore` in the project root.
