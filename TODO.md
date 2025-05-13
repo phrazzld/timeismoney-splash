@@ -12,7 +12,7 @@
         1. `pnpm install` completes successfully after the change.
     - **Depends‑on:** none
 
-- [ ] **T002 · Chore · P1: create prettier configuration file**
+- [x] **T002 · Chore · P1: create prettier configuration file**
     - **Context:** PLAN.md > Detailed Build Steps > 2
     - **Action:**
         1. Create `.prettierrc.js` in the project root with the configuration specified in the plan.
