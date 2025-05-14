@@ -121,7 +121,7 @@
     3. A commit containing only cleanup changes is created.
   - **Depends‑on:** [T002, T003, T004, T005, T006]
 
-- [ ] **T010 · Chore · P2: document code quality workflow**
+- [x] **T010 · Chore · P2: document code quality workflow**
 
   - **Context:** PLAN.md > Detailed Build Steps > 9
   - **Action:**

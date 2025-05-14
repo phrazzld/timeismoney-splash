@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Contributing
+
+We welcome contributions to the Time Is Money marketing site. Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for code quality standards, workflow details, and guidelines for submitting pull requests.
+
 ## Getting Started
 
 First, run the development server:
@@ -9,7 +13,7 @@ npm run dev
 # or
 yarn dev
 # or
-pnpm dev
+pnpm dev --turbopack
 # or
 bun dev
 ```
