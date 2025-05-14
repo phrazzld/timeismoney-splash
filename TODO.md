@@ -62,7 +62,7 @@
         2. Run `pnpm install` triggers the `husky` command output (from the `prepare` script).
     - **Depends‑on:** [T001]
 
-- [ ] **T006 · Chore · P1: configure `lint-staged` in `package.json`**
+- [x] **T006 · Chore · P1: configure `lint-staged` in `package.json`**
     - **Context:** PLAN.md > Detailed Build Steps > 6
     - **Action:**
         1. Add the `lint-staged` configuration object to `package.json` as specified in the plan.

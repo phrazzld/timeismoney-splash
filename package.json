@@ -12,6 +12,14 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,md,mdx,html,yaml,yml}\"",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs}": [
+      "eslint --fix --max-warnings=0"
+    ],
+    "*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,md,mdx,html,yaml,yml}": [
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
