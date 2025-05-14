@@ -93,7 +93,7 @@
     1. Stage a file and run `git commit -m "test"`; observe output indicating `lint-staged` was executed.
   - **Depends‑on:** [T005, T006]
 
-- [ ] **T008 · Chore · P1: configure CI pipeline checks**
+- [x] **T008 · Chore · P1: configure CI pipeline checks**
   - **Context:** PLAN.md > Detailed Build Steps > 7; Risk Matrix > CI pipeline misconfiguration
   - **Action:**
     1. Update the CI workflow file (e.g., `.github/workflows/main.yml`) with steps for `pnpm lint` and `pnpm format:check` after dependency install and before build.
