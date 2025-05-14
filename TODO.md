@@ -147,7 +147,7 @@
     1. Fix the violation, stage the file again, and verify the commit now succeeds.
   - **Depends‑on:** [T004, T007]
 
-- [ ] **T012 · Test · P2: verify local pre-commit hook for Prettier violations**
+- [x] **T012 · Test · P2: verify local pre-commit hook for Prettier violations**
 
   - **Context:** PLAN.md > Testing Strategy > Local Verification
   - **Action:**
