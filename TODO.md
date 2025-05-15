@@ -37,7 +37,7 @@
     1. Run `pnpm prettier --check .` does not report issues in ignored files (e.g., `pnpm-lock.yaml`).
   - **Depends‑on:** [T001]
 
-- [ ] **T004 · Chore · P1: enhance eslint configuration (`eslint.config.mjs`)**
+- [x] **T004 · Chore · P1: enhance eslint configuration (`eslint.config.mjs`)**
 
   - **Context:** PLAN.md > Detailed Build Steps > 3
   - **Action:**
@@ -173,7 +173,7 @@
     1. Review CI logs to confirm successful execution of `pnpm lint` and `pnpm format:check`.
   - **Depends‑on:** [T008, T009]
 
-- [ ] **T014 · Test · P2: verify CI fails on lint/format violations**
+- [x] **T014 · Test · P2: verify CI fails on lint/format violations**
   - **Context:** PLAN.md > Testing Strategy > CI Verification; Risk Matrix > CI pipeline misconfiguration
   - **Action:**
     1. Create a test branch.
