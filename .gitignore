@@ -71,3 +71,9 @@ yarn-error.log*
 
 # Generated files
 *.generated.*
+next-env.d.ts
+
+# Symbolic links to development philosophy docs
+docs/DEVELOPMENT_PHILOSOPHY.md
+docs/DEVELOPMENT_PHILOSOPHY_APPENDIX_FRONTEND.md
+docs/DEVELOPMENT_PHILOSOPHY_APPENDIX_TYPESCRIPT.md
