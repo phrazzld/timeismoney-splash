@@ -133,7 +133,7 @@
     1. A team member unfamiliar with the setup can understand the process from the documentation.
   - **Depends‑on:** [T007, T008]
 
-- [ ] **T011 · Test · P2: verify local pre-commit hook for ESLint violations**
+- [x] **T011 · Test · P2: verify local pre-commit hook for ESLint violations**
 
   - **Context:** PLAN.md > Testing Strategy > Local Verification
   - **Action:**
