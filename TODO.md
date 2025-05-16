@@ -199,7 +199,7 @@
     1. (Optional) Attempt `pnpm install` with an incompatible Node/pnpm version; observe warning/error.
   - **Depends‑on:** none
 
-- [ ] **T016 · Chore · P2: add dependency vulnerability audit to CI pipeline**
+- [x] **T016 · Chore · P2: add dependency vulnerability audit to CI pipeline**
 
   - **Context:** PLAN.md > Risk Matrix > New dependencies introduce vulnerabilities
   - **Action:**

@@ -42,6 +42,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Audit dependencies
+        run: pnpm audit --prod --audit-level=high
+        # This will fail the build if high severity vulnerabilities are found in production dependencies
+
       - name: Check formatting
         run: pnpm format:check
         # This will fail the build if there are formatting issues
