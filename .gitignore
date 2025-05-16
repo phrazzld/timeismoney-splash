@@ -1,41 +1,73 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Claude-specific settings
+**/.claude/settings.local.json
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Dependencies
+node_modules/
+.pnpm/
 
-# testing
-/coverage
+# Build outputs
+.next/
+dist/
+build/
+*.tsbuildinfo
+.turbo/
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# OS files
 .DS_Store
-*.pem
+Thumbs.db
+*.swp
+*.swo
+*~
 
-# debug
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.local
+.env.production.local
+.env.development.local
+.env.test.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.eslintcache
+.prettierignore.local
+*.orig
+*.cache
+
+# Tool outputs
+thinktank_*/
+TASK-*.md
+*-plan.md
+*-task.md
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Debug files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Generated files
+*.generated.*

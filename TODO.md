@@ -161,7 +161,7 @@
     1. Inspect the committed file; verify the formatting violation is fixed.
   - **Depends‑on:** [T002, T007]
 
-- [ ] **T013 · Test · P2: verify CI passes on clean codebase**
+- [x] **T013 · Test · P2: verify CI passes on clean codebase**
 
   - **Context:** PLAN.md > Testing Strategy > CI Verification
   - **Action:**
