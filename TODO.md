@@ -107,7 +107,7 @@
 
 ## Cleanup, Verification & Documentation
 
-- [~] **T009 · Chore · P2: perform initial codebase cleanup**
+- [x] **T009 · Chore · P2: perform initial codebase cleanup**
 
   - **Context:** PLAN.md > Detailed Build Steps > 8
   - **Action:**
