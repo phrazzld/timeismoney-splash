@@ -211,7 +211,7 @@
     1. (Optional) Temporarily add a known vulnerable dependency; verify the CI audit step fails.
   - **Depends‑on:** [T008]
 
-- [ ] **T017 · Chore · P2: add IDE configuration guidance to documentation**
+- [x] **T017 · Chore · P2: add IDE configuration guidance to documentation**
   - **Context:** PLAN.md > Risk Matrix > IDEs not picking up configurations
   - **Action:**
     1. Add a section to the documentation (created/updated in T010) with basic setup instructions for VSCode ESLint and Prettier extensions.

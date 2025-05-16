@@ -12,6 +12,7 @@ Our development follows strict principles of simplicity, modularity, testability
 
 - Node.js >=20
 - pnpm >=8
+- VSCode (recommended) or another editor with ESLint and Prettier support
 
 ### Installation
 
@@ -25,6 +26,65 @@ pnpm install
 ```
 
 The `pnpm install` command will automatically set up Husky pre-commit hooks through the `prepare` script in package.json.
+
+### IDE Configuration
+
+For the best development experience, we recommend using VSCode with the following extensions. These provide real-time feedback for code quality issues and automatic formatting.
+
+#### VSCode Setup
+
+1. **Install Required Extensions:**
+
+   - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) - Integrates ESLint into VSCode
+   - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) - Integrates Prettier into VSCode
+
+2. **Configure VSCode Settings:**
+
+   Add the following to your VSCode workspace settings (`.vscode/settings.json`) or user settings:
+
+   ```json
+   {
+     "editor.formatOnSave": true,
+     "editor.defaultFormatter": "esbenp.prettier-vscode",
+     "eslint.enable": true,
+     "eslint.format.enable": false,
+     "[typescript]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode"
+     },
+     "[typescriptreact]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode"
+     },
+     "[javascript]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode"
+     },
+     "[javascriptreact]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode"
+     }
+   }
+   ```
+
+3. **Verify Your Setup:**
+   - Open any `.ts` or `.tsx` file in the project
+   - You should see ESLint warnings/errors in the Problems panel (View → Problems)
+   - When you save a file, it should automatically format according to Prettier rules
+   - Hovering over ESLint errors should show fix suggestions
+
+#### Troubleshooting
+
+- **Extensions not working?**
+
+  - Restart VSCode after installing extensions
+  - Ensure extensions are enabled for the workspace
+  - Check the VSCode Output panel (View → Output) and select "ESLint" or "Prettier" for error logs
+
+- **Formatting conflicts?**
+
+  - Make sure ESLint doesn't conflict with Prettier by ensuring `eslint.format.enable` is set to `false`
+  - Prettier should be your default formatter for all JavaScript and TypeScript files
+
+- **ESLint not detecting issues?**
+  - Run `pnpm lint` in the terminal to verify ESLint is configured correctly
+  - Check if the ESLint extension is using the correct Node version (should match your terminal)
 
 ## Code Quality Tools
 
