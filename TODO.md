@@ -188,7 +188,7 @@
 
 ## Risk Mitigation & Enhancements
 
-- [ ] **T015 · Chore · P1: specify node and pnpm versions in `package.json` engines**
+- [x] **T015 · Chore · P1: specify node and pnpm versions in `package.json` engines**
 
   - **Context:** PLAN.md > Risk Matrix > Inconsistent Node/pnpm versions
   - **Action:**
