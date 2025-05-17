@@ -29,7 +29,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
 
 ### Environment Configuration
 
-- [ ] **T002 · Chore · P0: Configure `NEXT_PUBLIC_SITE_URL` environment variable**
+- [x] **T002 · Chore · P0: Configure `NEXT_PUBLIC_SITE_URL` environment variable**
   - **Context:** Set up environment variable for site URL
   - **Action:**
     1. Add `NEXT_PUBLIC_SITE_URL=http://localhost:3000` to `.env.local`

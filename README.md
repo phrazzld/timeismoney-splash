@@ -33,6 +33,32 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Environment Variables
+
+This project requires the following environment variables:
+
+### `NEXT_PUBLIC_SITE_URL`
+
+The base URL of the site, used for SEO metadata, sitemap generation, and canonical URLs.
+
+- **Local Development**: Set in `.env.local` as `http://localhost:3000`
+- **Production**: Set in Vercel environment variables as `https://timeismoney.works`
+- **Preview Deployments**: Use the appropriate preview URL in Vercel
+
+This variable is critical for proper SEO functionality. Without it:
+
+- The site will use a fallback URL in development
+- Production builds will log a warning
+- SEO features may not work correctly
+
+To configure for deployment:
+
+1. Go to your Vercel project settings
+2. Navigate to the Environment Variables section
+3. Add `NEXT_PUBLIC_SITE_URL` with the appropriate URL for each environment:
+   - Production: `https://timeismoney.works`
+   - Preview: Leave as default or set to your custom preview domain
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
