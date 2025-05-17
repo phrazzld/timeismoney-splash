@@ -69,7 +69,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
 
 ### Page-Specific Metadata
 
-- [ ] **T004 · Feature · P1: Implement landing page metadata in `app/page.tsx`**
+- [x] **T004 · Feature · P1: Implement landing page metadata in `app/page.tsx`**
   - **Context:** Landing page specific metadata
   - **Action:**
     1. Import `Metadata` type from `next`

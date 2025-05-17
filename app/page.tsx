@@ -1,4 +1,14 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'Convert Prices to Work Hours',
+  description:
+    'Transform online prices into hours of work with the Time is Money Chrome extension. See the true cost of purchases in the time it takes to earn them.',
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function Home(): React.ReactNode {
   return (
