@@ -47,7 +47,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
 
 ### Global Metadata
 
-- [ ] **T003 · Feature · P0: Implement global metadata in `app/layout.tsx`**
+- [x] **T003 · Feature · P0: Implement global metadata in `app/layout.tsx`**
   - **Context:** Configure site-wide metadata defaults
   - **Action:**
     1. Import constants from `lib/seo-config.ts`
