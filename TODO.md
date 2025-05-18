@@ -88,7 +88,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
 
 ### SEO Files Generation
 
-- [ ] **T005 · Feature · P1: Create `app/robots.ts` for robots.txt generation**
+- [x] **T005 · Feature · P1: Create `app/robots.ts` for robots.txt generation**
 
   - **Context:** Generate robots.txt file
   - **Action:**
@@ -109,7 +109,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
   - **Depends‑on:** [T001]
   - **Note:** [CL004 - Confirm disallow rules]
 
-- [ ] **T006 · Feature · P1: Create `app/sitemap.ts` for sitemap.xml generation**
+- [x] **T006 · Feature · P1: Create `app/sitemap.ts` for sitemap.xml generation**
   - **Context:** Generate sitemap.xml file for single-page application
   - **Action:**
     1. Create `app/sitemap.ts`
@@ -138,7 +138,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
 
 ### CI/CD Integration
 
-- [ ] **T007 · Chore · P1: Add CI check for `NEXT_PUBLIC_SITE_URL` presence and format**
+- [~] **T007 · Chore · P1: Add CI check for `NEXT_PUBLIC_SITE_URL` presence and format**
   - **Context:** Prevent deployment without proper URL configuration
   - **Action:**
     1. Add CI script to validate `NEXT_PUBLIC_SITE_URL` presence
@@ -155,7 +155,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
 
 ### Testing
 
-- [ ] **T008 · Test · P2: Unit tests for `lib/seo-config.ts`**
+- [x] **T008 · Test · P2: Unit tests for `lib/seo-config.ts`**
 
   - **Context:** Test SEO configuration logic
   - **Action:**
