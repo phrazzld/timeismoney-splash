@@ -168,7 +168,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
     3. All tests pass
   - **Depends‑on:** [T001]
 
-- [ ] **T009 · Test · P2: Integration tests for SEO endpoints**
+- [x] **T009 · Test · P2: Integration tests for SEO endpoints**
 
   - **Context:** Test robots.txt and sitemap.xml generation
   - **Action:**

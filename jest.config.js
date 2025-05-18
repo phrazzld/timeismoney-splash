@@ -4,11 +4,12 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>'],
   testMatch: ['**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
+  testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   transform: {
     '^.+\.ts$': 'ts-jest',
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/$1',
   },
   collectCoverageFrom: [
     '**/*.{ts,tsx}',
