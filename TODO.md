@@ -200,7 +200,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
 
 ### Documentation
 
-- [ ] **T011 · Documentation · P2: Document SEO configuration**
+- [x] **T011 · Documentation · P2: Document SEO configuration**
   - **Context:** Provide clear documentation for SEO setup
   - **Action:**
     1. Update README.md or create `docs/seo.md` with:
