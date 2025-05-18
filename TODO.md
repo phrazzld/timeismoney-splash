@@ -230,7 +230,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
     2. Issues documented if found
   - **Depends‑on:** [T001-T006]
 
-- [ ] **T013 · Chore · P2: Production deployment verification**
+- [x] **T013 · Chore · P2: Production deployment verification**
   - **Context:** Verify SEO on live site
   - **Action:**
     1. Deploy to preview/production
