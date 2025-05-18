@@ -184,7 +184,7 @@ This document outlines the tasks for implementing baseline SEO configuration for
     2. Content validation is comprehensive
   - **Depends‑on:** [T005, T006]
 
-- [ ] **T010 · Test · P2: E2E tests for landing page metadata**
+- [x] **T010 · Test · P2: E2E tests for landing page metadata**
   - **Context:** Test metadata rendering on real pages
   - **Action:**
     1. Write Playwright tests for landing page
