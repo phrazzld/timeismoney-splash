@@ -4,6 +4,35 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
 
 ---
 
+## Recently Completed (Not Previously Tracked)
+
+- ~~**[Feature]**: Enforce strict package manager usage (pnpm)~~ ✅ **COMPLETED**
+
+  - **Type**: Feature
+  - **Complexity**: Medium
+  - **Rationale**: Ensures consistent dependency management across all environments and prevents issues from mixed package manager usage.
+  - **Expected Outcome**: Strict pnpm enforcement preventing npm/yarn usage with clear error messages.
+  - **Completion Note**: Implemented multiple enforcement mechanisms:
+    - `.npmrc` configuration to prevent npm lockfile creation
+    - Custom `scripts/enforce-pnpm.js` preinstall script
+    - Corepack configuration in package.json
+    - CI/CD checks for lockfile integrity
+    - Updated documentation and contributing guidelines
+
+- ~~**[Enhancement]**: Environment variable validation for production builds~~ ✅ **COMPLETED**
+  - **Type**: Enhancement
+  - **Complexity**: Simple
+  - **Rationale**: Prevents production deployment failures due to missing required environment variables.
+  - **Expected Outcome**: Build process validates required environment variables and fails gracefully with clear error messages.
+  - **Completion Note**: Implemented comprehensive validation:
+    - Created `scripts/validate-env.ts` for environment checks
+    - Validates NEXT_PUBLIC_SITE_URL format and production requirements
+    - Validates GA_MEASUREMENT_ID format (must start with 'G-')
+    - Added validation step to CI/CD pipeline
+    - Full test coverage for validation logic
+
+---
+
 ## High Priority
 
 ### Project Foundation & Core Infrastructure
@@ -33,7 +62,7 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
     - Added engine version constraints and IDE configuration guidance
     - All tests verified working: pre-commit hooks block violations, Prettier auto-formats, CI pipeline runs checks
 
-- ~~**[Feature]**: Set up CI/CD pipeline via GitHub Actions~~ ✅
+- ~~**[Feature]**: Set up CI/CD pipeline via GitHub Actions~~ ✅ **COMPLETED**
 
   - **Type**: Feature
   - **Complexity**: Medium
@@ -44,6 +73,9 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
     - Running ESLint and Prettier checks on all branches and PRs
     - Building the application
     - Checking for dependency vulnerabilities
+    - Enforcing pnpm usage with lockfile checks
+    - Environment variable validation for production builds
+    - Corepack enablement for consistent package management
 
 - **[Feature]**: Implement baseline SEO configuration (Metadata, `robots.txt`, Sitemap)
 
@@ -53,12 +85,19 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
   - **Expected Outcome**: Basic site metadata (`title`, `description`), canonical URLs, `robots.txt`, and an auto-generated `sitemap.xml` configured for core pages.
   - **Dependencies**: Project Initialization
 
-- **[Feature] [~]**: Configure basic analytics tracking (Page Views, Core Events)
+- ~~**[Feature]**: Configure basic analytics tracking (Page Views, Core Events)~~ ✅ **COMPLETED**
   - **Type**: Feature
   - **Complexity**: Medium
   - **Rationale**: Provides essential data on site traffic and user behavior, forming the foundation for conversion tracking and optimization. (Business Value, Operational Excellence)
   - **Expected Outcome**: An analytics platform (e.g., Plausible, GA4) integrated, tracking page views and initial setup for custom event tracking.
   - **Dependencies**: Project Initialization
+  - **Completion Note**: Successfully implemented Google Analytics 4 (GA4) instead of Plausible due to GA4's free tier. Implementation includes:
+    - Core analytics tracking with development mode logging
+    - Page view tracking for SPA navigation
+    - Event tracking for user interactions
+    - Conversion tracking capabilities
+    - Full test coverage and E2E tests
+    - Comprehensive error handling and TypeScript support
 
 ### Design System & Core UI
 
