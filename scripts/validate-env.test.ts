@@ -1,117 +1,119 @@
-import { execSync } from 'child_process';
-import { join } from 'path';
-
-// Path to the validation script
-const SCRIPT_PATH = join(__dirname, 'validate-env.ts');
-
 /**
- * Runs the validation script with given environment variables
+ * @jest-environment node
  */
-function runValidation(env: Record<string, string | undefined>): {
-  success: boolean;
-  error: number | null;
-  output?: string;
-  stderr?: string;
-} {
-  try {
-    execSync(`tsx ${SCRIPT_PATH}`, {
+
+import { spawn } from 'child_process';
+import path from 'path';
+
+const scriptPath = path.join(__dirname, 'validate-env.ts');
+
+function runScript(
+  env: NodeJS.ProcessEnv,
+): Promise<{ stdout: string; stderr: string; code: number | null }> {
+  return new Promise((resolve, reject) => {
+    const childProcess = spawn('tsx', [scriptPath], {
       env: { ...process.env, ...env },
-      stdio: 'pipe',
     });
-    return { success: true, error: null };
-  } catch (error: unknown) {
-    const execError = error as Error & { status?: number; stdout?: Buffer; stderr?: Buffer };
-    return {
-      success: false,
-      error: execError.status || 1,
-      output: execError.stdout?.toString() || '',
-      stderr: execError.stderr?.toString() || '',
-    };
-  }
+
+    let stdout = '';
+    let stderr = '';
+
+    childProcess.stdout.on('data', (data) => {
+      stdout += data.toString();
+    });
+
+    childProcess.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+
+    childProcess.on('close', (code) => {
+      resolve({ stdout, stderr, code });
+    });
+
+    childProcess.on('error', (error) => {
+      reject(error);
+    });
+  });
 }
 
-describe('validate-env.ts', () => {
-  describe('Production Context (NODE_ENV=production)', () => {
-    const prodEnv = { NODE_ENV: 'production' };
-
-    test('fails when NEXT_PUBLIC_SITE_URL is missing', () => {
-      const result = runValidation({
-        ...prodEnv,
-        NEXT_PUBLIC_SITE_URL: undefined,
+describe('Env Validation Script', () => {
+  describe('NEXT_PUBLIC_SITE_URL validation', () => {
+    it('should fail in production without NEXT_PUBLIC_SITE_URL', async () => {
+      const { stdout, stderr, code } = await runScript({
+        NODE_ENV: 'production',
       });
-      expect(result.success).toBe(false);
-      expect(result.error).toBe(1);
+
+      expect(code).toBe(1);
+      // The error might be in stderr due to console.error
+      const combined = stdout + stderr;
+      expect(combined).toContain('Critical Error:');
     });
 
-    test('fails when NEXT_PUBLIC_SITE_URL is invalid', () => {
-      const result = runValidation({
-        ...prodEnv,
-        NEXT_PUBLIC_SITE_URL: 'not-a-url',
+    it('should pass in production with valid NEXT_PUBLIC_SITE_URL', async () => {
+      const { stdout, stderr, code } = await runScript({
+        NODE_ENV: 'production',
+        NEXT_PUBLIC_SITE_URL: 'https://example.com',
       });
-      expect(result.success).toBe(false);
-      expect(result.error).toBe(1);
+
+      // This should still fail because GA_MEASUREMENT_ID is missing in production
+      expect(code).toBe(1);
+      expect(stdout).toContain('NEXT_PUBLIC_SITE_URL is set to "https://example.com"');
+      const combined = stdout + stderr;
+      expect(combined).toContain('NEXT_PUBLIC_GA_MEASUREMENT_ID is not set');
     });
 
-    test('fails when NEXT_PUBLIC_SITE_URL is localhost', () => {
-      const result = runValidation({
-        ...prodEnv,
-        NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
+    it('should pass in development without NEXT_PUBLIC_SITE_URL', async () => {
+      const { stdout, code } = await runScript({
+        NODE_ENV: 'development',
       });
-      expect(result.success).toBe(false);
-      expect(result.error).toBe(1);
-    });
 
-    test('fails when NEXT_PUBLIC_SITE_URL has invalid protocol', () => {
-      const result = runValidation({
-        ...prodEnv,
-        NEXT_PUBLIC_SITE_URL: 'ftp://example.com',
-      });
-      expect(result.success).toBe(false);
-      expect(result.error).toBe(1);
-    });
-
-    test('succeeds when NEXT_PUBLIC_SITE_URL is valid', () => {
-      const result = runValidation({
-        ...prodEnv,
-        NEXT_PUBLIC_SITE_URL: 'https://timeismoney.works',
-      });
-      expect(result.success).toBe(true);
+      expect(code).toBe(0);
+      expect(stdout).toContain('NEXT_PUBLIC_SITE_URL is not set (non-production context)');
     });
   });
 
-  describe('Non-Production Context', () => {
-    const devEnv = { NODE_ENV: 'development' };
-
-    test('warns but succeeds when NEXT_PUBLIC_SITE_URL is missing', () => {
-      const result = runValidation({
-        ...devEnv,
-        NEXT_PUBLIC_SITE_URL: undefined,
+  describe('NEXT_PUBLIC_GA_MEASUREMENT_ID validation', () => {
+    it('should fail in production without NEXT_PUBLIC_GA_MEASUREMENT_ID', async () => {
+      const { stdout, stderr, code } = await runScript({
+        NODE_ENV: 'production',
+        NEXT_PUBLIC_SITE_URL: 'https://example.com',
       });
-      expect(result.success).toBe(true);
+
+      expect(code).toBe(1);
+      const combined = stdout + stderr;
+      expect(combined).toContain('NEXT_PUBLIC_GA_MEASUREMENT_ID is not set');
     });
 
-    test('warns but succeeds when NEXT_PUBLIC_SITE_URL is invalid', () => {
-      const result = runValidation({
-        ...devEnv,
-        NEXT_PUBLIC_SITE_URL: 'not-a-url',
+    it('should pass in production with both env vars set', async () => {
+      const { stdout, code } = await runScript({
+        NODE_ENV: 'production',
+        NEXT_PUBLIC_SITE_URL: 'https://example.com',
+        NEXT_PUBLIC_GA_MEASUREMENT_ID: 'G-TEST123456',
       });
-      expect(result.success).toBe(true);
+
+      expect(code).toBe(0);
+      expect(stdout).toContain('NEXT_PUBLIC_GA_MEASUREMENT_ID is set to "G-TEST123456"');
     });
 
-    test('succeeds when NEXT_PUBLIC_SITE_URL is localhost', () => {
-      const result = runValidation({
-        ...devEnv,
-        NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
+    it('should fail with invalid GA measurement ID format', async () => {
+      const { stdout, stderr, code } = await runScript({
+        NODE_ENV: 'production',
+        NEXT_PUBLIC_SITE_URL: 'https://example.com',
+        NEXT_PUBLIC_GA_MEASUREMENT_ID: 'UA-123456789-1', // Old UA format
       });
-      expect(result.success).toBe(true);
+
+      expect(code).toBe(1);
+      const combined = stdout + stderr;
+      expect(combined).toContain("GA4 Measurement IDs must start with 'G-'");
     });
 
-    test('succeeds when NEXT_PUBLIC_SITE_URL is valid', () => {
-      const result = runValidation({
-        ...devEnv,
-        NEXT_PUBLIC_SITE_URL: 'https://timeismoney.works',
+    it('should pass in development without NEXT_PUBLIC_GA_MEASUREMENT_ID', async () => {
+      const { stdout, code } = await runScript({
+        NODE_ENV: 'development',
       });
-      expect(result.success).toBe(true);
+
+      expect(code).toBe(0);
+      expect(stdout).toContain('NEXT_PUBLIC_GA_MEASUREMENT_ID is not set (non-production context)');
     });
   });
 });

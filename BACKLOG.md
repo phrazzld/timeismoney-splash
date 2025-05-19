@@ -33,7 +33,7 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
     - Added engine version constraints and IDE configuration guidance
     - All tests verified working: pre-commit hooks block violations, Prettier auto-formats, CI pipeline runs checks
 
-- ~~**[Feature]**: Set up CI/CD pipeline via GitHub Actions~~ ✅ **PARTIALLY COMPLETED**
+- ~~**[Feature]**: Set up CI/CD pipeline via GitHub Actions~~ ✅
 
   - **Type**: Feature
   - **Complexity**: Medium
@@ -44,7 +44,6 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
     - Running ESLint and Prettier checks on all branches and PRs
     - Building the application
     - Checking for dependency vulnerabilities
-    - **Still Needed**: Deployment configuration for preview and production environments
 
 - **[Feature]**: Implement baseline SEO configuration (Metadata, `robots.txt`, Sitemap)
 
@@ -54,7 +53,7 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
   - **Expected Outcome**: Basic site metadata (`title`, `description`), canonical URLs, `robots.txt`, and an auto-generated `sitemap.xml` configured for core pages.
   - **Dependencies**: Project Initialization
 
-- **[Feature]**: Configure basic analytics tracking (Page Views, Core Events)
+- **[Feature] [~]**: Configure basic analytics tracking (Page Views, Core Events)
   - **Type**: Feature
   - **Complexity**: Medium
   - **Rationale**: Provides essential data on site traffic and user behavior, forming the foundation for conversion tracking and optimization. (Business Value, Operational Excellence)

@@ -4,7 +4,7 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>'],
   testMatch: ['**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
-  testPathIgnorePatterns: ['/node_modules/', '/.next/'],
+  testPathIgnorePatterns: ['/node_modules/', '/.next/', '/e2e/'],
   transform: {
     '^.+\.ts$': 'ts-jest',
   },
@@ -18,6 +18,9 @@ module.exports = {
     '!**/.next/**',
     '!**/*.config.js',
     '!**/coverage/**',
+    '!**/e2e/**',
+    '!**/playwright-report/**',
+    '!**/test-results/**',
   ],
   clearMocks: true,
 };

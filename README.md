@@ -1,21 +1,38 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Prerequisites
+
+This project uses **pnpm** as the package manager. You must have pnpm installed to work with this project.
+
+To install pnpm:
+
+```bash
+npm install -g pnpm
+```
+
+We enforce pnpm usage through multiple mechanisms:
+
+- `packageManager` field in package.json (requires Node.js 16.13+)
+- Preinstall script that blocks npm/yarn
+- `.npmrc` configuration
+- Engine strict mode
+
 ## Contributing
 
 We welcome contributions to the Time Is Money marketing site. Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for code quality standards, workflow details, and guidelines for submitting pull requests.
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies using pnpm:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev --turbopack
-# or
-bun dev
+pnpm install
+```
+
+Then run the development server:
+
+```bash
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -58,6 +75,33 @@ To configure for deployment:
 3. Add `NEXT_PUBLIC_SITE_URL` with the appropriate URL for each environment:
    - Production: `https://timeismoney.works`
    - Preview: Leave as default or set to your custom preview domain
+
+## Analytics
+
+This project uses Plausible Analytics for privacy-friendly analytics tracking.
+
+### Configuration
+
+Set the following environment variable:
+
+```
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=yourdomain.com
+```
+
+- **Local Development**: Analytics are disabled, events log to console
+- **Production**: Analytics are enabled when `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is set
+
+### Tracking Events
+
+```typescript
+import { trackEvent } from '@/lib/analytics';
+
+// Track a custom event
+trackEvent('extension_install_click', {
+  location: 'hero',
+  variant: 'primary',
+});
+```
 
 ## Deploy on Vercel
 

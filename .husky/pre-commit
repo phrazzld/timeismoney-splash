@@ -1,1 +1,17 @@
-pnpm lint-staged
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged
+npx lint-staged
+
+# Check for unwanted lockfiles
+if [ -f "package-lock.json" ] || [ -f "yarn.lock" ]; then
+  echo "❌ Error: Unwanted lockfile detected!"
+  echo ""
+  echo "This project uses pnpm. Please remove:"
+  [ -f "package-lock.json" ] && echo "  - package-lock.json"
+  [ -f "yarn.lock" ] && echo "  - yarn.lock"
+  echo ""
+  echo "Use 'pnpm install' to manage dependencies."
+  exit 1
+fi

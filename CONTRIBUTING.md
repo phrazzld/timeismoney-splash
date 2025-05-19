@@ -11,8 +11,26 @@ Our development follows strict principles of simplicity, modularity, testability
 ### Prerequisites
 
 - Node.js >=20
-- pnpm >=8
+- pnpm >=8 (REQUIRED - enforced by multiple mechanisms)
 - VSCode (recommended) or another editor with ESLint and Prettier support
+
+### Package Manager Requirements
+
+**This project strictly enforces pnpm usage.** Do not use npm or yarn.
+
+Enforcement mechanisms:
+
+- `.npmrc` prevents npm/yarn lockfile creation
+- Preinstall script blocks non-pnpm installations
+- Git hooks check for unwanted lockfiles
+- CI pipeline validates pnpm usage
+- Corepack enforces the declared package manager
+
+If you encounter package manager errors:
+
+1. Ensure pnpm is installed: `npm install -g pnpm`
+2. Remove any `package-lock.json` or `yarn.lock` files
+3. Run `pnpm install`
 
 ### Installation
 
@@ -21,7 +39,7 @@ Our development follows strict principles of simplicity, modularity, testability
 git clone <repository-url>
 cd timeismoney-splash
 
-# Install dependencies
+# Install dependencies (MUST use pnpm)
 pnpm install
 ```
 
