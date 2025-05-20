@@ -268,7 +268,7 @@
 
 ### Icon Component
 
-- [ ] **T022 · Feature · P1: implement `Icon` atom component**
+- [x] **T022 · Feature · P1: implement `Icon` atom component**
 
   - **Context:** Phase 3, Step 13 (a, b, c); `components/atoms/Icon/Icon.tsx`
   - **Action:**

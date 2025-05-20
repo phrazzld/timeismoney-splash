@@ -34,11 +34,28 @@ export interface IconProps extends Omit<LucideProps, 'ref'> {
 
 /**
  * Icon component that renders a Lucide icon
- * The primary icons for the Time is Money app are:
- * - Time-related: Clock, Timer, Hourglass
- * - Money-related: DollarSign, Coins, Wallet, PiggyBank
+ *
+ * Core icons for the Time is Money app are:
+ *
+ * Time-related:
+ * - Clock: Primary time indicator, used throughout the UI
+ * - Timer: Used for tracking time-related features
+ * - Hourglass: Used for loading states and brand imagery
+ *
+ * Money-related:
+ * - DollarSign: Primary currency indicator
+ * - Coins: Used for savings or coin-related imagery
+ * - Wallet: Used for user financial information
+ * - PiggyBank: Used for savings-related features
+ *
+ * Additional utility icons:
+ * - TrendingUp: Used for positive financial metrics
+ * - BarChart: Used for financial reports/statistics
+ * - LineChart: Used for trend visualization
+ * - Settings: Used for user settings
  *
  * See docs/icon-usage.md for complete icon usage guidelines
+ * See docs/icon-component.md for detailed component documentation
  */
 export const Icon: React.FC<IconProps> = ({
   name,
