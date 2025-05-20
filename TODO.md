@@ -292,7 +292,7 @@
     1. Review stories for icon rendering, prop effects. Check light/dark mode. Verify `@storybook/addon-a11y`.
   - **Depends‑on:** [T004, T015, T022]
 
-- [ ] **T024 · Test · P1: write unit and accessibility tests for `Icon` component**
+- [x] **T024 · Test · P1: write unit and accessibility tests for `Icon` component**
   - **Context:** Phase 3, Step 13 (g); `components/atoms/Icon/Icon.test.tsx`
   - **Action:**
     1. Create `Icon.test.tsx`.
