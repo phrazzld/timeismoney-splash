@@ -43,7 +43,7 @@
   - **Blocking?:** no (can proceed with placeholders, but better to have)
   - **Depends‑on:** none
 
-- [ ] **T005 · Chore · P1: implement `cn` utility for class composition**
+- [x] **T005 · Chore · P1: implement `cn` utility for class composition**
   - **Context:** Phase 3, General Step b; Risk Matrix: Styling Conflicts
   - **Action:**
     1. Install `clsx` and `tailwind-merge` dependencies.
