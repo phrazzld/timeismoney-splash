@@ -120,7 +120,7 @@
     1. Inspect `app/globals.css` in the browser dev tools to confirm custom properties are set.
   - **Depends‑on:** [T009]
 
-- [ ] **T011 · Test · P1: verify design token application visually**
+- [x] **T011 · Test · P1: verify design token application visually**
   - **Context:** Phase 1, Step 6; Risk: Inconsistent/Incorrect Design Token Application, Dark Mode Implementation Issues
   - **Action:**
     1. Temporarily apply new token-based Tailwind classes to elements on a test page/component.
