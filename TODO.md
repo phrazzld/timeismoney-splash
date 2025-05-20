@@ -22,7 +22,7 @@
   - **Blocking?:** yes (for T005)
   - **Depends‑on:** none
 
-- [ ] **T003 · Clarification · P0: obtain logo asset details and variants**
+- [x] **T003 · Clarification · P0: obtain logo asset details and variants**
 
   - **Context:** Open Questions #3; Phase 3, Step 14
   - **Action:**
