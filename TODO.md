@@ -149,7 +149,7 @@
     1. `pnpm storybook` starts Storybook successfully.
   - **Depends‑on:** none
 
-- [ ] **T013 · Chore · P1: configure storybook for tailwind css**
+- [x] **T013 · Chore · P1: configure storybook for tailwind css**
 
   - **Context:** Phase 2, Step 8; Risk: Storybook Configuration Complexity
   - **Action:**
@@ -185,6 +185,18 @@
     2. Storybook addons (a11y, theme toggle) function as expected with the story.
   - **Verification:**
     1. Run `pnpm storybook` and manually inspect the placeholder story and addon interactions.
+  - **Depends‑on:** [T013, T014]
+
+- [ ] **T015.1 · Chore · P2: implement theme decorator for storybook**
+  - **Context:** Phase 2, Step 10; Risk: Dark Mode Implementation Issues
+  - **Action:**
+    1. Create a proper ThemeProvider decorator for Storybook that works with the theme toggle.
+    2. Ensure dark mode classes are correctly applied when the theme is switched.
+  - **Done‑when:**
+    1. Theme toggle in Storybook correctly applies dark mode classes.
+    2. Components in stories react appropriately to theme changes.
+  - **Verification:**
+    1. Test the theme toggle functionality in Storybook with multiple components.
   - **Depends‑on:** [T013, T014]
 
 ## Atom Components
