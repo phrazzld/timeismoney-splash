@@ -12,7 +12,7 @@
   - **Blocking?:** yes (for T004)
   - **Depends‑on:** none
 
-- [ ] **T002 · Clarification · P0: confirm typography specifics beyond defaults**
+- [~] **T002 · Clarification · P0: confirm typography specifics beyond defaults**
 
   - **Context:** Open Questions #2; Phase 1, Step 2
   - **Action:**
@@ -32,7 +32,7 @@
   - **Blocking?:** yes (for T025)
   - **Depends‑on:** none
 
-- [ ] **T004 · Clarification · P1: confirm specific core lucide-react icon names**
+- [x] **T004 · Clarification · P1: confirm specific core lucide-react icon names**
 
   - **Context:** Open Questions #4; Phase 3, Step 13
   - **Action:**
