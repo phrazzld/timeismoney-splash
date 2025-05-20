@@ -82,7 +82,7 @@
     1. Code review of token definitions.
   - **Depends‑on:** [T002]
 
-- [ ] **T008 · Feature · P1: define spacing scale design tokens**
+- [x] **T008 · Feature · P1: define spacing scale design tokens**
 
   - **Context:** Phase 1, Step 3; Architecture Blueprint (Design Tokens `SpacingTokens`)
   - **Action:**
