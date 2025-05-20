@@ -175,7 +175,8 @@
     1. Check for addon panels (Controls, A11y, etc.) and theme toggle functionality in Storybook.
   - **Depends‑on:** [T012]
 
-- [ ] **T015 · Test · P2: verify complete storybook setup with a test story**
+- [x] **T015 · Test · P2: verify complete storybook setup with a test story**
+
   - **Context:** Phase 2, Step 10
   - **Action:**
     1. Create a placeholder story for a simple HTML element styled with Tailwind classes.
@@ -188,6 +189,7 @@
   - **Depends‑on:** [T013, T014]
 
 - [ ] **T015.1 · Chore · P2: implement theme decorator for storybook**
+
   - **Context:** Phase 2, Step 10; Risk: Dark Mode Implementation Issues
   - **Action:**
     1. Create a proper ThemeProvider decorator for Storybook that works with the theme toggle.
@@ -198,6 +200,34 @@
   - **Verification:**
     1. Test the theme toggle functionality in Storybook with multiple components.
   - **Depends‑on:** [T013, T014]
+
+- [ ] **T015.2 · Fix · P1: resolve eslint configuration for storybook files**
+
+  - **Context:** Phase 2, Step 10; Risk: Code Quality
+  - **Action:**
+    1. Update ESLint configuration to properly handle Storybook TypeScript files.
+    2. Fix all ESLint errors in Storybook configuration files.
+  - **Done‑when:**
+    1. ESLint runs successfully on all Storybook files without errors.
+    2. Pre-commit hooks pass for Storybook-related changes.
+  - **Verification:**
+    1. Run ESLint manually on Storybook files to confirm no errors.
+    2. Make a small change to a Storybook file and ensure it can be committed without bypassing hooks.
+  - **Depends‑on:** [T013]
+
+- [ ] **T015.3 · Fix · P1: resolve linting issues in test components**
+  - **Context:** Phase 2, Step 10; Risk: Code Quality
+  - **Action:**
+    1. Fix ESLint errors and warnings in test components.
+    2. Ensure proper typing and function return types for all components.
+    3. Add appropriate JSDoc comments for improved documentation.
+  - **Done‑when:**
+    1. All test components pass linting without errors.
+    2. Pre-commit hooks pass when modifying test components.
+  - **Verification:**
+    1. Run ESLint manually on test components to confirm no errors.
+    2. Successfully commit changes without bypassing pre-commit hooks.
+  - **Depends‑on:** [T015]
 
 ## Atom Components
 
