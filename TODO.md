@@ -161,7 +161,7 @@
     1. Create a simple story with Tailwind classes; verify rendering in Storybook.
   - **Depends‑on:** [T010, T012]
 
-- [ ] **T014 · Chore · P1: install and configure essential storybook addons**
+- [x] **T014 · Chore · P1: install and configure essential storybook addons**
 
   - **Context:** Phase 2, Step 9; Risk: Accessibility Oversights, Dark Mode Implementation Issues
   - **Action:**
