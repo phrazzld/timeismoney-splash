@@ -107,7 +107,7 @@
     1. Build process completes without Tailwind configuration errors.
   - **Depends‑on:** [T006, T007, T008]
 
-- [ ] **T010 · Feature · P1: update app/globals.css with token-derived custom properties**
+- [x] **T010 · Feature · P1: update app/globals.css with token-derived custom properties**
 
   - **Context:** Phase 1, Step 5; `app/globals.css`
   - **Action:**
