@@ -55,7 +55,7 @@
 
 ## Design Tokens & Tailwind Integration
 
-- [ ] **T006 · Feature · P1: define brand color palette design tokens**
+- [x] **T006 · Feature · P1: define brand color palette design tokens**
 
   - **Context:** Phase 1, Step 1; Architecture Blueprint (Design Tokens `BrandColors`)
   - **Action:**
