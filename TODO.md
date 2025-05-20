@@ -94,7 +94,7 @@
     1. Code review of token definitions.
   - **Depends‑on:** none
 
-- [ ] **T009 · Feature · P1: integrate design tokens into tailwind.config.ts**
+- [x] **T009 · Feature · P1: integrate design tokens into tailwind.config.ts**
 
   - **Context:** Phase 1, Step 4; `tailwind.config.ts`
   - **Action:**
