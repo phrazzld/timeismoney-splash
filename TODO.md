@@ -136,7 +136,7 @@
 
 ## Storybook Setup
 
-- [ ] **T012 · Chore · P1: install and initialize storybook**
+- [x] **T012 · Chore · P1: install and initialize storybook**
 
   - **Context:** Phase 2, Step 7; `.storybook/`
   - **Action:**
