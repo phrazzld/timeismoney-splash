@@ -69,7 +69,7 @@
     1. Code review of token definitions.
   - **Depends‑on:** [T001]
 
-- [ ] **T007 · Feature · P1: define typography scale design tokens**
+- [x] **T007 · Feature · P1: define typography scale design tokens**
 
   - **Context:** Phase 1, Step 2; Architecture Blueprint (Design Tokens `TypographyTokens`)
   - **Action:**
