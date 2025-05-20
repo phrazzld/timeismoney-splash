@@ -338,7 +338,7 @@
 
 ## Final Review, Testing & Documentation
 
-- [ ] **T028 · Chore · P1: set up visual regression testing with Chromatic**
+- [x] **T028 · Chore · P1: set up visual regression testing with Chromatic**
 
   - **Context:** Testing Strategy - Visual Regression Tests
   - **Action:**

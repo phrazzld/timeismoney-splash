@@ -103,6 +103,33 @@ trackEvent('extension_install_click', {
 });
 ```
 
+## Component Development
+
+This project uses [Storybook](https://storybook.js.org/) for component development and documentation. View the Storybook to explore all UI components, their variations, and usage guidelines.
+
+### Running Storybook
+
+```bash
+pnpm storybook
+```
+
+This will start Storybook at [http://localhost:6006](http://localhost:6006).
+
+### Visual Regression Testing
+
+We use [Chromatic](https://www.chromatic.com/) for visual regression testing to ensure UI consistency across changes.
+
+- **View published Storybook**: [Time is Money Storybook](https://www.chromatic.com/library?appId=<your-app-id>)
+- **Status**: [![Chromatic Status](https://github.com/your-org/timeismoney-splash/actions/workflows/chromatic.yml/badge.svg)](https://github.com/your-org/timeismoney-splash/actions/workflows/chromatic.yml)
+
+#### Local Chromatic Usage
+
+To run Chromatic locally (requires a project token):
+
+```bash
+CHROMATIC_PROJECT_TOKEN=<your-token> pnpm chromatic
+```
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
