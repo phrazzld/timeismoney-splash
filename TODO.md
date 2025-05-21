@@ -29,7 +29,7 @@
     2. Manual verification of storybook functionality
   - **Depends‑on:** T100
 
-- [ ] **T102 · Feature · P1: Add basic Storybook configuration files**
+- [x] **T102 · Feature · P1: Add basic Storybook configuration files**
 
   - **Context:** CI failures due to missing Storybook configuration
   - **Action:**
