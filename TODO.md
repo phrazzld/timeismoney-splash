@@ -44,7 +44,7 @@
     2. Chromatic builds successfully in CI
   - **Depends‑on:** none
 
-- [ ] **T103 · Feature · P1: Create design token stories for colors**
+- [x] **T103 · Feature · P1: Create design token stories for colors**
 
   - **Context:** Need to visualize design tokens in Storybook for team reference
   - **Action:**
