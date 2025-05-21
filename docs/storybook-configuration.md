@@ -17,6 +17,7 @@ Tailwind CSS is integrated into Storybook through the following setup:
 1. **CSS Import**: The `preview.tsx` file imports `../app/globals.css`, which contains the Tailwind CSS directives.
 
 2. **Theme Support**: The configuration includes support for both light and dark modes:
+
    - Using the `themes` parameter in the Storybook configuration
    - Using a custom ThemeProvider component that adds the appropriate class to the document
 

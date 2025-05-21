@@ -37,7 +37,7 @@ const meta: Meta<typeof Button> = {
       control: 'boolean',
       description: 'Whether to render the button as a child component (using Radix UI Slot)',
       table: {
-        defaultValue: { summary: false },
+        defaultValue: { summary: 'false' },
       },
     },
     onClick: { action: 'clicked' },

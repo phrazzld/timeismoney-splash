@@ -7,6 +7,7 @@ This document outlines recommended improvements to the Storybook setup that were
 The current Storybook setup has issues with Next.js path aliases (`@/lib/utils`, etc.). Two possible fixes:
 
 1. **Add webpack configuration**:
+
    - Create a `.storybook/webpack.config.js` file with path alias resolution
    - Example implementation provided in this PR
 

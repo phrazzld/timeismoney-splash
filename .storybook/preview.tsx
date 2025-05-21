@@ -44,7 +44,7 @@ const preview: Preview = {
     (Story: React.ComponentType, context: StoryContext): React.ReactNode => {
       // Get the theme value from Storybook globals context
       const theme = context.globals.theme || 'light';
-      
+
       return (
         <ThemeProvider theme={theme}>
           <Story />

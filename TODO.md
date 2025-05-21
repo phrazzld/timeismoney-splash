@@ -14,7 +14,7 @@
     1. PR builds successfully complete on CI
   - **Depends‑on:** none
 
-- [ ] **T101 · Fix · P2: Update eslint-plugin-storybook to support eslint v9**
+- [x] **T101 · Fix · P2: Update eslint-plugin-storybook to support eslint v9**
 
   - **Context:** Issue #3 - CI Build Failures
   - **Action:**

@@ -66,7 +66,7 @@ export const Icon: React.FC<IconProps> = ({
   ...props
 }) => {
   // Get the icon component from lucide-react
-  const LucideIcon = LucideIcons[name];
+  const LucideIcon = LucideIcons[name] as React.ComponentType<LucideProps>;
 
   if (!LucideIcon) {
     console.error(`Icon "${name}" not found in lucide-react`);

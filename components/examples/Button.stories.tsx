@@ -16,7 +16,7 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'outline';
 }
 
-const Button = ({ children, onClick, variant = 'primary' }: ButtonProps) => {
+const Button = ({ children, onClick, variant = 'primary' }: ButtonProps): React.JSX.Element => {
   // Map variants to Tailwind classes
   const classes = {
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',

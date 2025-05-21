@@ -244,8 +244,8 @@ export const AllVariants: Story = {
         clear and readable, with appropriate line height and spacing for comfortable reading.
       </Typography>
       <Typography variant="bodySmall">
-        Body Small - This is smaller text, useful for secondary content that doesn't need to be as
-        prominent.
+        Body Small - This is smaller text, useful for secondary content that doesn&apos;t need to be
+        as prominent.
       </Typography>
       <Typography variant="caption">
         Caption - This is caption text, useful for captions, footnotes or less important
@@ -293,7 +293,7 @@ export const DarkMode: Story = {
         ACCENT TEXT CAN USE BRAND COLORS
       </Typography>
       <Typography variant="code" className="bg-background-darkSecondary p-2 rounded">
-        // Code text in dark mode often has dedicated styling const darkMode = true;
+        {/* Code text in dark mode often has dedicated styling */} const darkMode = true;
       </Typography>
     </div>
   ),
