@@ -449,10 +449,13 @@
     1. Found an existing comprehensive README.md that documents all atom components with usage examples and design system information.
   - **Depends‑on:** [T029]
 
-- [ ] **T032 · Documentation · P3: update project README with link to Storybook**
+- [x] **T032 · Documentation · P3: update project README with link to Storybook**
   - **Context:** Documentation - README Updates
   - **Action:**
     1. Update the main project `README.md` to include a link to the deployed Storybook instance as the component library documentation.
   - **Done‑when:**
     1. Project `README.md` links to Storybook.
+  - **Notes:**
+    1. Found and updated existing Storybook and Chromatic links in the README.md.
+    2. The README.md was already quite comprehensive with Storybook documentation.
   - **Depends‑on:** [T015] (or when Storybook is deployed)

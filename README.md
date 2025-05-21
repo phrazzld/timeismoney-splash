@@ -119,8 +119,8 @@ This will start Storybook at [http://localhost:6006](http://localhost:6006).
 
 We use [Chromatic](https://www.chromatic.com/) for visual regression testing to ensure UI consistency across changes.
 
-- **View published Storybook**: [Time is Money Storybook](https://www.chromatic.com/library?appId=<your-app-id>)
-- **Status**: [![Chromatic Status](https://github.com/your-org/timeismoney-splash/actions/workflows/chromatic.yml/badge.svg)](https://github.com/your-org/timeismoney-splash/actions/workflows/chromatic.yml)
+- **View published Storybook**: [Time is Money Storybook](https://main--65ce8cf3d3d98d00123a02ef.chromatic.com/)
+- **Status**: [![Chromatic Status](https://github.com/timecurrencyteam/timeismoney-splash/actions/workflows/chromatic.yml/badge.svg)](https://github.com/timecurrencyteam/timeismoney-splash/actions/workflows/chromatic.yml)
 
 #### Local Chromatic Usage
 
