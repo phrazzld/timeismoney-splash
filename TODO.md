@@ -201,7 +201,7 @@
     1. Test the theme toggle functionality in Storybook with multiple components.
   - **Depends‑on:** [T013, T014]
 
-- [ ] **T015.2 · Fix · P1: resolve eslint configuration for storybook files**
+- [x] **T015.2 · Fix · P1: resolve eslint configuration for storybook files**
 
   - **Context:** Phase 2, Step 10; Risk: Code Quality
   - **Action:**
