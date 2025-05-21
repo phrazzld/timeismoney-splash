@@ -407,7 +407,7 @@
     1. First Chromatic build passes and establishes baseline.
   - **Depends‑on:** [T015] (or after first few component stories are ready)
 
-- [ ] **T029 · Chore · P1: conduct final review and polish of all atom components**
+- [x] **T029 · Chore · P1: conduct final review and polish of all atom components**
 
   - **Context:** Phase 3, Step 15
   - **Action:**
