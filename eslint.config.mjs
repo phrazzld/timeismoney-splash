@@ -19,11 +19,13 @@ const eslintConfig = [
       '.next/',
       'dist/',
       '.DS_Store',
-      '.storybook/',
+      '.storybook/**/*',
       '**/*.stories.ts',
       '**/*.stories.tsx',
     ],
   },
+
+  // No specific Storybook configuration - using ignores instead
 
   // Base TypeScript configuration using Next.js configurations
   ...compat.extends('next/core-web-vitals', 'next/typescript'),

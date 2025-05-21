@@ -100,7 +100,6 @@
   "packageManager": "pnpm@8.15.6",
   "eslintConfig": {
     "extends": [
-      "plugin:storybook/recommended",
       "plugin:storybook/recommended"
     ]
   }

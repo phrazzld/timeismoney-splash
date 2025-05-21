@@ -230,7 +230,7 @@
     2. Successfully commit changes without bypassing pre-commit hooks.
   - **Depends‑on:** [T015]
 
-- [ ] **T015.4 · Fix · P1: resolve linting issues in story files**
+- [~] **T015.4 · Fix · P1: resolve linting issues in story files**
   - **Context:** Phase 2, Step 10; Risk: Code Quality
   - **Action:**
     1. Update ESLint configuration to properly handle story files or fix the warnings in them.

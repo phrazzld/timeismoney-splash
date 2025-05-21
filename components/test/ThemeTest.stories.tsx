@@ -14,7 +14,8 @@ const meta: Meta<typeof ThemeTest> = {
     layout: 'padded',
     docs: {
       description: {
-        component: 'A component designed to test theme switching functionality in Storybook. Use the theme toggle in the toolbar to switch between light and dark modes.',
+        component:
+          'A component designed to test theme switching functionality in Storybook. Use the theme toggle in the toolbar to switch between light and dark modes.',
       },
     },
   },
@@ -32,6 +33,7 @@ type Story = StoryObj<typeof ThemeTest>;
 /**
  * The default view of the ThemeTest component. Use the theme toggle in the Storybook toolbar
  * to switch between light and dark modes and see how the component's appearance changes.
+ * This demonstrates the theme switching functionality.
  */
 export const Default: Story = {
   args: {
