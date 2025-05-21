@@ -2,64 +2,6 @@
 
 This backlog outlines the planned work for the "Time is Money" marketing site, balancing immediate launch needs with technical excellence, long-term vision, and operational stability. Items are prioritized based on delivering core value, driving conversions, and establishing a maintainable foundation, aligned with the project's development philosophy.
 
----
-
-## High Priority
-
-### Project Foundation & Core Infrastructure
-
-- ~~**[Feature]**: Initialize Next.js project with strict TypeScript configuration and App Router~~ ✅ **COMPLETED**
-
-  - **Type**: Feature
-  - **Complexity**: Simple
-  - **Rationale**: Establishes the core technical stack, enabling type safety, modern routing, and a scalable architecture required for all subsequent development. (Technical Excellence)
-  - **Expected Outcome**: A bootstrapped Next.js project (`src/` structure, App Router configured) passing strict TypeScript checks (`tsc --noEmit`).
-  - **Dependencies**: None
-  - **Completion Note**: Project successfully initialized with Next.js App Router and strict TypeScript configuration. Running `tsc --noEmit` confirms TypeScript configuration is working correctly.
-
-- ~~**[Enhancement]**: Configure ESLint & Prettier with enforced pre-commit hooks~~ ✅ **COMPLETED**
-
-  - **Type**: Enhancement
-  - **Complexity**: Simple
-  - **Rationale**: Ensures consistent code quality, formatting, and adherence to standards automatically, improving maintainability and developer experience. (Technical Excellence, Operational Excellence)
-  - **Expected Outcome**: Automated formatting/linting via `husky` & `lint-staged` on every commit; CI pipeline fails on violations.
-  - **Dependencies**: Project Initialization
-  - **Completion Note**: Successfully implemented comprehensive code quality tooling:
-    - Configured ESLint with strict TypeScript rules and Next.js integration
-    - Set up Prettier for consistent code formatting
-    - Implemented Husky pre-commit hooks with lint-staged
-    - Added CI/CD checks for linting, formatting, and vulnerability scanning
-    - Created comprehensive contributing documentation
-    - Added engine version constraints and IDE configuration guidance
-    - All tests verified working: pre-commit hooks block violations, Prettier auto-formats, CI pipeline runs checks
-
-- ~~**[Feature]**: Set up CI/CD pipeline via GitHub Actions~~ ✅
-
-  - **Type**: Feature
-  - **Complexity**: Medium
-  - **Rationale**: Automates testing, building, and deployment, enabling rapid iteration, reliable releases, and preview environments for review. (Operational Excellence)
-  - **Expected Outcome**: Automated deployments to preview (PRs) and production (main branch) environments, triggered by Git pushes. CI runs linting, tests, and builds.
-  - **Dependencies**: Project Initialization, ESLint/Prettier Config
-  - **Completion Note**: GitHub Actions CI pipeline configured for:
-    - Running ESLint and Prettier checks on all branches and PRs
-    - Building the application
-    - Checking for dependency vulnerabilities
-
-- **[Feature]**: Implement baseline SEO configuration (Metadata, `robots.txt`, Sitemap)
-
-  - **Type**: Feature
-  - **Complexity**: Medium
-  - **Rationale**: Critical for search engine discoverability and driving organic traffic to increase extension downloads. (Business Value)
-  - **Expected Outcome**: Basic site metadata (`title`, `description`), canonical URLs, `robots.txt`, and an auto-generated `sitemap.xml` configured for core pages.
-  - **Dependencies**: Project Initialization
-
-- **[Feature] [~]**: Configure basic analytics tracking (Page Views, Core Events)
-  - **Type**: Feature
-  - **Complexity**: Medium
-  - **Rationale**: Provides essential data on site traffic and user behavior, forming the foundation for conversion tracking and optimization. (Business Value, Operational Excellence)
-  - **Expected Outcome**: An analytics platform (e.g., Plausible, GA4) integrated, tracking page views and initial setup for custom event tracking.
-  - **Dependencies**: Project Initialization
-
 ### Design System & Core UI
 
 - **[Feature]**: Define core design tokens (Colors, Typography, Spacing) based on branding
@@ -68,7 +10,7 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
   - **Complexity**: Simple
   - **Rationale**: Establishes the visual foundation, ensuring UI consistency with the extension's "green hourglass" theme and supporting maintainability. (Technical Excellence)
   - **Expected Outcome**: Centralized design tokens available (e.g., in Tailwind config) reflecting the brand identity.
-  - **Dependencies**: Project Initialization
+  - **Dependencies**: None
 
 - **[Feature]**: Set up Storybook for isolated component development and documentation
 
@@ -76,7 +18,7 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
   - **Complexity**: Medium
   - **Rationale**: Facilitates component-driven development, visual testing, and documentation, crucial for a maintainable and scalable frontend architecture. (Technical Excellence, Developer Experience)
   - **Expected Outcome**: Storybook running, configured for the project, ready for component stories.
-  - **Dependencies**: Project Initialization
+  - **Dependencies**: None
 
 - **[Feature]**: Create foundational atom components (Typography, Button, Icon System, Logo)
   - **Type**: Feature

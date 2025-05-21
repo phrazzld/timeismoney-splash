@@ -1,4 +1,7 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
@@ -44,72 +47,92 @@
 }
 
 :root {
+  /* Border radius */
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Base colors from Time is Money brand */
+  --background: oklch(0.99 0 0); /* From brandColors.background.DEFAULT */
+  --foreground: oklch(0.1 0 0); /* From brandColors.neutral.900 */
+
+  /* Brand colors */
+  --primary: oklch(0.7 0.2 145); /* From brandColors.primary.DEFAULT */
+  --primary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --secondary: oklch(0.6 0.15 130); /* From brandColors.secondary.DEFAULT */
+  --secondary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --accent: oklch(0.8 0.15 85); /* From brandColors.accent.DEFAULT */
+  --accent-foreground: oklch(0.1 0 0); /* From brandColors.neutral.900 */
+
+  /* UI colors */
+  --card: oklch(0.99 0 0); /* From brandColors.background.DEFAULT */
+  --card-foreground: oklch(0.1 0 0); /* From brandColors.neutral.900 */
+  --popover: oklch(0.99 0 0); /* From brandColors.background.DEFAULT */
+  --popover-foreground: oklch(0.1 0 0); /* From brandColors.neutral.900 */
+  --muted: oklch(0.96 0 0); /* From brandColors.neutral.100 */
+  --muted-foreground: oklch(0.5 0 0); /* From brandColors.neutral.500 */
+  --destructive: oklch(0.6 0.2 25); /* From brandColors.error.DEFAULT */
+  --border: oklch(0.9 0 0); /* From brandColors.neutral.200 */
+  --input: oklch(0.9 0 0); /* From brandColors.neutral.200 */
+  --ring: oklch(0.7 0.2 145); /* From brandColors.primary.DEFAULT */
+
+  /* Chart colors */
+  --chart-1: oklch(0.7 0.2 145); /* From brandColors.primary.DEFAULT */
+  --chart-2: oklch(0.6 0.15 130); /* From brandColors.secondary.DEFAULT */
+  --chart-3: oklch(0.8 0.15 85); /* From brandColors.accent.DEFAULT */
+  --chart-4: oklch(0.6 0.2 25); /* From brandColors.error.DEFAULT */
+  --chart-5: oklch(0.8 0.2 85); /* From brandColors.warning.DEFAULT */
+
+  /* Sidebar colors */
+  --sidebar: oklch(0.99 0 0); /* From brandColors.background.DEFAULT */
+  --sidebar-foreground: oklch(0.1 0 0); /* From brandColors.neutral.900 */
+  --sidebar-primary: oklch(0.7 0.2 145); /* From brandColors.primary.DEFAULT */
+  --sidebar-primary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --sidebar-accent: oklch(0.8 0.15 85); /* From brandColors.accent.DEFAULT */
+  --sidebar-accent-foreground: oklch(0.1 0 0); /* From brandColors.neutral.900 */
+  --sidebar-border: oklch(0.9 0 0); /* From brandColors.neutral.200 */
+  --sidebar-ring: oklch(0.7 0.2 145); /* From brandColors.primary.DEFAULT */
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark mode colors from Time is Money brand */
+  --background: oklch(0.1 0 0); /* From brandColors.background.dark */
+  --foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+
+  /* Brand colors - dark mode */
+  --primary: oklch(0.5 0.2 145); /* From brandColors.primary.dark */
+  --primary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --secondary: oklch(0.4 0.15 130); /* From brandColors.secondary.dark */
+  --secondary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --accent: oklch(0.6 0.15 85); /* From brandColors.accent.dark */
+  --accent-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+
+  /* UI colors - dark mode */
+  --card: oklch(0.15 0 0); /* From brandColors.background.darkSecondary */
+  --card-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --popover: oklch(0.15 0 0); /* From brandColors.background.darkSecondary */
+  --popover-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --muted: oklch(0.2 0 0); /* From brandColors.neutral.800 */
+  --muted-foreground: oklch(0.7 0 0); /* From brandColors.neutral.300 */
+  --destructive: oklch(0.4 0.2 25); /* From brandColors.error.dark */
+  --border: oklch(0.98 0 0 / 15%); /* From brandColors.neutral.50 with transparency */
+  --input: oklch(0.98 0 0 / 15%); /* From brandColors.neutral.50 with transparency */
+  --ring: oklch(0.5 0.2 145); /* From brandColors.primary.dark */
+
+  /* Chart colors - dark mode */
+  --chart-1: oklch(0.5 0.2 145); /* From brandColors.primary.dark */
+  --chart-2: oklch(0.4 0.15 130); /* From brandColors.secondary.dark */
+  --chart-3: oklch(0.6 0.15 85); /* From brandColors.accent.dark */
+  --chart-4: oklch(0.4 0.2 25); /* From brandColors.error.dark */
+  --chart-5: oklch(0.6 0.2 85); /* From brandColors.warning.dark */
+
+  /* Sidebar colors - dark mode */
+  --sidebar: oklch(0.15 0 0); /* From brandColors.background.darkSecondary */
+  --sidebar-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --sidebar-primary: oklch(0.5 0.2 145); /* From brandColors.primary.dark */
+  --sidebar-primary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --sidebar-accent: oklch(0.6 0.15 85); /* From brandColors.accent.dark */
+  --sidebar-accent-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
+  --sidebar-border: oklch(0.98 0 0 / 15%); /* From brandColors.neutral.50 with transparency */
+  --sidebar-ring: oklch(0.5 0.2 145); /* From brandColors.primary.dark */
 }
 
 @layer base {

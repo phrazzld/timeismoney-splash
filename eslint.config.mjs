@@ -14,8 +14,19 @@ const compat = new FlatCompat({
 const eslintConfig = [
   // Global ignores
   {
-    ignores: ['node_modules/', '.next/', 'dist/', '.DS_Store'],
+    ignores: [
+      'node_modules/',
+      '.next/',
+      'dist/',
+      '.DS_Store',
+      '.storybook/**/*',
+      'storybook-static/**/*',
+      '**/*.stories.ts',
+      '**/*.stories.tsx',
+    ],
   },
+
+  // No specific Storybook configuration - using ignores instead
 
   // Base TypeScript configuration using Next.js configurations
   ...compat.extends('next/core-web-vitals', 'next/typescript'),

@@ -50,3 +50,35 @@ if (process.env.npm_config_user_agent) {
     process.exit(1);
   }
 }
+
+// Check for incorrect lockfiles
+/* eslint-disable @typescript-eslint/no-require-imports */
+const fs = require('fs');
+const path = require('path');
+/* eslint-enable @typescript-eslint/no-require-imports */
+
+const lockFiles = ['package-lock.json', 'yarn.lock'];
+const rootDir = path.resolve(__dirname, '..');
+
+lockFiles.forEach((lockFile) => {
+  const lockFilePath = path.join(rootDir, lockFile);
+  if (fs.existsSync(lockFilePath)) {
+    console.error(`
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   ERROR: Incorrect lockfile detected!                         ║
+║                                                               ║
+║   Found: ${lockFile.padEnd(45)}║
+║   Expected: pnpm-lock.yaml                                    ║
+║                                                               ║
+║   Please remove the incorrect lockfile:                       ║
+║     rm ${lockFile.padEnd(46)}║
+║                                                               ║
+║   Then use pnpm to install dependencies:                      ║
+║     pnpm install                                              ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+`);
+    process.exit(1);
+  }
+});
