@@ -7,8 +7,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.mjs --max-warnings=0",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.mjs --fix",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.mjs --max-warnings=0 --no-warn-ignored",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.mjs --fix --no-warn-ignored",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,md,mdx,html,yaml,yml}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,md,mdx,html,yaml,yml}\"",
     "prepare": "husky",
@@ -26,7 +26,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs}": [
-      "eslint --fix --max-warnings=0"
+      "eslint --fix --max-warnings=0 --no-warn-ignored"
     ],
     "*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,md,mdx,html,yaml,yml}": [
       "prettier --write"
@@ -35,12 +35,10 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "lucide-react": "^0.510.0",
     "next": "15.3.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwind-merge": "^3.3.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -53,7 +51,7 @@
     "@storybook/nextjs": "^8.0.0",
     "@storybook/react": "^8.0.0",
     "@storybook/test": "^8.0.0",
-    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/postcss": "^4.1.7",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
@@ -66,7 +64,9 @@
     "@types/xml2js": "^0.4.14",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
+    "autoprefixer": "10.4.21",
     "chromatic": "^10.0.0",
+    "clsx": "^2.1.1",
     "dotenv": "^16.5.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
@@ -78,9 +78,11 @@
     "jest-environment-jsdom": "29.7.0",
     "jest-environment-node": "^29.7.0",
     "lint-staged": "^16.0.0",
+    "postcss": "^8.4.32",
     "prettier": "^3.5.3",
     "storybook": "^8.0.0",
     "supertest": "^7.1.1",
+    "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4",
     "ts-jest": "^29.3.4",
     "tsx": "^4.19.4",

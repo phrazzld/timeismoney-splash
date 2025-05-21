@@ -215,7 +215,8 @@
     2. Make a small change to a Storybook file and ensure it can be committed without bypassing hooks.
   - **Depends‑on:** [T013]
 
-- [ ] **T015.3 · Fix · P1: resolve linting issues in test components**
+- [x] **T015.3 · Fix · P1: resolve linting issues in test components**
+
   - **Context:** Phase 2, Step 10; Risk: Code Quality
   - **Action:**
     1. Fix ESLint errors and warnings in test components.
@@ -228,6 +229,19 @@
     1. Run ESLint manually on test components to confirm no errors.
     2. Successfully commit changes without bypassing pre-commit hooks.
   - **Depends‑on:** [T015]
+
+- [ ] **T015.4 · Fix · P1: resolve linting issues in story files**
+  - **Context:** Phase 2, Step 10; Risk: Code Quality
+  - **Action:**
+    1. Update ESLint configuration to properly handle story files or fix the warnings in them.
+    2. Ensure story files can be modified without triggering ESLint warnings during pre-commit.
+  - **Done‑when:**
+    1. Story files can be committed without any warnings or errors.
+    2. Pre-commit hooks pass when modifying story files.
+  - **Verification:**
+    1. Run ESLint manually on story files to confirm no errors or ignored warnings.
+    2. Successfully commit changes to story files without bypassing pre-commit hooks.
+  - **Depends‑on:** [T015.2, T015.3]
 
 ## Atom Components
 

@@ -12,25 +12,28 @@ export interface ThemeTestProps {
 
 /**
  * A component to test theme switching functionality in Storybook.
- * Displays various elements with theme-specific styles.
+ * Displays various elements with theme-specific styles to demonstrate dark mode capabilities.
+ *
+ * @param {ThemeTestProps} props - Component props
+ * @returns {React.ReactElement} Rendered component
  */
 export const ThemeTest: React.FC<ThemeTestProps> = ({
-  title = 'Theme Test Component'
-}): React.ReactNode => {
+  title = 'Theme Test Component',
+}): React.ReactElement => {
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">{title}</h1>
-      
+
       <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold text-neutral-800 dark:text-white mb-4">
           Theme Switching Test
         </h2>
-        
+
         <p className="text-neutral-600 dark:text-neutral-300 mb-4">
-          This component demonstrates theme switching between light and dark modes.
-          Use the theme toggle in the Storybook toolbar to switch between themes.
+          This component demonstrates theme switching between light and dark modes. Use the theme
+          toggle in the Storybook toolbar to switch between themes.
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded">
             <h3 className="font-medium text-primary dark:text-primary/90 mb-2">
@@ -40,7 +43,7 @@ export const ThemeTest: React.FC<ThemeTestProps> = ({
               This section uses the primary color with different opacities.
             </p>
           </div>
-          
+
           <div className="bg-neutral-100 dark:bg-neutral-700 p-4 rounded">
             <h3 className="font-medium text-neutral-900 dark:text-neutral-100 mb-2">
               Neutral Color Section
@@ -51,7 +54,7 @@ export const ThemeTest: React.FC<ThemeTestProps> = ({
           </div>
         </div>
       </div>
-      
+
       <div className="text-sm text-neutral-500 dark:text-neutral-400 italic">
         Toggle the theme using the Theme control in the Storybook toolbar.
       </div>

@@ -2,15 +2,23 @@
  * Design Token Test Component
  *
  * This component is used to visually test the application of design tokens (colors, typography, spacing)
- * in both light and dark modes. It will be temporarily added to the main page for verification
- * and then removed or moved to Storybook when testing is complete.
+ * in both light and dark modes. It provides a comprehensive visual reference for all design tokens
+ * and allows toggling between light and dark mode.
+ *
+ * @returns {React.ReactElement} Rendered component
  */
 
 'use client';
 
 import React, { useState } from 'react';
 
-export const DesignTokenTest: React.FC = (): React.ReactNode => {
+/**
+ * Component that displays all design tokens in the system with a toggle for dark mode
+ * Used for visual testing and verification of the design system
+ *
+ * @returns {React.ReactElement} Rendered component with all design tokens
+ */
+export const DesignTokenTest: React.FC = (): React.ReactElement => {
   const [darkMode, setDarkMode] = useState(false);
 
   const toggleDarkMode = (): void => {
