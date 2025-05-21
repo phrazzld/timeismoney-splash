@@ -230,7 +230,7 @@
     2. Successfully commit changes without bypassing pre-commit hooks.
   - **Depends‑on:** [T015]
 
-- [~] **T015.4 · Fix · P1: resolve linting issues in story files**
+- [x] **T015.4 · Fix · P1: resolve linting issues in story files**
   - **Context:** Phase 2, Step 10; Risk: Code Quality
   - **Action:**
     1. Update ESLint configuration to properly handle story files or fix the warnings in them.
@@ -247,7 +247,7 @@
 
 ### Typography Component
 
-- [ ] **T016 · Feature · P1: implement `Typography` atom component**
+- [x] **T016 · Feature · P1: implement `Typography` atom component**
 
   - **Context:** Phase 3, Step 11 (a, b, c); `components/atoms/Typography/Typography.tsx`
   - **Action:**
