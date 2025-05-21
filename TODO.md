@@ -287,7 +287,7 @@
 
 ### Button Component
 
-- [ ] **T019 · Feature · P1: implement `Button` atom component**
+- [x] **T019 · Feature · P1: implement `Button` atom component**
 
   - **Context:** Phase 3, Step 12 (a, b, c); `components/atoms/Button/Button.tsx`
   - **Action:**
