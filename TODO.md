@@ -260,7 +260,7 @@
     3. Semantic HTML structure is appropriate for accessibility.
   - **Depends‑on:** [T005, T007, T009]
 
-- [ ] **T017 · Feature · P2: create `Typography` storybook stories and documentation**
+- [x] **T017 · Feature · P2: create `Typography` storybook stories and documentation**
 
   - **Context:** Phase 3, Step 11 (d, e, f); `components/atoms/Typography/Typography.stories.tsx`
   - **Action:**
