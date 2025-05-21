@@ -2,111 +2,6 @@
 
 This backlog outlines the planned work for the "Time is Money" marketing site, balancing immediate launch needs with technical excellence, long-term vision, and operational stability. Items are prioritized based on delivering core value, driving conversions, and establishing a maintainable foundation, aligned with the project's development philosophy.
 
----
-
-## Recently Completed (Not Previously Tracked)
-
-- ~~**[Feature]**: Enforce strict package manager usage (pnpm)~~ ✅ **COMPLETED**
-
-  - **Type**: Feature
-  - **Complexity**: Medium
-  - **Rationale**: Ensures consistent dependency management across all environments and prevents issues from mixed package manager usage.
-  - **Expected Outcome**: Strict pnpm enforcement preventing npm/yarn usage with clear error messages.
-  - **Completion Note**: Implemented multiple enforcement mechanisms:
-    - `.npmrc` configuration to prevent npm lockfile creation
-    - Custom `scripts/enforce-pnpm.js` preinstall script
-    - Corepack configuration in package.json
-    - CI/CD checks for lockfile integrity
-    - Updated documentation and contributing guidelines
-
-- ~~**[Enhancement]**: Environment variable validation for production builds~~ ✅ **COMPLETED**
-  - **Type**: Enhancement
-  - **Complexity**: Simple
-  - **Rationale**: Prevents production deployment failures due to missing required environment variables.
-  - **Expected Outcome**: Build process validates required environment variables and fails gracefully with clear error messages.
-  - **Completion Note**: Implemented comprehensive validation:
-    - Created `scripts/validate-env.ts` for environment checks
-    - Validates NEXT_PUBLIC_SITE_URL format and production requirements
-    - Validates GA_MEASUREMENT_ID format (must start with 'G-')
-    - Added validation step to CI/CD pipeline
-    - Full test coverage for validation logic
-
----
-
-## High Priority
-
-### Project Foundation & Core Infrastructure
-
-- ~~**[Feature]**: Initialize Next.js project with strict TypeScript configuration and App Router~~ ✅ **COMPLETED**
-
-  - **Type**: Feature
-  - **Complexity**: Simple
-  - **Rationale**: Establishes the core technical stack, enabling type safety, modern routing, and a scalable architecture required for all subsequent development. (Technical Excellence)
-  - **Expected Outcome**: A bootstrapped Next.js project (`src/` structure, App Router configured) passing strict TypeScript checks (`tsc --noEmit`).
-  - **Dependencies**: None
-  - **Completion Note**: Project successfully initialized with Next.js App Router and strict TypeScript configuration. Running `tsc --noEmit` confirms TypeScript configuration is working correctly.
-
-- ~~**[Enhancement]**: Configure ESLint & Prettier with enforced pre-commit hooks~~ ✅ **COMPLETED**
-
-  - **Type**: Enhancement
-  - **Complexity**: Simple
-  - **Rationale**: Ensures consistent code quality, formatting, and adherence to standards automatically, improving maintainability and developer experience. (Technical Excellence, Operational Excellence)
-  - **Expected Outcome**: Automated formatting/linting via `husky` & `lint-staged` on every commit; CI pipeline fails on violations.
-  - **Dependencies**: Project Initialization
-  - **Completion Note**: Successfully implemented comprehensive code quality tooling:
-    - Configured ESLint with strict TypeScript rules and Next.js integration
-    - Set up Prettier for consistent code formatting
-    - Implemented Husky pre-commit hooks with lint-staged
-    - Added CI/CD checks for linting, formatting, and vulnerability scanning
-    - Created comprehensive contributing documentation
-    - Added engine version constraints and IDE configuration guidance
-    - All tests verified working: pre-commit hooks block violations, Prettier auto-formats, CI pipeline runs checks
-
-- ~~**[Feature]**: Set up CI/CD pipeline via GitHub Actions~~ ✅ **COMPLETED**
-
-  - **Type**: Feature
-  - **Complexity**: Medium
-  - **Rationale**: Automates testing, building, and deployment, enabling rapid iteration, reliable releases, and preview environments for review. (Operational Excellence)
-  - **Expected Outcome**: Automated deployments to preview (PRs) and production (main branch) environments, triggered by Git pushes. CI runs linting, tests, and builds.
-  - **Dependencies**: Project Initialization, ESLint/Prettier Config
-  - **Completion Note**: GitHub Actions CI pipeline configured for:
-    - Running ESLint and Prettier checks on all branches and PRs
-    - Building the application
-    - Checking for dependency vulnerabilities
-    - Enforcing pnpm usage with lockfile checks
-    - Environment variable validation for production builds
-    - Corepack enablement for consistent package management
-
-- ~~**[Feature]**: Implement baseline SEO configuration (Metadata, `robots.txt`, Sitemap)~~ ✅ **COMPLETED**
-
-  - **Type**: Feature
-  - **Complexity**: Medium
-  - **Rationale**: Critical for search engine discoverability and driving organic traffic to increase extension downloads. (Business Value)
-  - **Expected Outcome**: Basic site metadata (`title`, `description`), canonical URLs, `robots.txt`, and an auto-generated `sitemap.xml` configured for core pages.
-  - **Dependencies**: Project Initialization
-  - **Completion Note**: Fully implemented SEO configuration including:
-    - Global and page-specific metadata with proper templates
-    - Canonical URLs for all pages
-    - robots.txt with proper crawl permissions
-    - Dynamic sitemap.xml generation
-    - Centralized SEO configuration in `lib/seo-config.ts`
-    - Full test coverage for SEO endpoints
-    - Comprehensive documentation
-
-- ~~**[Feature]**: Configure basic analytics tracking (Page Views, Core Events)~~ ✅ **COMPLETED**
-  - **Type**: Feature
-  - **Complexity**: Medium
-  - **Rationale**: Provides essential data on site traffic and user behavior, forming the foundation for conversion tracking and optimization. (Business Value, Operational Excellence)
-  - **Expected Outcome**: An analytics platform (e.g., Plausible, GA4) integrated, tracking page views and initial setup for custom event tracking.
-  - **Dependencies**: Project Initialization
-  - **Completion Note**: Successfully implemented Google Analytics 4 (GA4) instead of Plausible due to GA4's free tier. Implementation includes:
-    - Core analytics tracking with development mode logging
-    - Page view tracking for SPA navigation
-    - Event tracking for user interactions
-    - Conversion tracking capabilities
-    - Full test coverage and E2E tests
-    - Comprehensive error handling and TypeScript support
-
 ### Design System & Core UI
 
 - **[Feature]**: Define core design tokens (Colors, Typography, Spacing) based on branding
@@ -115,7 +10,7 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
   - **Complexity**: Simple
   - **Rationale**: Establishes the visual foundation, ensuring UI consistency with the extension's "green hourglass" theme and supporting maintainability. (Technical Excellence)
   - **Expected Outcome**: Centralized design tokens available (e.g., in Tailwind config) reflecting the brand identity.
-  - **Dependencies**: Project Initialization
+  - **Dependencies**: None
 
 - **[Feature]**: Set up Storybook for isolated component development and documentation
 
@@ -123,7 +18,7 @@ This backlog outlines the planned work for the "Time is Money" marketing site, b
   - **Complexity**: Medium
   - **Rationale**: Facilitates component-driven development, visual testing, and documentation, crucial for a maintainable and scalable frontend architecture. (Technical Excellence, Developer Experience)
   - **Expected Outcome**: Storybook running, configured for the project, ready for component stories.
-  - **Dependencies**: Project Initialization
+  - **Dependencies**: None
 
 - **[Feature]**: Create foundational atom components (Typography, Button, Icon System, Logo)
   - **Type**: Feature
