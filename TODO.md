@@ -275,7 +275,7 @@
     3. Verify `@storybook/addon-a11y` passes.
   - **Depends‑on:** [T015, T016]
 
-- [ ] **T018 · Test · P1: write unit and accessibility tests for `Typography` component**
+- [x] **T018 · Test · P1: write unit and accessibility tests for `Typography` component**
   - **Context:** Phase 3, Step 11 (g); `components/atoms/Typography/Typography.test.tsx`
   - **Action:**
     1. Create `Typography.test.tsx` using React Testing Library and Jest.

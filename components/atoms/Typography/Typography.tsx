@@ -33,7 +33,7 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
 /**
  * Mapping of typography variants to their default HTML elements
  */
-const variantElementMap: Record<keyof typeof typographyPresets, React.ElementType> = {
+export const variantElementMap: Record<keyof typeof typographyPresets, React.ElementType> = {
   h1: 'h1',
   h2: 'h2',
   h3: 'h3',
@@ -53,7 +53,7 @@ const variantElementMap: Record<keyof typeof typographyPresets, React.ElementTyp
 /**
  * Mapping of typography variants to their corresponding Tailwind classes
  */
-const variantClassMap: Record<keyof typeof typographyPresets, string> = {
+export const variantClassMap: Record<keyof typeof typographyPresets, string> = {
   h1: 'text-5xl font-bold leading-tight tracking-tight',
   h2: 'text-4xl font-bold leading-tight tracking-tight',
   h3: 'text-3xl font-semibold leading-snug',
