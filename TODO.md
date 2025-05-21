@@ -438,13 +438,15 @@
     3. There are test configuration issues with Jest's handling of JSX that need to be addressed.
   - **Depends‑on:** [T018, T021, T024, T027, T029]
 
-- [ ] **T031 · Documentation · P3: create overview README for atom components**
+- [x] **T031 · Documentation · P3: create overview README for atom components**
 
   - **Context:** Documentation - README Updates
   - **Action:**
     1. Create or update `README.md` in `components/atoms/` providing an overview of the atom components and their purpose.
   - **Done‑when:**
     1. `components/atoms/README.md` is created/updated with relevant information.
+  - **Notes:**
+    1. Found an existing comprehensive README.md that documents all atom components with usage examples and design system information.
   - **Depends‑on:** [T029]
 
 - [ ] **T032 · Documentation · P3: update project README with link to Storybook**
