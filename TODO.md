@@ -359,7 +359,7 @@
 
 ### Logo Component
 
-- [ ] **T025 · Feature · P1: implement `Logo` atom component**
+- [x] **T025 · Feature · P1: implement `Logo` atom component**
 
   - **Context:** Phase 3, Step 14 (a, b, c); `components/atoms/Logo/Logo.tsx`
   - **Action:**
@@ -371,7 +371,7 @@
     2. Accessibility requirements are met.
   - **Depends‑on:** [T003, T005]
 
-- [ ] **T026 · Feature · P2: create `Logo` storybook stories and documentation**
+- [x] **T026 · Feature · P2: create `Logo` storybook stories and documentation**
 
   - **Context:** Phase 3, Step 14 (d, e, f); `components/atoms/Logo/Logo.stories.tsx`
   - **Action:**
@@ -383,7 +383,7 @@
     1. Review stories for logo rendering, responsiveness. Check light/dark mode. Verify `@storybook/addon-a11y`.
   - **Depends‑on:** [T003, T015, T025]
 
-- [ ] **T027 · Test · P1: write unit and accessibility tests for `Logo` component**
+- [x] **T027 · Test · P1: write unit and accessibility tests for `Logo` component**
   - **Context:** Phase 3, Step 14 (g); `components/atoms/Logo/Logo.test.tsx`
   - **Action:**
     1. Create `Logo.test.tsx`.
