@@ -188,7 +188,7 @@
     1. Run `pnpm storybook` and manually inspect the placeholder story and addon interactions.
   - **Depends‑on:** [T013, T014]
 
-- [ ] **T015.1 · Chore · P2: implement theme decorator for storybook**
+- [x] **T015.1 · Chore · P2: implement theme decorator for storybook**
 
   - **Context:** Phase 2, Step 10; Risk: Dark Mode Implementation Issues
   - **Action:**
