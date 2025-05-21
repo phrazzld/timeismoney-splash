@@ -1,9 +1,17 @@
 {
   "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["../*"]
+    }
+  },
   "include": [
     "../next-env.d.ts",
-    "*.ts",
-    "*.tsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
     "../**/*.stories.ts",
     "../**/*.stories.tsx"
   ],
