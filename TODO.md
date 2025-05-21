@@ -421,7 +421,7 @@
     2. Check against design guidelines.
   - **Depends‑on:** [T017, T020, T023, T026]
 
-- [ ] **T030 · Test · P1: run all tests and linters for foundational UI**
+- [~] **T030 · Test · P1: run all tests and linters for foundational UI**
 
   - **Context:** Phase 3, Step 15
   - **Action:**
@@ -432,6 +432,10 @@
     2. Linters report no errors.
   - **Verification:**
     1. CI build passes successfully.
+  - **Notes:**
+    1. Fixed several linting issues in the component files.
+    2. Remaining linting issues are in the scripts directory, not in UI components.
+    3. There are test configuration issues with Jest's handling of JSX that need to be addressed.
   - **Depends‑on:** [T018, T021, T024, T027, T029]
 
 - [ ] **T031 · Documentation · P3: create overview README for atom components**

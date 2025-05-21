@@ -20,6 +20,7 @@ const eslintConfig = [
       'dist/',
       '.DS_Store',
       '.storybook/**/*',
+      'storybook-static/**/*',
       '**/*.stories.ts',
       '**/*.stories.tsx',
     ],
