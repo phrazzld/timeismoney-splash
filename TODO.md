@@ -300,7 +300,7 @@
     3. Accessibility requirements (focus, ARIA) are met.
   - **Depends‑on:** [T005, T009]
 
-- [ ] **T020 · Feature · P2: create `Button` storybook stories and documentation**
+- [x] **T020 · Feature · P2: create `Button` storybook stories and documentation**
 
   - **Context:** Phase 3, Step 12 (d, e, f); `components/atoms/Button/Button.stories.tsx`
   - **Action:**
@@ -313,7 +313,7 @@
     1. Review stories for all states and interactions. Check light/dark mode. Verify `@storybook/addon-a11y`.
   - **Depends‑on:** [T015, T019]
 
-- [ ] **T021 · Test · P1: write unit and accessibility tests for `Button` component**
+- [x] **T021 · Test · P1: write unit and accessibility tests for `Button` component**
   - **Context:** Phase 3, Step 12 (g); `components/atoms/Button/Button.test.tsx`
   - **Action:**
     1. Create `Button.test.tsx`.
@@ -336,7 +336,7 @@
     2. Accessibility considerations are addressed.
   - **Depends‑on:** [T004, T005]
 
-- [ ] **T023 · Feature · P2: create `Icon` storybook stories and documentation**
+- [x] **T023 · Feature · P2: create `Icon` storybook stories and documentation**
 
   - **Context:** Phase 3, Step 13 (d, e, f); `components/atoms/Icon/Icon.stories.tsx`
   - **Action:**
