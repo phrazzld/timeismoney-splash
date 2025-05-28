@@ -15,3 +15,11 @@ if [ -f "package-lock.json" ] || [ -f "yarn.lock" ]; then
   echo "Use 'pnpm install' to manage dependencies."
   exit 1
 fi
+
+# Run pnpm doctor for comprehensive checks including peer dependencies
+echo "🔍 Running pnpm doctor to check for issues..."
+if ! pnpm doctor; then
+  echo "❌ pnpm doctor found issues. Please resolve them before committing."
+  echo "💡 Tip: Run 'pnpm doctor' to see detailed diagnostics."
+  exit 1
+fi

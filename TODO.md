@@ -90,7 +90,7 @@
     2. UI change detection working as expected
   - **Depends‑on:** T102, T103
 
-- [ ] **T106 · Security · P3: Add CI check for peer dependency issues**
+- [x] **T106 · Security · P3: Add CI check for peer dependency issues**
 
   - **Context:** Prevent future CI failures due to dependency issues
   - **Action:**

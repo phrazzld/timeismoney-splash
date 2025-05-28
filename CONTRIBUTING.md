@@ -202,6 +202,57 @@ Our GitHub Actions workflow automatically runs on all pushed branches and pull r
 
 **All checks must pass** before code can be merged into the main branch.
 
+## Dependency Management
+
+### Peer Dependencies
+
+This project enforces strict peer dependency checking to prevent runtime issues and ensure compatibility.
+
+#### Automatic Checks
+
+1. **Pre-commit Hook**: Runs `pnpm doctor` to detect peer dependency issues (and other problems) before commits
+2. **CI Pipeline**: Enforces peer dependencies via `strict-peer-dependencies=true` in `.npmrc`
+
+#### Resolving Peer Dependency Issues
+
+When you encounter peer dependency conflicts:
+
+1. **Check the error message**: Run `pnpm install` to see detailed information about the conflict
+2. **Update packages**: Try updating the conflicting packages:
+   ```bash
+   pnpm update <package-name>
+   # or update all packages
+   pnpm update
+   ```
+3. **Check compatibility**: Research if the packages are actually compatible despite the version mismatch
+4. **Add exceptions (if justified)**: For known-compatible packages, add rules to `package.json`:
+   ```json
+   {
+     "pnpm": {
+       "peerDependencyRules": {
+         "ignoreMissing": ["@types/react"],
+         "allowedVersions": {
+           "react": "17.x || 18.x"
+         }
+       }
+     }
+   }
+   ```
+
+#### Manual Checks
+
+- Run `pnpm doctor` for a comprehensive health check
+- Run `pnpm install` to verify all dependencies are correctly resolved
+- Run `pnpm ls` to inspect the dependency tree
+- Run `node scripts/check-peer-deps.mjs` for a focused peer dependency check
+
+#### Best Practices
+
+1. Always resolve peer dependency issues before committing
+2. Keep dependencies up to date with regular updates
+3. Document any peer dependency exceptions in code comments
+4. Test thoroughly after resolving dependency conflicts
+
 ## Quality Policy
 
 - **Pre-commit hooks are MANDATORY** and must be run before every commit
@@ -209,6 +260,7 @@ Our GitHub Actions workflow automatically runs on all pushed branches and pull r
 - All code must pass the CI pipeline before being merged
 - No ESLint errors or warnings are accepted (strict `--max-warnings=0` policy)
 - All code must be properly formatted according to Prettier rules
+- All peer dependency issues must be resolved before committing
 
 ## Pull Request Process
 
