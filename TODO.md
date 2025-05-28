@@ -136,7 +136,7 @@
 
 ## CI/CD Workflow
 
-- [ ] **T109 · Refactor · P1: Implement pre-flight check for `CHROMATIC_PROJECT_TOKEN` in CI workflow**
+- [x] **T109 · Refactor · P1: Implement pre-flight check for `CHROMATIC_PROJECT_TOKEN` in CI workflow**
 
   - **Context:** CI Resolution Plan - Process Improvements - Add Pre-flight Secret Check
   - **Action:**

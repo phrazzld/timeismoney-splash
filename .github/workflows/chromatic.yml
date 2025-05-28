@@ -45,6 +45,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Check for Chromatic Project Token
+        run: |
+          if [ -z "${{ secrets.CHROMATIC_PROJECT_TOKEN }}" ]; then
+            echo "::error::CHROMATIC_PROJECT_TOKEN is not set. Please add it as a GitHub repository secret."
+            exit 1
+          fi
+
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
