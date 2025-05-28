@@ -74,7 +74,7 @@
     2. Successful Chromatic build with typography stories
   - **Depends‑on:** T102, T103
 
-- [ ] **T105 · Setup · P2: Configure Chromatic for visual regression testing**
+- [x] **T105 · Setup · P2: Configure Chromatic for visual regression testing** _(Awaiting manual token setup)_
 
   - **Context:** Need reliable visual testing for design tokens and components
   - **Action:**
