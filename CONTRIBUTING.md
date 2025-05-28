@@ -262,6 +262,36 @@ When you encounter peer dependency conflicts:
 - All code must be properly formatted according to Prettier rules
 - All peer dependency issues must be resolved before committing
 
+## Definition of Done
+
+A task is considered complete only when it meets all applicable criteria below:
+
+### General Criteria (All Tasks)
+
+1. All code changes are implemented according to specifications
+2. Code passes all linting and formatting checks
+3. All tests pass (unit, integration, and any relevant E2E tests)
+4. The build completes successfully
+5. Code has been reviewed and approved (for PRs)
+6. Changes are merged to the main branch
+7. CI pipeline passes all checks
+
+### External Service Integration Tasks
+
+For tasks that integrate external services (e.g., analytics, monitoring, deployment platforms, visual testing tools), the following additional criteria must be met:
+
+1. **External Setup Complete**: All required external accounts, projects, or configurations are created and properly configured
+2. **Secrets Configured**: All required API keys, tokens, or credentials are:
+   - Generated from the external service
+   - Added to the appropriate secret storage (e.g., GitHub repository secrets)
+   - Verified to be correctly named and accessible
+3. **Service Verification**: The external service integration has been verified by:
+   - Successfully executing in the CI pipeline at least once
+   - Confirming data/functionality flows correctly to/from the external service
+   - Reviewing any dashboards or interfaces to ensure proper connection
+
+**Important**: A task involving external services is NOT complete if the code is merged but the service is not functional in CI/production due to missing configuration.
+
 ## Pull Request Process
 
 1. Create a branch from `main` for your changes

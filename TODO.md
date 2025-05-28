@@ -162,7 +162,7 @@
 
 ## Development Process
 
-- [ ] **T110 · Chore · P1: Update definition of done for tasks with external service integrations**
+- [x] **T110 · Chore · P1: Update definition of done for tasks with external service integrations**
 
   - **Context:** CI Resolution Plan - Process Improvements - Update Definition of Done
   - **Action:**
