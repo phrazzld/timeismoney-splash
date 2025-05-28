@@ -174,7 +174,7 @@
     1. Review the updated documentation to confirm the new criteria are present, clear, and accurately reflect the plan
   - **Depends‑on:** none
 
-- [ ] **T111 · Chore · P2: Document CI process improvements in `CONTRIBUTING.md`**
+- [x] **T111 · Chore · P2: Document CI process improvements in `CONTRIBUTING.md`**
 
   - **Context:** CI Resolution Plan - Verification Checklist - Process improvements documented in CONTRIBUTING.md
   - **Action:**

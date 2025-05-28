@@ -200,6 +200,26 @@ Our GitHub Actions workflow automatically runs on all pushed branches and pull r
 4. Lints code with ESLint
 5. Builds the application
 
+### Process Improvements for External Service Integrations
+
+To prevent CI failures related to external service integrations, we have implemented several process improvements:
+
+#### Pre-flight Secret Validation
+
+Our Chromatic workflow includes a pre-flight check that validates required secrets before attempting to use external services. This prevents cryptic failures later in the pipeline:
+
+- **What**: The workflow checks for `CHROMATIC_PROJECT_TOKEN` presence before running Chromatic
+- **Why**: Missing secrets would cause the Chromatic step to fail with unclear error messages, making troubleshooting difficult
+- **Benefit**: Immediate, clear feedback when secrets are missing, reducing debugging time
+
+#### Enhanced Definition of Done
+
+External service integration tasks now have explicit completion criteria (see [Definition of Done](#definition-of-done)):
+
+- **What**: Tasks are only complete when external services are fully functional in CI, not just when code is merged
+- **Why**: Previous workflow allowed tasks to be marked "done" even if external services weren't working due to missing configuration
+- **Benefit**: Ensures all integrations are actually functional before considering work complete
+
 **All checks must pass** before code can be merged into the main branch.
 
 ## Dependency Management
