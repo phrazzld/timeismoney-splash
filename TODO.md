@@ -59,7 +59,7 @@
     2. Successful Chromatic build with color stories
   - **Depends‑on:** T102
 
-- [ ] **T104 · Feature · P2: Create typography design token stories**
+- [x] **T104 · Feature · P2: Create typography design token stories**
 
   - **Context:** Need to document typography styles in Storybook
   - **Action:**
