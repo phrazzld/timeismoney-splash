@@ -189,7 +189,7 @@
 
 ## Documentation
 
-- [ ] **T112 · Chore · P2: Enhance `docs/chromatic-setup.md` with mandatory token setup and verification**
+- [x] **T112 · Chore · P2: Enhance `docs/chromatic-setup.md` with mandatory token setup and verification**
 
   - **Context:** CI Resolution Plan - Process Improvements - Documentation Updates
   - **Action:**

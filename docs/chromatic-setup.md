@@ -57,14 +57,75 @@ On each pull request, Chromatic will:
 3. Compare them against the baseline
 4. Report visual changes in the PR
 
-## Setting Up Project Token
+## ⚠️ MANDATORY: Project Token Configuration
 
-To set up the Chromatic project token:
+**The `CHROMATIC_PROJECT_TOKEN` setup is a mandatory prerequisite for Chromatic integration to function.**
 
-1. Go to [Chromatic](https://www.chromatic.com/) and sign up using your GitHub account
-2. Create a new project linked to the Time is Money repository
-3. Copy the Project Token
-4. Add it to GitHub Repository Secrets as `CHROMATIC_PROJECT_TOKEN`
+Without proper token configuration, the CI pipeline will fail and visual regression testing will not work. This token configuration is required because:
+
+- Chromatic needs authentication to access your project
+- CI workflows cannot proceed without valid credentials
+- Missing tokens cause cryptic build failures that are difficult to debug
+
+### Token Setup Steps
+
+**REQUIRED:** Complete ALL steps below before considering Chromatic integration functional:
+
+1. **Create Chromatic Account**
+
+   - Go to [Chromatic](https://www.chromatic.com/) and sign up using your GitHub account
+
+2. **Create Project**
+
+   - Create a new project linked to the Time is Money repository
+   - Copy the Project Token from the project's Manage screen
+
+3. **Configure GitHub Secret**
+   - Navigate to GitHub repository Settings → Secrets and variables → Actions
+   - Create a new repository secret named `CHROMATIC_PROJECT_TOKEN`
+   - Paste the copied token value and save
+
+## ✅ Verification: Confirm Your Setup
+
+**IMPORTANT:** Complete this verification checklist to ensure your Chromatic integration is fully functional:
+
+### Step 1: Verify Secret Configuration
+
+1. Navigate to your GitHub repository Settings → Secrets and variables → Actions
+2. Confirm `CHROMATIC_PROJECT_TOKEN` is listed in the repository secrets (value will be masked)
+3. If not present, complete the [Token Setup Steps](#token-setup-steps) above
+
+### Step 2: Test CI Integration
+
+1. Create a test branch: `git checkout -b test-chromatic-setup`
+2. Make a small change to any Storybook story file
+3. Commit and push the change: `git commit -am "test: verify chromatic integration" && git push origin test-chromatic-setup`
+4. Create a pull request to trigger the CI workflow
+5. Monitor the GitHub Actions workflow for the Chromatic step
+
+### Step 3: Verify Successful Execution
+
+✅ **Success Indicators:**
+
+- The "Check for Chromatic Project Token" step passes
+- The "Publish to Chromatic" step completes successfully
+- You receive a Chromatic build link in the PR checks
+- Clicking the Chromatic link shows your visual tests
+
+❌ **Failure Indicators:**
+
+- "CHROMATIC_PROJECT_TOKEN is not set" error in CI logs
+- "Publish to Chromatic" step fails with authentication errors
+- No Chromatic link appears in PR checks
+
+### Step 4: Clean Up Test
+
+After successful verification:
+
+1. Delete the test branch: `git branch -d test-chromatic-setup`
+2. Close the test pull request
+
+**If verification fails, repeat the [Token Setup Steps](#token-setup-steps) and contact the repository administrator.**
 
 ## Best Practices
 
@@ -86,11 +147,63 @@ To set up the Chromatic project token:
 
 ## Troubleshooting
 
-If you encounter issues with Chromatic:
+If you encounter issues with Chromatic, follow this systematic approach:
 
-- **Build Failures**: Check if Storybook builds locally with `pnpm build-storybook`
-- **Token Issues**: Verify the project token is set correctly in GitHub Secrets
-- **Timeout Issues**: Large Storybooks might time out; consider increasing the timeout or splitting the build
+### 1. Token-Related Issues (Most Common)
+
+**Symptoms:**
+
+- "CHROMATIC_PROJECT_TOKEN is not set" error in CI
+- Authentication failures in Chromatic step
+- CI pipeline stops at Chromatic integration
+
+**Solution:**
+
+1. Complete the [Verification checklist](#verification-confirm-your-setup) above
+2. Ensure the secret name is exactly `CHROMATIC_PROJECT_TOKEN` (case-sensitive)
+3. Verify you have the correct permissions to access repository secrets
+
+### 2. Build Failures
+
+**Symptoms:**
+
+- Storybook fails to build in CI
+- "Build failed" errors in Chromatic step
+
+**Solution:**
+
+1. Test local Storybook build: `pnpm build-storybook`
+2. Check for TypeScript errors: `pnpm lint`
+3. Verify all story files are valid
+
+### 3. Timeout Issues
+
+**Symptoms:**
+
+- Chromatic step times out
+- Long-running builds that never complete
+
+**Solution:**
+
+- Large Storybooks might need increased timeout
+- Consider splitting complex stories into simpler variants
+- Check Chromatic dashboard for build progress
+
+### 4. First-Time Setup Issues
+
+**NEW PROJECT?** If this is your first time setting up Chromatic for this repository:
+
+1. **STOP** - Complete the [mandatory token configuration](#️-mandatory-project-token-configuration) first
+2. Run through the [complete verification process](#verification-confirm-your-setup)
+3. Only proceed with development after verification passes
+
+### Need Help?
+
+If issues persist after following the verification steps:
+
+1. Check the [complete verification checklist](#verification-confirm-your-setup)
+2. Review CI logs for specific error messages
+3. Contact the repository administrator with verification results
 
 ## Additional Resources
 
