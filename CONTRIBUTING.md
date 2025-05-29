@@ -200,7 +200,78 @@ Our GitHub Actions workflow automatically runs on all pushed branches and pull r
 4. Lints code with ESLint
 5. Builds the application
 
+### Process Improvements for External Service Integrations
+
+To prevent CI failures related to external service integrations, we have implemented several process improvements:
+
+#### Pre-flight Secret Validation
+
+Our Chromatic workflow includes a pre-flight check that validates required secrets before attempting to use external services. This prevents cryptic failures later in the pipeline:
+
+- **What**: The workflow checks for `CHROMATIC_PROJECT_TOKEN` presence before running Chromatic
+- **Why**: Missing secrets would cause the Chromatic step to fail with unclear error messages, making troubleshooting difficult
+- **Benefit**: Immediate, clear feedback when secrets are missing, reducing debugging time
+
+#### Enhanced Definition of Done
+
+External service integration tasks now have explicit completion criteria (see [Definition of Done](#definition-of-done)):
+
+- **What**: Tasks are only complete when external services are fully functional in CI, not just when code is merged
+- **Why**: Previous workflow allowed tasks to be marked "done" even if external services weren't working due to missing configuration
+- **Benefit**: Ensures all integrations are actually functional before considering work complete
+
 **All checks must pass** before code can be merged into the main branch.
+
+## Dependency Management
+
+### Peer Dependencies
+
+This project enforces strict peer dependency checking to prevent runtime issues and ensure compatibility.
+
+#### Automatic Checks
+
+1. **Pre-commit Hook**: Runs `pnpm doctor` to detect peer dependency issues (and other problems) before commits
+2. **CI Pipeline**: Enforces peer dependencies via `strict-peer-dependencies=true` in `.npmrc`
+
+#### Resolving Peer Dependency Issues
+
+When you encounter peer dependency conflicts:
+
+1. **Check the error message**: Run `pnpm install` to see detailed information about the conflict
+2. **Update packages**: Try updating the conflicting packages:
+   ```bash
+   pnpm update <package-name>
+   # or update all packages
+   pnpm update
+   ```
+3. **Check compatibility**: Research if the packages are actually compatible despite the version mismatch
+4. **Add exceptions (if justified)**: For known-compatible packages, add rules to `package.json`:
+   ```json
+   {
+     "pnpm": {
+       "peerDependencyRules": {
+         "ignoreMissing": ["@types/react"],
+         "allowedVersions": {
+           "react": "17.x || 18.x"
+         }
+       }
+     }
+   }
+   ```
+
+#### Manual Checks
+
+- Run `pnpm doctor` for a comprehensive health check
+- Run `pnpm install` to verify all dependencies are correctly resolved
+- Run `pnpm ls` to inspect the dependency tree
+- Run `node scripts/check-peer-deps.mjs` for a focused peer dependency check
+
+#### Best Practices
+
+1. Always resolve peer dependency issues before committing
+2. Keep dependencies up to date with regular updates
+3. Document any peer dependency exceptions in code comments
+4. Test thoroughly after resolving dependency conflicts
 
 ## Quality Policy
 
@@ -209,6 +280,37 @@ Our GitHub Actions workflow automatically runs on all pushed branches and pull r
 - All code must pass the CI pipeline before being merged
 - No ESLint errors or warnings are accepted (strict `--max-warnings=0` policy)
 - All code must be properly formatted according to Prettier rules
+- All peer dependency issues must be resolved before committing
+
+## Definition of Done
+
+A task is considered complete only when it meets all applicable criteria below:
+
+### General Criteria (All Tasks)
+
+1. All code changes are implemented according to specifications
+2. Code passes all linting and formatting checks
+3. All tests pass (unit, integration, and any relevant E2E tests)
+4. The build completes successfully
+5. Code has been reviewed and approved (for PRs)
+6. Changes are merged to the main branch
+7. CI pipeline passes all checks
+
+### External Service Integration Tasks
+
+For tasks that integrate external services (e.g., analytics, monitoring, deployment platforms, visual testing tools), the following additional criteria must be met:
+
+1. **External Setup Complete**: All required external accounts, projects, or configurations are created and properly configured
+2. **Secrets Configured**: All required API keys, tokens, or credentials are:
+   - Generated from the external service
+   - Added to the appropriate secret storage (e.g., GitHub repository secrets)
+   - Verified to be correctly named and accessible
+3. **Service Verification**: The external service integration has been verified by:
+   - Successfully executing in the CI pipeline at least once
+   - Confirming data/functionality flows correctly to/from the external service
+   - Reviewing any dashboards or interfaces to ensure proper connection
+
+**Important**: A task involving external services is NOT complete if the code is merged but the service is not functional in CI/production due to missing configuration.
 
 ## Pull Request Process
 

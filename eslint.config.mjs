@@ -1,6 +1,7 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
+import storybookPlugin from 'eslint-plugin-storybook';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,7 +15,25 @@ const compat = new FlatCompat({
 const eslintConfig = [
   // Global ignores
   {
-    ignores: ['node_modules/', '.next/', 'dist/', '.DS_Store'],
+    ignores: [
+      'node_modules/',
+      '.next/',
+      'dist/',
+      '.DS_Store',
+      '.storybook/**/*',
+      'storybook-static/**/*',
+    ],
+  },
+
+  // Storybook configuration for story files
+  {
+    files: ['**/*.stories.@(js|jsx|ts|tsx)'],
+    plugins: {
+      storybook: storybookPlugin,
+    },
+    rules: {
+      ...storybookPlugin.configs.recommended.rules,
+    },
   },
 
   // Base TypeScript configuration using Next.js configurations
