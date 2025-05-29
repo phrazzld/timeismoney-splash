@@ -1,7 +1,14 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, TITLE_TEMPLATE } from '@/lib/seo-config';
+import {
+  generateDefaultMetadata,
+  toNextMetadata,
+  generateOrganizationSchema,
+  generateWebSiteSchema,
+  generateJsonLdScript,
+  createSearchAction,
+} from '@/lib/seo';
 import { AnalyticsProvider } from '@/components/AnalyticsProvider';
 import './globals.css';
 
@@ -17,24 +24,28 @@ const geistMono = Geist_Mono({
 
 /**
  * Global metadata configuration for the application.
- * metadataBase is crucial for converting relative URLs to absolute URLs in metadata.
+ * Uses our SEO metadata helpers for comprehensive meta tag support.
  */
-export const metadata: Metadata = {
-  title: {
-    default: SITE_NAME,
-    template: TITLE_TEMPLATE,
-  },
-  description: SITE_DESCRIPTION,
-  metadataBase: new URL(SITE_URL),
-  openGraph: {
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
-    url: '/',
-    siteName: SITE_NAME,
-    type: 'website',
-    locale: 'en_US',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const metadataConfig = generateDefaultMetadata();
+  const nextMetadata = toNextMetadata(metadataConfig) as Metadata;
+
+  return {
+    ...nextMetadata,
+    metadataBase: new URL(metadataConfig.base.canonical || 'http://localhost:3000'),
+    openGraph: {
+      ...(nextMetadata.openGraph || {}),
+      locale: 'en_US',
+    },
+    twitter: {
+      ...(nextMetadata.twitter || {}),
+    },
+    robots: metadataConfig.base.robots,
+    alternates: {
+      canonical: metadataConfig.base.canonical,
+    },
+  };
+}
 
 export default function RootLayout({
   children,
@@ -43,8 +54,40 @@ export default function RootLayout({
 }>): React.ReactNode {
   const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
+  // Generate structured data for Organization and WebSite
+  const organizationSchema = generateOrganizationSchema();
+  const websiteSchema = generateWebSiteSchema({
+    potentialAction: createSearchAction(),
+  });
+
+  const organizationJsonLd = generateJsonLdScript(organizationSchema);
+  const websiteJsonLd = generateJsonLdScript(websiteSchema);
+
   return (
     <html lang="en">
+      <head>
+        {/* JSON-LD Structured Data */}
+        {organizationJsonLd && (
+          <Script
+            id="organization-schema"
+            type="application/ld+json"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: organizationJsonLd.replace(/<\/?script[^>]*>/g, ''),
+            }}
+          />
+        )}
+        {websiteJsonLd && (
+          <Script
+            id="website-schema"
+            type="application/ld+json"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: websiteJsonLd.replace(/<\/?script[^>]*>/g, ''),
+            }}
+          />
+        )}
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* Google Analytics */}
         {process.env.NODE_ENV === 'production' && gaMeasurementId && (

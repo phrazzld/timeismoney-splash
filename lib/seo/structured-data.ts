@@ -59,7 +59,7 @@ export interface WebSiteData {
 /**
  * Organization schema.org JSON-LD structure
  */
-export interface OrganizationSchema {
+export interface OrganizationSchema extends Record<string, unknown> {
   readonly '@context': 'https://schema.org';
   readonly '@type': 'Organization';
   readonly '@id'?: string;
@@ -76,7 +76,7 @@ export interface OrganizationSchema {
 /**
  * Website schema.org JSON-LD structure
  */
-export interface WebSiteSchema {
+export interface WebSiteSchema extends Record<string, unknown> {
   readonly '@context': 'https://schema.org';
   readonly '@type': 'WebSite';
   readonly '@id'?: string;
