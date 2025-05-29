@@ -16,9 +16,9 @@ module.exports = {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',
       {
-        tsconfig: 'tsconfig.json',
-        isolatedModules: true,
-        jsx: 'react-jsx',
+        tsconfig: {
+          jsx: 'react-jsx',
+        },
       },
     ],
   },
