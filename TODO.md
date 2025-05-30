@@ -98,7 +98,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
   2. TypeScript prop validation works for CTA prop
 - **Depends-on:** [T004]
 
-- [ ] ### T007 · Test · P0: Create comprehensive Storybook stories for HeroContent
+- [x] ### T007 · Test · P0: Create comprehensive Storybook stories for HeroContent
 - **Context:** Phase 2: Hero Content Molecule - Essential for component-driven development
 - **Action:**
   1. Create `HeroContent.stories.tsx` with complete variant coverage
@@ -113,7 +113,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
   2. Accessibility scan passes without critical violations
 - **Depends-on:** [T004, T005, T006]
 
-- [ ] ### T008 · Test · P0: Write comprehensive component tests for HeroContent
+- [x] ### T008 · Test · P0: Write comprehensive component tests for HeroContent
 - **Context:** Phase 2: Hero Content Molecule - Critical for regression prevention
 - **Action:**
   1. Create `HeroContent.test.tsx` using React Testing Library
@@ -130,7 +130,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
 
 ## Phase 3: Hero Organism (Layout Composition)
 
-- [ ] ### T009 · Feature · P0: Create Hero organism component with composition
+- [x] ### T009 · Feature · P0: Create Hero organism component with composition
 - **Context:** Phase 3: Hero Organism - Brings together layout and content
 - **Action:**
   1. Scaffold `components/organisms/Hero/Hero.tsx` with layout responsibility
