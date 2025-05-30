@@ -88,6 +88,24 @@ export const Default: Story = {
 };
 
 /**
+ * HeroContent without CTA demonstrating the placeholder state for future integration.
+ */
+export const WithoutCTA: Story = {
+  args: {
+    heading: 'No CTA Placeholder',
+    subheading: 'This shows the component with CTA placeholder for future integration.',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates the hidden placeholder state when no CTA is provided. The placeholder is invisible but present for testing purposes.',
+      },
+    },
+  },
+};
+
+/**
  * HeroContent with both heading and subheading for additional context.
  */
 export const WithSubheading: Story = {

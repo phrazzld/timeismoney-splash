@@ -83,7 +83,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
   2. Text legibility confirmed on actual mobile and desktop devices
 - **Depends-on:** [T004]
 
-- [ ] ### T006 · Feature · P1: Add CTA button integration placeholder
+- [x] ### T006 · Feature · P1: Add CTA button integration placeholder
 - **Context:** Phase 2: Hero Content Molecule - Prepares for CTA integration (Issue #8)
 - **Action:**
   1. Add `cta` prop of type `ReactNode` to component interface

@@ -104,12 +104,17 @@ export const HeroContent: React.FC<HeroContentProps> = ({
       {/* Optional Subheading */}
       {subheading && <Typography variant={subheadingVariant}>{subheading}</Typography>}
 
-      {/* Optional CTA Slot */}
-      {cta && (
-        <div className={cn('cta-container', variant === 'centered' ? 'flex justify-center' : '')}>
-          {cta}
-        </div>
-      )}
+      {/* CTA Slot - renders provided CTA or placeholder */}
+      <div
+        className={cn('cta-container', variant === 'centered' ? 'flex justify-center' : '')}
+        data-testid={cta ? 'hero-cta-content' : 'hero-cta-placeholder'}
+      >
+        {cta || (
+          <div className="hidden" aria-hidden="true" data-testid="hero-cta-placeholder-content">
+            {/* Placeholder for future CTA integration */}
+          </div>
+        )}
+      </div>
     </section>
   );
 };

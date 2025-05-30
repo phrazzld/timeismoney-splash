@@ -140,6 +140,74 @@ describe('HeroContent', () => {
     });
   });
 
+  describe('CTA Integration', () => {
+    it('renders CTA content when provided', () => {
+      render(<HeroContent heading="Test Heading" cta={<button>Test CTA</button>} />);
+
+      const ctaContainer = screen.getByTestId('hero-cta-content');
+      const ctaButton = screen.getByRole('button', { name: 'Test CTA' });
+
+      expect(ctaContainer).toBeInTheDocument();
+      expect(ctaButton).toBeInTheDocument();
+      expect(ctaContainer).toContainElement(ctaButton);
+    });
+
+    it('renders placeholder when no CTA provided', () => {
+      render(<HeroContent heading="Test Heading" />);
+
+      const placeholder = screen.getByTestId('hero-cta-placeholder');
+      const placeholderContent = screen.getByTestId('hero-cta-placeholder-content');
+
+      expect(placeholder).toBeInTheDocument();
+      expect(placeholderContent).toBeInTheDocument();
+      expect(placeholder).toContainElement(placeholderContent);
+
+      // Placeholder should be hidden but accessible for testing
+      expect(placeholderContent).toHaveClass('hidden');
+      expect(placeholderContent).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('applies centered alignment to CTA when variant is centered', () => {
+      render(
+        <HeroContent
+          heading="Test Heading"
+          variant="centered"
+          cta={<button>Centered CTA</button>}
+        />,
+      );
+
+      const ctaContainer = screen.getByTestId('hero-cta-content');
+      expect(ctaContainer).toHaveClass('flex', 'justify-center');
+    });
+
+    it('applies default alignment to CTA when variant is default', () => {
+      render(
+        <HeroContent heading="Test Heading" variant="default" cta={<button>Default CTA</button>} />,
+      );
+
+      const ctaContainer = screen.getByTestId('hero-cta-content');
+      expect(ctaContainer).not.toHaveClass('flex', 'justify-center');
+    });
+
+    it('supports complex CTA content', () => {
+      const complexCTA = (
+        <div>
+          <button>Primary</button>
+          <button>Secondary</button>
+        </div>
+      );
+
+      render(<HeroContent heading="Test Heading" cta={complexCTA} />);
+
+      const ctaContainer = screen.getByTestId('hero-cta-content');
+      const primaryButton = screen.getByRole('button', { name: 'Primary' });
+      const secondaryButton = screen.getByRole('button', { name: 'Secondary' });
+
+      expect(ctaContainer).toContainElement(primaryButton);
+      expect(ctaContainer).toContainElement(secondaryButton);
+    });
+  });
+
   describe('Content Layout', () => {
     it('organizes content in proper vertical order', () => {
       render(
