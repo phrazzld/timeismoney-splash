@@ -160,7 +160,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
   2. No horizontal overflow occurs at any viewport size
 - **Depends-on:** [T009]
 
-- [ ] ### T011 · Feature · P1: Add background treatment with variants
+- [x] ### T011 · Feature · P1: Add background treatment with variants
 - **Context:** Phase 3: Hero Organism - Visual enhancement and brand consistency
 - **Action:**
   1. Implement background variants using Tailwind classes (gradient, pattern, solid)
@@ -175,7 +175,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
   2. Color contrast validation meets WCAG AA standards
 - **Depends-on:** [T009]
 
-- [ ] ### T012 · Test · P0: Create comprehensive Storybook stories for Hero organism
+- [x] ### T012 · Test · P0: Create comprehensive Storybook stories for Hero organism
 - **Context:** Phase 3: Hero Organism - Documentation and visual testing
 - **Action:**
   1. Create `Hero.stories.tsx` with all background and content variants
@@ -190,7 +190,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
   2. Chromatic builds pass without unexpected visual changes
 - **Depends-on:** [T009, T010, T011]
 
-- [ ] ### T013 · Test · P0: Write integration tests for Hero organism
+- [x] ### T013 · Test · P0: Write integration tests for Hero organism
 - **Context:** Phase 3: Hero Organism - Ensures component composition works correctly
 - **Action:**
   1. Create `Hero.test.tsx` with React Testing Library for integration testing

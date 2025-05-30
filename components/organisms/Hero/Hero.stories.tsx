@@ -185,3 +185,36 @@ export const LongContent: Story = {
     ),
   },
 };
+
+/**
+ * Hero designed for dark mode environments to test theme compatibility.
+ */
+export const DarkMode: Story = {
+  args: {
+    heading: 'Dark Mode Hero Section',
+    subheading: 'Hero content optimized for dark themes with proper contrast and readability.',
+    backgroundVariant: 'pattern',
+    variant: 'centered',
+    cta: (
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button variant="outline" size="lg">
+          Dark Theme Action
+        </Button>
+        <Button variant="ghost" size="lg">
+          Secondary Action
+        </Button>
+      </div>
+    ),
+  },
+  parameters: {
+    backgrounds: {
+      default: 'dark',
+    },
+    docs: {
+      description: {
+        story:
+          'Demonstrates Hero component compatibility with dark themes. Tests background variants and text contrast in dark mode environments.',
+      },
+    },
+  },
+};
