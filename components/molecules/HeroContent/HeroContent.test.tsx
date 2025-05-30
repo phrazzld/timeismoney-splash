@@ -29,7 +29,7 @@ describe('HeroContent', () => {
 
       const heading = screen.getByRole('heading', { name: 'Test Heading' });
       // Should have h1 variant classes
-      expect(heading).toHaveClass('text-5xl', 'font-bold');
+      expect(heading).toHaveClass('text-3xl', 'font-bold');
     });
 
     it('accepts and applies custom className', () => {
@@ -53,7 +53,7 @@ describe('HeroContent', () => {
 
       const heading = screen.getByRole('heading', { name: 'Test Heading' });
       expect(heading.tagName).toBe('H2');
-      expect(heading).toHaveClass('text-4xl', 'font-bold');
+      expect(heading).toHaveClass('text-2xl', 'font-bold');
     });
 
     it('renders subheading when provided', () => {
@@ -62,7 +62,7 @@ describe('HeroContent', () => {
       const subheading = screen.getByText('This is a subheading');
       expect(subheading).toBeInTheDocument();
       expect(subheading.tagName).toBe('P');
-      expect(subheading).toHaveClass('text-lg');
+      expect(subheading).toHaveClass('text-base');
     });
 
     it('does not render subheading when not provided', () => {
@@ -83,7 +83,7 @@ describe('HeroContent', () => {
       );
 
       const subheading = screen.getByText('Custom subheading');
-      expect(subheading).toHaveClass('text-base');
+      expect(subheading).toHaveClass('text-sm');
     });
 
     it('maintains proper heading hierarchy', () => {

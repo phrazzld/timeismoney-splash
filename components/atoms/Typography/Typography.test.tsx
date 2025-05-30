@@ -15,7 +15,9 @@ describe('Typography', () => {
     const heading = screen.getByText('Heading 1');
     expect(heading).toBeInTheDocument();
     expect(heading.tagName).toBe('H1');
-    expect(heading).toHaveClass('text-5xl font-bold leading-tight tracking-tight');
+    expect(heading).toHaveClass(
+      'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight',
+    );
   });
 
   it('should allow overriding the HTML element with the "as" prop', () => {
@@ -27,7 +29,9 @@ describe('Typography', () => {
     const heading = screen.getByText('Heading as div');
     expect(heading).toBeInTheDocument();
     expect(heading.tagName).toBe('DIV');
-    expect(heading).toHaveClass('text-5xl font-bold leading-tight tracking-tight');
+    expect(heading).toHaveClass(
+      'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight',
+    );
   });
 
   it('should merge additional className with variant classes', () => {
@@ -38,12 +42,16 @@ describe('Typography', () => {
     );
     const text = screen.getByText('Body text');
     expect(text).toBeInTheDocument();
-    expect(text).toHaveClass('text-base font-normal leading-normal text-primary');
+    expect(text).toHaveClass(
+      'text-sm sm:text-base md:text-lg font-normal leading-normal text-primary',
+    );
   });
 
   it('should apply different styles based on variant', () => {
     const { rerender } = render(<Typography variant="body">Body text</Typography>);
-    expect(screen.getByText('Body text')).toHaveClass('text-base font-normal leading-normal');
+    expect(screen.getByText('Body text')).toHaveClass(
+      'text-sm sm:text-base md:text-lg font-normal leading-normal',
+    );
     expect(screen.getByText('body text', { exact: false }).tagName).toBe('P');
 
     rerender(<Typography variant="caption">Caption text</Typography>);

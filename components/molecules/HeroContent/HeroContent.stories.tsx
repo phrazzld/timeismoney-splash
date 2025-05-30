@@ -260,7 +260,73 @@ export const DarkMode: Story = {
 };
 
 /**
- * Responsive example showing how content adapts across different screen sizes.
+ * Responsive typography demonstration showing how text scales across breakpoints.
+ */
+export const ResponsiveTypography: Story = {
+  args: {
+    heading: 'Responsive Typography Scale',
+    subheading:
+      'This text automatically scales from mobile (320px) to desktop (4K) for optimal readability at every breakpoint.',
+    cta: <Button variant="primary">Responsive Action</Button>,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates responsive typography scaling from 320px to 4K displays. Resize viewport to see text scale appropriately.',
+      },
+    },
+    viewport: {
+      viewports: {
+        mobile: {
+          name: 'Mobile (375px)',
+          styles: {
+            width: '375px',
+            height: '667px',
+          },
+        },
+        smallTablet: {
+          name: 'Small Tablet (640px)',
+          styles: {
+            width: '640px',
+            height: '960px',
+          },
+        },
+        tablet: {
+          name: 'Tablet (768px)',
+          styles: {
+            width: '768px',
+            height: '1024px',
+          },
+        },
+        desktop: {
+          name: 'Desktop (1024px)',
+          styles: {
+            width: '1024px',
+            height: '768px',
+          },
+        },
+        largeDesktop: {
+          name: 'Large Desktop (1280px)',
+          styles: {
+            width: '1280px',
+            height: '800px',
+          },
+        },
+        ultraWide: {
+          name: 'Ultra Wide (1536px)',
+          styles: {
+            width: '1536px',
+            height: '864px',
+          },
+        },
+      },
+    },
+  },
+};
+
+/**
+ * Responsive layout example showing how content adapts across different screen sizes.
  */
 export const Responsive: Story = {
   args: {

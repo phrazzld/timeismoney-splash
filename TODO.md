@@ -53,7 +53,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
 
 ## Phase 2: Hero Content Molecule (Component Foundation)
 
-- [ ] ### T004 · Feature · P0: Create HeroContent molecule component
+- [x] ### T004 · Feature · P0: Create HeroContent molecule component
 - **Context:** Phase 2: Hero Content Molecule - Core content component for hero section
 - **Action:**
   1. Scaffold `components/molecules/HeroContent/HeroContent.tsx` with comprehensive props interface
@@ -68,7 +68,7 @@ _This synthesis combines the collective intelligence of multiple AI perspectives
   2. Component renders expected content structure in Storybook
 - **Depends-on:** none
 
-- [ ] ### T005 · Feature · P0: Implement responsive typography using Typography atom
+- [x] ### T005 · Feature · P0: Implement responsive typography using Typography atom
 - **Context:** Phase 2: Hero Content Molecule - Critical for design system consistency
 - **Action:**
   1. Integrate existing Typography atom for all text elements
