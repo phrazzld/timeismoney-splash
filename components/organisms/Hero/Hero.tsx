@@ -38,11 +38,11 @@ export const backgroundVariantMap: Record<NonNullable<HeroProps['backgroundVaria
  * content structure to the HeroContent molecule.
  *
  * ## Features
- * - Responsive container with proper spacing and constraints
+ * - Responsive container with design token-based spacing and constraints
  * - Background variant options for visual variety
  * - Seamless composition with HeroContent molecule
  * - Separation of layout and content concerns
- * - Mobile-first responsive design
+ * - Mobile-first responsive design following 8px grid system
  *
  * ## Atomic Design Hierarchy
  * - **Organism**: Hero (layout, container, backgrounds)
@@ -80,8 +80,11 @@ export const Hero: React.FC<HeroProps> = ({
     'w-full',
     // Background treatment
     backgroundVariantMap[backgroundVariant],
-    // Responsive padding
+    // Responsive horizontal padding using design tokens
+    // px-4 (16px) = spacingTokens['4'], sm:px-6 (24px) = spacingTokens['6'], lg:px-8 (32px) = spacingTokens['8']
     'px-4 sm:px-6 lg:px-8',
+    // Responsive vertical padding using design tokens
+    // py-12 (48px) = spacingTokens['12'], sm:py-16 (64px) = spacingTokens['16'], lg:py-20 (80px) = spacingTokens['20']
     'py-12 sm:py-16 lg:py-20',
     // Custom classes
     className,
@@ -89,10 +92,9 @@ export const Hero: React.FC<HeroProps> = ({
 
   // Combine content container classes for proper centering and max width
   const contentContainerClasses = cn(
-    // Responsive container with max width
-    'mx-auto',
-    'max-w-7xl',
-    // Responsive content centering
+    // Responsive container with max width constraint (1280px)
+    'mx-auto max-w-7xl',
+    // Full width within container bounds
     'w-full',
   );
 
