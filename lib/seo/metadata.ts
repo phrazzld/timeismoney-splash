@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, TITLE_TEMPLATE } from '../seo-config';
+import { sanitizeMetadata } from '../security/sanitization';
 
 /**
  * Base metadata structure for SEO
@@ -99,32 +100,42 @@ export function mergePageMetadata(pageMetadata: PageMetadata, path?: string): Me
   const baseUrl = SITE_URL;
   const canonicalUrl = path ? `${baseUrl}${path}` : defaults.base.canonical;
 
+  // Sanitize all user-provided metadata
+  const safeMetadata = {
+    title: pageMetadata.title ? sanitizeMetadata(pageMetadata.title) : undefined,
+    description: pageMetadata.description ? sanitizeMetadata(pageMetadata.description) : undefined,
+    canonical: pageMetadata.canonical ? sanitizeMetadata(pageMetadata.canonical) : undefined,
+    robots: pageMetadata.robots ? sanitizeMetadata(pageMetadata.robots) : undefined,
+    image: pageMetadata.image ? sanitizeMetadata(pageMetadata.image) : undefined,
+    imageAlt: pageMetadata.imageAlt ? sanitizeMetadata(pageMetadata.imageAlt) : undefined,
+  };
+
   // Format title using template if page title provided
-  const pageTitle = pageMetadata.title
-    ? TITLE_TEMPLATE.replace('%s', pageMetadata.title)
+  const pageTitle = safeMetadata.title
+    ? TITLE_TEMPLATE.replace('%s', sanitizeMetadata(safeMetadata.title))
     : defaults.base.title;
 
   return {
     base: {
       title: pageTitle,
-      description: pageMetadata.description ?? defaults.base.description,
-      canonical: pageMetadata.canonical ?? canonicalUrl,
-      robots: pageMetadata.robots ?? defaults.base.robots,
+      description: safeMetadata.description ?? defaults.base.description,
+      canonical: safeMetadata.canonical ?? canonicalUrl,
+      robots: safeMetadata.robots ?? defaults.base.robots,
     },
     openGraph: {
       ...defaults.openGraph,
       'og:title': pageTitle,
-      'og:description': pageMetadata.description ?? defaults.openGraph['og:description'],
-      'og:url': pageMetadata.canonical ?? canonicalUrl ?? defaults.openGraph['og:url'],
-      'og:image': pageMetadata.image,
-      'og:image:alt': pageMetadata.imageAlt,
+      'og:description': safeMetadata.description ?? defaults.openGraph['og:description'],
+      'og:url': safeMetadata.canonical ?? canonicalUrl ?? defaults.openGraph['og:url'],
+      'og:image': safeMetadata.image,
+      'og:image:alt': safeMetadata.imageAlt,
     },
     twitter: {
       ...defaults.twitter,
       'twitter:title': pageTitle,
-      'twitter:description': pageMetadata.description ?? defaults.twitter['twitter:description'],
-      'twitter:image': pageMetadata.image,
-      'twitter:image:alt': pageMetadata.imageAlt,
+      'twitter:description': safeMetadata.description ?? defaults.twitter['twitter:description'],
+      'twitter:image': safeMetadata.image,
+      'twitter:image:alt': safeMetadata.imageAlt,
     },
   };
 }
