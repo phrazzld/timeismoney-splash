@@ -79,3 +79,22 @@ jobs:
       - name: Build
         run: pnpm build
         # Build step runs after successful lint and format checks
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run accessibility tests
+        run: pnpm test:e2e:accessibility
+        env:
+          CI: true
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+      - name: Upload accessibility report on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: accessibility-report-main-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30

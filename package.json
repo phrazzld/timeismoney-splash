@@ -20,6 +20,9 @@
     "test:e2e:prod": "playwright test --config=playwright.config.production.ts",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
+    "test:e2e:accessibility": "playwright test --grep @accessibility",
+    "test:a11y": "pnpm test:e2e:accessibility",
+    "test:a11y:report": "playwright test --grep @accessibility --reporter=html",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --build-script-name=build-storybook"
