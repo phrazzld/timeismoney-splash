@@ -10,7 +10,17 @@ import {
   createSearchAction,
 } from '@/lib/seo';
 import { AnalyticsProvider } from '@/components/AnalyticsProvider';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import './globals.css';
+
+// Initialize monitoring system
+if (typeof window !== 'undefined') {
+  import('@/lib/monitoring').then(({ initializeMonitoring }) => {
+    initializeMonitoring().catch((error) => {
+      console.warn('Failed to initialize monitoring:', error);
+    });
+  });
+}
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -109,7 +119,30 @@ export default function RootLayout({
           </>
         )}
 
-        <AnalyticsProvider>{children}</AnalyticsProvider>
+        <ErrorBoundary 
+          enableRetry 
+          showErrorDetails={process.env.NODE_ENV === 'development'}
+          fallback={
+            <div className="min-h-screen flex items-center justify-center p-4">
+              <div className="max-w-md text-center">
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                  Application Error
+                </h1>
+                <p className="text-gray-600 mb-6">
+                  We're sorry, but something went wrong. Please try refreshing the page.
+                </p>
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Refresh Page
+                </button>
+              </div>
+            </div>
+          }
+        >
+          <AnalyticsProvider>{children}</AnalyticsProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
