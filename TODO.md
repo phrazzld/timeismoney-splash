@@ -24,6 +24,23 @@
 - `lib/performance/` - unused imports and vars
 - `lighthouserc.js` - require import, unused var
 
+## CI Failure Resolution Tasks
+
+### High Priority
+
+- [ ] Add playwright-core peer dependency to fix CI failures
+- [ ] Remove deprecated @types/dompurify package (dompurify provides own types)
+- [ ] Verify all CI jobs pass after dependency fixes
+
+### Medium Priority
+
+- [ ] Update pnpm version specification in package.json packageManager field
+- [ ] Add .npmrc configuration for peer dependency handling
+
+### Low Priority
+
+- [ ] Clean up deprecated subdependencies in package ecosystem
+
 ## Rationale for Current Commit
 
 The current changes fix critical Next.js build errors:
