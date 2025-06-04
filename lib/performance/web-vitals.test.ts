@@ -18,6 +18,7 @@ import {
 } from '../logging/correlation';
 import type { RawMetric, PerformanceConfig } from './types';
 import * as webVitals from 'web-vitals';
+import type { MockWebVitalsModule } from '@/lib/test-types';
 
 // Mock web-vitals library
 jest.mock('web-vitals', () => ({
@@ -29,22 +30,25 @@ jest.mock('web-vitals', () => ({
   onTTFB: jest.fn(),
 }));
 
+// Type the mocked module
+const mockWebVitals = webVitals as unknown as MockWebVitalsModule;
+
 describe('Web Vitals Integration (T018)', () => {
-  let mockOnLCP: jest.Mock;
-  let mockOnFID: jest.Mock;
-  let mockOnCLS: jest.Mock;
-  let mockOnFCP: jest.Mock;
-  let mockOnINP: jest.Mock;
-  let mockOnTTFB: jest.Mock;
+  let mockOnLCP: jest.MockedFunction<typeof webVitals.onLCP>;
+  let mockOnFID: jest.MockedFunction<typeof webVitals.onFID>;
+  let mockOnCLS: jest.MockedFunction<typeof webVitals.onCLS>;
+  let mockOnFCP: jest.MockedFunction<typeof webVitals.onFCP>;
+  let mockOnINP: jest.MockedFunction<typeof webVitals.onINP>;
+  let mockOnTTFB: jest.MockedFunction<typeof webVitals.onTTFB>;
 
   beforeEach(() => {
-    // Reset mocks
-    mockOnLCP = (webVitals.onLCP as jest.Mock).mockClear();
-    mockOnFID = (webVitals.onFID as jest.Mock).mockClear();
-    mockOnCLS = (webVitals.onCLS as jest.Mock).mockClear();
-    mockOnFCP = (webVitals.onFCP as jest.Mock).mockClear();
-    mockOnINP = (webVitals.onINP as jest.Mock).mockClear();
-    mockOnTTFB = (webVitals.onTTFB as jest.Mock).mockClear();
+    // Reset mocks using typed module
+    mockOnLCP = mockWebVitals.onLCP.mockClear();
+    mockOnFID = mockWebVitals.onFID.mockClear();
+    mockOnCLS = mockWebVitals.onCLS.mockClear();
+    mockOnFCP = mockWebVitals.onFCP.mockClear();
+    mockOnINP = mockWebVitals.onINP.mockClear();
+    mockOnTTFB = mockWebVitals.onTTFB.mockClear();
 
     // Clear metrics
     clearWebVitalMetrics();

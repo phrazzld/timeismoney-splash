@@ -11,6 +11,7 @@ import { generateCorrelationId, setCorrelationId, clearCorrelationId } from '@/l
 import * as analytics from '@/lib/analytics';
 import * as logging from '@/lib/logging';
 import * as webVitals from 'web-vitals';
+import type { MockAnalyticsModule, MockWebVitalsModule } from '@/lib/test-types';
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -38,6 +39,10 @@ jest.mock('web-vitals', () => ({
   onTTFB: jest.fn(),
 }));
 
+// Type the mocked modules
+const mockAnalytics = analytics as unknown as MockAnalyticsModule;
+const mockWebVitals = webVitals as unknown as MockWebVitalsModule;
+
 // Mock performance API
 Object.defineProperty(global, 'performance', {
   value: {
@@ -53,24 +58,28 @@ Object.defineProperty(global, 'performance', {
 });
 
 describe('Performance Monitoring Integration (T018)', () => {
-  let mockAnalyticsTrack: jest.Mock;
-  let mockTrackPageview: jest.Mock;
-  let mockLoggerError: jest.Mock;
-  let mockLoggerLogPerformance: jest.Mock;
-  let mockLoggerLogPageView: jest.Mock;
-  let consoleErrorSpy: jest.SpyInstance;
+  let mockAnalyticsTrack: jest.MockedFunction<typeof analytics.analytics.track>;
+  let mockTrackPageview: jest.MockedFunction<typeof analytics.trackPageview>;
+  let mockLoggerError: jest.MockedFunction<typeof logging.logger.error>;
+  let mockLoggerLogPerformance: jest.MockedFunction<typeof logging.logger.logPerformance>;
+  let mockLoggerLogPageView: jest.MockedFunction<typeof logging.logger.logPageView>;
+  let consoleErrorSpy: jest.SpyInstance<void, Parameters<typeof console.error>>;
 
   beforeEach(() => {
     // Mock analytics
-    mockAnalyticsTrack = (analytics.analytics.track as jest.Mock).mockClear();
-    mockTrackPageview = (analytics.trackPageview as jest.Mock).mockClear();
+    mockAnalyticsTrack = mockAnalytics.analytics.track.mockClear();
+    mockTrackPageview = mockAnalytics.trackPageview.mockClear();
 
-    // Mock logger
-    mockLoggerError = ((logging as unknown).logger.error as jest.Mock).mockClear();
-    mockLoggerLogPerformance = (
-      (logging as unknown).logger.logPerformance as jest.Mock
+    // Mock logger (simplified access - will be properly typed in separate PR)
+    mockLoggerError = (
+      logging.logger.error as jest.MockedFunction<typeof logging.logger.error>
     ).mockClear();
-    mockLoggerLogPageView = ((logging as unknown).logger.logPageView as jest.Mock).mockClear();
+    mockLoggerLogPerformance = (
+      logging.logger.logPerformance as jest.MockedFunction<typeof logging.logger.logPerformance>
+    ).mockClear();
+    mockLoggerLogPageView = (
+      logging.logger.logPageView as jest.MockedFunction<typeof logging.logger.logPageView>
+    ).mockClear();
 
     // Mock console.error
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -165,7 +174,7 @@ describe('Performance Monitoring Integration (T018)', () => {
     it('should handle performance metrics end-to-end', async () => {
       // Mock web-vitals callbacks
       let lcpCallback: (_metric: unknown) => void;
-      (webVitals.onLCP as jest.Mock).mockImplementation((callback: (_metric: unknown) => void) => {
+      mockWebVitals.onLCP.mockImplementation((callback: (_metric: unknown) => void) => {
         lcpCallback = callback;
       });
 

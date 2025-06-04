@@ -12,7 +12,7 @@
 ### Medium Priority
 
 - [x] Clean up unused imports in infrastructure files
-- [ ] Add proper type definitions for mock objects
+- [x] Add proper type definitions for mock objects
 - [ ] Standardize test file patterns
 
 ### Files needing attention:

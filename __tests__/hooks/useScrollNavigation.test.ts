@@ -5,6 +5,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useScrollNavigation } from '../../lib/hooks/useScrollNavigation';
 import * as scrollUtils from '../../lib/scroll';
+import type { MockIntersectionObserver } from '@/lib/test-types';
 
 // Mock scroll utilities
 jest.mock('../../lib/scroll', () => ({
@@ -16,8 +17,8 @@ jest.mock('../../lib/scroll', () => ({
 // Mock requestAnimationFrame
 global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
 
-// Mock IntersectionObserver
-class MockIntersectionObserver {
+// Mock IntersectionObserver implementing our typed interface
+class MockIntersectionObserverImpl implements MockIntersectionObserver {
   observe = jest.fn();
   disconnect = jest.fn();
   unobserve = jest.fn();
@@ -25,15 +26,16 @@ class MockIntersectionObserver {
   constructor(private _callback: IntersectionObserverCallback) {}
 
   trigger(entries: Partial<IntersectionObserverEntry>[]): void {
-    this._callback(entries as IntersectionObserverEntry[], this as unknown);
+    this._callback(entries as IntersectionObserverEntry[], this as unknown as IntersectionObserver);
   }
 }
 
-global.IntersectionObserver = MockIntersectionObserver as unknown;
+global.IntersectionObserver =
+  MockIntersectionObserverImpl as unknown as typeof IntersectionObserver;
 
 describe('useScrollNavigation', () => {
   let mockElements: HTMLElement[];
-  let mockObserver: MockIntersectionObserver;
+  let mockObserver: MockIntersectionObserverImpl;
 
   const defaultSections = [
     { id: 'hero', label: 'Hero' },
@@ -61,7 +63,7 @@ describe('useScrollNavigation', () => {
 
     // Mock IntersectionObserver
     (global.IntersectionObserver as unknown) = jest.fn((callback) => {
-      mockObserver = new MockIntersectionObserver(callback);
+      mockObserver = new MockIntersectionObserverImpl(callback);
       return mockObserver;
     });
   });

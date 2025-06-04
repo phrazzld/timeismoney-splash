@@ -11,6 +11,7 @@ import {
   clearCorrelationId,
 } from '@/lib/logging/correlation';
 import * as logging from '@/lib/logging';
+import type { MockLoggingModule } from '@/lib/test-types';
 
 // Mock logging system
 jest.mock('@/lib/logging', () => ({
@@ -19,13 +20,16 @@ jest.mock('@/lib/logging', () => ({
   },
 }));
 
+// Type the mocked module
+const mockLogging = logging as unknown as MockLoggingModule;
+
 describe('ErrorBoundary Component (T018)', () => {
-  let mockLoggerError: jest.Mock;
-  let consoleErrorSpy: jest.SpyInstance;
+  let mockLoggerError: jest.MockedFunction<typeof logging.logger.error>;
+  let consoleErrorSpy: jest.SpyInstance<void, Parameters<typeof console.error>>;
 
   beforeEach(() => {
     // Mock logger
-    mockLoggerError = (logging.logger.error as jest.Mock).mockClear();
+    mockLoggerError = mockLogging.logger.error.mockClear();
 
     // Suppress console.error during tests
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();

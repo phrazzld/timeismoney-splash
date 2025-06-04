@@ -9,9 +9,10 @@ import {
   sanitizeErrorForRemote,
 } from '@/lib/monitoring/error-tracking';
 import type { ErrorTrackingConfig, ErrorEvent } from '@/lib/monitoring/types';
+import type { MockErrorTrackingService } from '@/lib/test-types';
 
-// Mock external error service
-const mockErrorService = {
+// Mock external error service with proper typing
+const mockErrorService: MockErrorTrackingService = {
   init: jest.fn(),
   captureException: jest.fn(),
   captureMessage: jest.fn(),
