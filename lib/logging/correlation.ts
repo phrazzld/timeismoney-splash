@@ -166,7 +166,7 @@ export class CorrelationIdManager implements CorrelationIdGenerator {
   /**
    * Creates middleware-style function for executing with this correlation ID
    */
-  middleware<T>(id?: string): (fn: () => T | Promise<T>) => Promise<T> {
+  middleware<T>(id?: string): (_fn: () => T | Promise<T>) => Promise<T> {
     const correlationId = id || this.id;
     return (fn: () => T | Promise<T>) => withCorrelationId(correlationId, fn);
   }

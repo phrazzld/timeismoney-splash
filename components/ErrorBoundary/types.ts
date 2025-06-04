@@ -26,12 +26,12 @@ export interface ErrorBoundaryProps {
   /**
    * Custom fallback UI to render when an error occurs
    */
-  readonly fallback?: ReactNode | ((error: Error, errorInfo: ErrorInfo) => ReactNode);
+  readonly fallback?: ReactNode | ((_error: Error, _errorInfo: ErrorInfo) => ReactNode);
 
   /**
    * Callback called when an error is caught
    */
-  readonly onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  readonly onError?: (_error: Error, _errorInfo: ErrorInfo) => void;
 
   /**
    * Whether to automatically retry rendering after an error
@@ -64,7 +64,7 @@ export interface ErrorBoundaryProps {
  */
 export interface ErrorBoundaryContext {
   readonly hasParentBoundary: boolean;
-  readonly reportError: (error: Error, errorInfo: ErrorInfo) => void;
+  readonly reportError: (_error: Error, _errorInfo: ErrorInfo) => void;
 }
 
 /**

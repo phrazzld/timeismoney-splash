@@ -86,7 +86,7 @@ export function calculateScrollPosition(
 /**
  * Debounce function for performance optimization
  */
-export function debounce<T extends (...args: unknown[]) => unknown>(
+export function debounce<T extends (..._args: unknown[]) => unknown>(
   func: T,
   delay: number,
 ): (...args: Parameters<T>) => void {
@@ -101,7 +101,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 /**
  * Throttle function for scroll event handling
  */
-export function throttle<T extends (...args: unknown[]) => unknown>(
+export function throttle<T extends (..._args: unknown[]) => unknown>(
   func: T,
   limit: number,
 ): (...args: Parameters<T>) => void {

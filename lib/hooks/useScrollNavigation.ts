@@ -52,7 +52,7 @@ export interface UseScrollNavigationReturn {
   /**
    * Function to scroll to a specific section
    */
-  readonly scrollToSection: (sectionId: string) => Promise<void>;
+  readonly scrollToSection: (_sectionId: string) => Promise<void>;
 
   /**
    * Whether a scroll operation is currently in progress

@@ -147,7 +147,7 @@ class CircuitBreakerImpl implements CircuitBreaker {
   private lastFailureTime?: number;
   private nextAttemptTime = 0;
 
-  constructor(private config: CircuitBreakerConfig) {}
+  constructor(private _config: CircuitBreakerConfig) {}
 
   get state(): CircuitBreakerState {
     return this._state;
@@ -167,7 +167,7 @@ class CircuitBreakerImpl implements CircuitBreaker {
       const result = await Promise.race([
         fn(),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Timeout')), this.config.timeoutMs),
+          setTimeout(() => reject(new Error('Timeout')), this._config.timeoutMs),
         ),
       ]);
 
@@ -182,7 +182,7 @@ class CircuitBreakerImpl implements CircuitBreaker {
   private onSuccess(): void {
     if (this._state === 'half-open') {
       this.successCount++;
-      if (this.successCount >= this.config.successThreshold) {
+      if (this.successCount >= this._config.successThreshold) {
         this._state = 'closed';
         this.failureCount = 0;
       }
@@ -195,9 +195,9 @@ class CircuitBreakerImpl implements CircuitBreaker {
     this.failureCount++;
     this.lastFailureTime = Date.now();
 
-    if (this._state === 'half-open' || this.failureCount >= this.config.failureThreshold) {
+    if (this._state === 'half-open' || this.failureCount >= this._config.failureThreshold) {
       this._state = 'open';
-      this.nextAttemptTime = Date.now() + this.config.resetTimeoutMs;
+      this.nextAttemptTime = Date.now() + this._config.resetTimeoutMs;
     }
   }
 
@@ -232,8 +232,8 @@ interface TransmissionMetrics {
  * Remote logger interface
  */
 interface RemoteLogger {
-  initialize(config: RemoteLoggingConfig): Promise<void>;
-  sendLogEntry(logEntry: LogEntry): Promise<void>;
+  initialize(_config: RemoteLoggingConfig): Promise<void>;
+  sendLogEntry(_logEntry: LogEntry): Promise<void>;
   flush(): Promise<void>;
   getTransmissionMetrics(): TransmissionMetrics;
 }
@@ -258,7 +258,7 @@ class RemoteLoggerImpl implements RemoteLogger {
 
   async initialize(config: RemoteLoggingConfig): Promise<void> {
     validateRemoteLoggingConfig(config);
-    this.config = config;
+    this._config = config;
 
     if (!config.enabled) {
       return;
@@ -303,7 +303,7 @@ class RemoteLoggerImpl implements RemoteLogger {
   }
 
   async sendLogEntry(logEntry: LogEntry): Promise<void> {
-    if (!this.config?.enabled || !this.isInitialized) {
+    if (!this._config?.enabled || !this.isInitialized) {
       return;
     }
 
@@ -312,14 +312,14 @@ class RemoteLoggerImpl implements RemoteLogger {
       const remoteEntry = createRemoteLogEntry(
         logEntry,
         'client',
-        this.config.endpoint?.includes('localhost') ? 'development' : 'production',
+        this._config.endpoint?.includes('localhost') ? 'development' : 'production',
       );
 
       // Add to buffer
       this.buffer.push(remoteEntry);
 
       // Check if batch size is reached
-      if (this.buffer.length >= this.config.batchSize) {
+      if (this.buffer.length >= this._config.batchSize) {
         await this.flush();
       }
     } catch (error) {
@@ -328,14 +328,14 @@ class RemoteLoggerImpl implements RemoteLogger {
   }
 
   async flush(): Promise<void> {
-    if (!this.config?.enabled || !this.isInitialized || this.buffer.length === 0) {
+    if (!this._config?.enabled || !this.isInitialized || this.buffer.length === 0) {
       return;
     }
 
     const batch = createLogBatch(this.buffer, {
       source: 'timeismoney-splash',
       version: '1.0.0',
-      environment: this.config.endpoint?.includes('localhost') ? 'development' : 'production',
+      environment: this._config.endpoint?.includes('localhost') ? 'development' : 'production',
     });
 
     // Clear buffer immediately to prevent duplicate sends
@@ -361,7 +361,7 @@ class RemoteLoggerImpl implements RemoteLogger {
   }
 
   private async transmitBatch(batch: LogBatch): Promise<RemoteLoggingResult> {
-    if (!this.config || !this.httpClient || !this.circuitBreaker) {
+    if (!this._config || !this.httpClient || !this.circuitBreaker) {
       throw new Error('Remote logger not properly initialized');
     }
 
@@ -373,19 +373,19 @@ class RemoteLoggerImpl implements RemoteLogger {
   }
 
   private async sendWithRetry(batch: LogBatch): Promise<RemoteLoggingResult> {
-    if (!this.config || !this.httpClient) {
+    if (!this._config || !this.httpClient) {
       throw new Error('Remote logger not properly initialized');
     }
 
     let lastError: Error | null = null;
     let attempt = 0;
 
-    while (attempt <= this.config.maxRetries) {
+    while (attempt <= this._config.maxRetries) {
       try {
-        const response = await this.httpClient.post(this.config.endpoint, batch, {
+        const response = await this.httpClient.post(this._config.endpoint, batch, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.config.apiKey}`,
+            Authorization: `Bearer ${this._config.apiKey}`,
           },
         });
 
@@ -403,9 +403,9 @@ class RemoteLoggerImpl implements RemoteLogger {
         lastError = error instanceof Error ? error : new Error(String(error));
         attempt++;
 
-        if (attempt <= this.config.maxRetries) {
+        if (attempt <= this._config.maxRetries) {
           // Exponential backoff
-          const backoffMs = this.config.retryBackoffMs * Math.pow(2, attempt - 1);
+          const backoffMs = this._config.retryBackoffMs * Math.pow(2, attempt - 1);
           await new Promise((resolve) => setTimeout(resolve, backoffMs));
         }
       }

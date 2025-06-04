@@ -13,7 +13,7 @@ export interface ErrorTrackingConfig {
   readonly enableAutoSessionTracking: boolean;
   readonly enablePerformanceMonitoring: boolean;
   readonly maxBreadcrumbs: number;
-  readonly beforeSend?: (event: ErrorEvent) => ErrorEvent | null;
+  readonly beforeSend?: (_event: ErrorEvent) => ErrorEvent | null;
 }
 
 /**
@@ -186,7 +186,7 @@ export interface CircuitBreakerConfig {
  */
 export interface CircuitBreaker {
   readonly state: CircuitBreakerState;
-  execute<T>(fn: () => Promise<T>): Promise<T>;
+  execute<T>(_fn: () => Promise<T>): Promise<T>;
   getMetrics(): {
     readonly totalCalls: number;
     readonly successfulCalls: number;
@@ -199,11 +199,15 @@ export interface CircuitBreaker {
  * Error tracking service interface
  */
 export interface ErrorTrackingService {
-  initialize(config: ErrorTrackingConfig): Promise<void>;
-  captureError(error: ErrorEvent): Promise<void>;
-  captureMessage(message: string, level: ErrorEvent['level'], context?: Record<string, unknown>): Promise<void>;
-  setUser(user: NonNullable<ErrorEvent['user']>): void;
-  setTags(tags: Record<string, string>): void;
-  addBreadcrumb(message: string, category: string, data?: Record<string, unknown>): void;
+  initialize(_config: ErrorTrackingConfig): Promise<void>;
+  captureError(_error: ErrorEvent): Promise<void>;
+  captureMessage(
+    _message: string,
+    _level: ErrorEvent['level'],
+    _context?: Record<string, unknown>,
+  ): Promise<void>;
+  setUser(_user: NonNullable<ErrorEvent['user']>): void;
+  setTags(_tags: Record<string, string>): void;
+  addBreadcrumb(_message: string, _category: string, _data?: Record<string, unknown>): void;
   flush(): Promise<void>;
 }

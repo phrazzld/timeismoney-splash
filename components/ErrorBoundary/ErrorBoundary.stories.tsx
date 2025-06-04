@@ -5,7 +5,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
-import type { ErrorBoundaryProps as _ErrorBoundaryProps } from './types';
 
 // Component that throws an error for testing
 const ThrowError: React.FC<{ message?: string; shouldThrow?: boolean }> = ({

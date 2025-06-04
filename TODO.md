@@ -11,7 +11,7 @@
 
 ### Medium Priority
 
-- [ ] Clean up unused imports in infrastructure files
+- [x] Clean up unused imports in infrastructure files
 - [ ] Add proper type definitions for mock objects
 - [ ] Standardize test file patterns
 

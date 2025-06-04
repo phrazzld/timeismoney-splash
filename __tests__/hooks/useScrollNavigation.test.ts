@@ -22,10 +22,10 @@ class MockIntersectionObserver {
   disconnect = jest.fn();
   unobserve = jest.fn();
 
-  constructor(private callback: IntersectionObserverCallback) {}
+  constructor(private _callback: IntersectionObserverCallback) {}
 
   trigger(entries: Partial<IntersectionObserverEntry>[]): void {
-    this.callback(entries as IntersectionObserverEntry[], this as unknown);
+    this._callback(entries as IntersectionObserverEntry[], this as unknown);
   }
 }
 

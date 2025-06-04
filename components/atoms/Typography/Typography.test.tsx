@@ -3,8 +3,6 @@ import { render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import Typography from './Typography';
 import { typographyPresets } from '../../../design-tokens/typography';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { variantElementMap, variantClassMap } from './Typography'; // Import maps for testing
 
 // Add jest-axe matcher
 expect.extend(toHaveNoViolations);

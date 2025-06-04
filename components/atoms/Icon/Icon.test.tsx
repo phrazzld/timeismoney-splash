@@ -1,8 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Icon } from './Icon';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { IconName } from './Icon';
 import { axe, toHaveNoViolations } from 'jest-axe';
 
 // Add jest-axe matcher

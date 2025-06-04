@@ -166,8 +166,8 @@ interface AlerterMetrics {
  * Performance alerter interface
  */
 interface PerformanceAlerter {
-  initialize(config: PerformanceAlertConfig): Promise<void>;
-  processMetric(metric: EnhancedMetric): Promise<void>;
+  initialize(_config: PerformanceAlertConfig): Promise<void>;
+  processMetric(_metric: EnhancedMetric): Promise<void>;
   getAlertMetrics(): AlerterMetrics;
   flush(): Promise<void>;
 }

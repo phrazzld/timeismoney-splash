@@ -10,7 +10,6 @@ import {
   setCorrelationId,
   clearCorrelationId,
 } from '@/lib/logging/correlation';
-import type { ErrorBoundaryProps as _ErrorBoundaryProps } from './types';
 import * as logging from '@/lib/logging';
 
 // Mock logging system

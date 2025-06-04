@@ -164,8 +164,8 @@ describe('Performance Monitoring Integration (T018)', () => {
 
     it('should handle performance metrics end-to-end', async () => {
       // Mock web-vitals callbacks
-      let lcpCallback: (metric: unknown) => void;
-      (webVitals.onLCP as jest.Mock).mockImplementation((callback: (metric: unknown) => void) => {
+      let lcpCallback: (_metric: unknown) => void;
+      (webVitals.onLCP as jest.Mock).mockImplementation((callback: (_metric: unknown) => void) => {
         lcpCallback = callback;
       });
 

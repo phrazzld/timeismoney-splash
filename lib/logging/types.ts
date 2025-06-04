@@ -102,19 +102,19 @@ export interface LoggerConfig {
  */
 export interface CorrelationIdGenerator {
   generate(): string;
-  validate(id: string): boolean;
+  validate(_id: string): boolean;
 }
 
 /**
  * Logger interface
  */
 export interface StructuredLogger {
-  debug(message: string, context?: Record<string, unknown>): void;
-  info(message: string, context?: Record<string, unknown>): void;
-  warn(message: string, context?: Record<string, unknown>): void;
-  error(message: string, error?: Error, context?: Record<string, unknown>): void;
-  logPerformance(entry: Omit<PerformanceLogEntry, 'timestamp' | 'level' | 'correlationId'>): void;
-  logPageView(entry: Omit<PageViewLogEntry, 'timestamp' | 'level' | 'correlationId'>): void;
-  logCustomEvent(entry: Omit<CustomLogEntry, 'timestamp' | 'level' | 'correlationId'>): void;
+  debug(_message: string, _context?: Record<string, unknown>): void;
+  info(_message: string, _context?: Record<string, unknown>): void;
+  warn(_message: string, _context?: Record<string, unknown>): void;
+  error(_message: string, _error?: Error, _context?: Record<string, unknown>): void;
+  logPerformance(_entry: Omit<PerformanceLogEntry, 'timestamp' | 'level' | 'correlationId'>): void;
+  logPageView(_entry: Omit<PageViewLogEntry, 'timestamp' | 'level' | 'correlationId'>): void;
+  logCustomEvent(_entry: Omit<CustomLogEntry, 'timestamp' | 'level' | 'correlationId'>): void;
   flush(): Promise<void>;
 }
