@@ -138,14 +138,17 @@ export function calculateBudgetViolations(
  * Collects device information for performance context
  */
 export function getDeviceInfo(): DeviceInfo {
-  const deviceInfo: DeviceInfo = {
+  const deviceInfo: { -readonly [K in keyof DeviceInfo]?: DeviceInfo[K] } = {
     userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
   };
 
   if (typeof navigator !== 'undefined') {
     // Device memory (experimental API)
     if ('deviceMemory' in navigator) {
-      deviceInfo.deviceMemory = (navigator as unknown).deviceMemory;
+      const deviceMemory = (navigator as unknown as { deviceMemory?: number }).deviceMemory;
+      if (typeof deviceMemory === 'number') {
+        deviceInfo.deviceMemory = deviceMemory;
+      }
     }
 
     // Hardware concurrency
@@ -155,9 +158,18 @@ export function getDeviceInfo(): DeviceInfo {
 
     // Network information (experimental API)
     if ('connection' in navigator) {
-      const connection = (navigator as unknown).connection;
+      const connection = (
+        navigator as unknown as {
+          connection?: {
+            effectiveType?: string;
+            downlink?: number;
+            rtt?: number;
+            saveData?: boolean;
+          };
+        }
+      ).connection;
       if (connection) {
-        deviceInfo.connectionType = connection.type;
+        deviceInfo.connectionType = connection.effectiveType;
         deviceInfo.effectiveType = connection.effectiveType;
         deviceInfo.downlink = connection.downlink;
         deviceInfo.rtt = connection.rtt;
@@ -166,7 +178,7 @@ export function getDeviceInfo(): DeviceInfo {
     }
   }
 
-  return deviceInfo;
+  return deviceInfo as DeviceInfo;
 }
 
 /**
@@ -190,7 +202,7 @@ export function getNavigationMetrics(): NavigationMetrics {
   const timing = performance.timing;
   const navigationStart = timing.navigationStart;
 
-  const metrics: NavigationMetrics = {
+  const metrics: { -readonly [K in keyof NavigationMetrics]?: NavigationMetrics[K] } = {
     navigationStart,
     domContentLoaded: timing.domContentLoadedEventEnd - navigationStart,
     loadComplete: timing.loadEventEnd - navigationStart,
@@ -221,7 +233,7 @@ export function getNavigationMetrics(): NavigationMetrics {
     }
   }
 
-  return metrics;
+  return metrics as NavigationMetrics;
 }
 
 /**

@@ -31,7 +31,7 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): unknown {
   } = config;
 
   // Build the workflow trigger configuration
-  const on: unknown = {};
+  const on: Record<string, unknown> = {};
 
   for (const trigger of triggers) {
     switch (trigger) {
@@ -151,7 +151,7 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): unknown {
   }
 
   // Build the job configuration
-  const job: unknown = {
+  const job: Record<string, unknown> = {
     'runs-on': 'ubuntu-latest',
     steps,
   };
@@ -166,7 +166,7 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): unknown {
   }
 
   // Add environment variables
-  const jobEnv: unknown = {};
+  const jobEnv: Record<string, unknown> = {};
 
   if (lighthouseConfig.serverToken) {
     jobEnv.LHCI_TOKEN = lighthouseConfig.serverToken;
@@ -209,7 +209,7 @@ export function validateWorkflowConfig(config: GitHubWorkflowConfig): boolean {
 
   // Validate triggers
   for (const trigger of config.triggers) {
-    if (!VALID_TRIGGERS.includes(trigger as unknown)) {
+    if (!VALID_TRIGGERS.includes(trigger)) {
       throw new Error(`Invalid trigger type: ${trigger}`);
     }
   }
@@ -254,23 +254,32 @@ export function parseWorkflowResults(rawResults: unknown): WorkflowResult {
     throw new Error('Invalid workflow results format');
   }
 
-  if (!rawResults.reports || !Array.isArray(rawResults.reports)) {
+  const results = rawResults as { reports?: unknown[]; status?: string; timestamp?: string };
+  if (!results.reports || !Array.isArray(results.reports)) {
     throw new Error('Invalid workflow results format: missing reports');
   }
 
-  const reports = rawResults.reports.map((report: unknown) => {
+  const reports = results.reports.map((report: unknown) => {
+    const typedReport = report as {
+      scores?: Record<string, number>;
+      metrics?: Record<string, number>;
+      budgetViolations?: unknown[];
+      url?: string;
+      timestamp?: string;
+    };
+
     // Convert scores from 0-1 to 0-100
     const scores: Record<string, number> = {};
-    if (report.scores) {
-      for (const [key, value] of Object.entries(report.scores)) {
+    if (typedReport.scores) {
+      for (const [key, value] of Object.entries(typedReport.scores)) {
         scores[key] = Math.round((value as number) * 100);
       }
     }
 
     // Normalize metrics names
     const metrics: Record<string, number> = {};
-    if (report.metrics) {
-      for (const [key, value] of Object.entries(report.metrics)) {
+    if (typedReport.metrics) {
+      for (const [key, value] of Object.entries(typedReport.metrics)) {
         const normalizedKey = key
           .replace('first-contentful-paint', 'fcp')
           .replace('largest-contentful-paint', 'lcp')
@@ -281,16 +290,21 @@ export function parseWorkflowResults(rawResults: unknown): WorkflowResult {
       }
     }
 
-    const hasBudgetViolations = report.budgetViolations && report.budgetViolations.length > 0;
+    const hasBudgetViolations =
+      typedReport.budgetViolations && typedReport.budgetViolations.length > 0;
     const performanceScore = scores.performance || 0;
     const passed = !hasBudgetViolations && performanceScore >= 95;
 
     return {
-      url: report.url,
+      url: typedReport.url || 'unknown',
       passed,
       scores,
       metrics,
-      budgetViolations: report.budgetViolations || [],
+      budgetViolations: (typedReport.budgetViolations || []) as {
+        readonly metric: string;
+        readonly actual: number;
+        readonly budget: number;
+      }[],
     };
   });
 
@@ -309,11 +323,11 @@ export function parseWorkflowResults(rawResults: unknown): WorkflowResult {
         )
       : 0;
 
-  const overallPassed = failedUrls === 0 && rawResults.status !== 'failure';
+  const overallPassed = failedUrls === 0 && results.status !== 'failure';
 
   return {
     passed: overallPassed,
-    timestamp: rawResults.timestamp || new Date().toISOString(),
+    timestamp: results.timestamp || new Date().toISOString(),
     overallScore: averagePerformanceScore,
     reports,
     summary: {
@@ -348,7 +362,25 @@ export function createDefaultWorkflow(): unknown {
  * Generates the YAML content for the GitHub Actions workflow
  */
 export function generateWorkflowYAML(config: GitHubWorkflowConfig): string {
-  const workflow = createGitHubWorkflow(config);
+  const workflow = createGitHubWorkflow(config) as {
+    name: string;
+    on: Record<string, unknown>;
+    jobs: {
+      lighthouse: Record<string, unknown> & {
+        'runs-on': string;
+        strategy?: { matrix: { environment: { name: string; url: string }[] } };
+        env?: Record<string, unknown>;
+        steps?: {
+          name: string;
+          uses?: string;
+          with?: Record<string, unknown>;
+          env?: Record<string, unknown>;
+          run?: string;
+          if?: string;
+        }[];
+      };
+    };
+  };
 
   // Simple YAML serialization (could use js-yaml library in production)
   const yamlLines: string[] = [];
@@ -360,17 +392,21 @@ export function generateWorkflowYAML(config: GitHubWorkflowConfig): string {
   for (const [trigger, triggerConfig] of Object.entries(workflow.on)) {
     if (trigger === 'schedule') {
       yamlLines.push(`  ${trigger}:`);
-      for (const schedule of triggerConfig) {
+      const scheduleConfig = triggerConfig as { cron: string }[];
+      for (const schedule of scheduleConfig) {
         yamlLines.push(`    - cron: '${schedule.cron}'`);
       }
-    } else if (triggerConfig.branches) {
-      yamlLines.push(`  ${trigger}:`);
-      yamlLines.push('    branches:');
-      for (const branch of triggerConfig.branches) {
-        yamlLines.push(`      - ${branch}`);
-      }
     } else {
-      yamlLines.push(`  ${trigger}: {}`);
+      const branchConfig = triggerConfig as { branches?: string[] };
+      if (branchConfig.branches) {
+        yamlLines.push(`  ${trigger}:`);
+        yamlLines.push('    branches:');
+        for (const branch of branchConfig.branches) {
+          yamlLines.push(`      - ${branch}`);
+        }
+      } else {
+        yamlLines.push(`  ${trigger}: {}`);
+      }
     }
   }
 
@@ -397,7 +433,7 @@ export function generateWorkflowYAML(config: GitHubWorkflowConfig): string {
   }
 
   yamlLines.push('    steps:');
-  for (const step of workflow.jobs.lighthouse.steps) {
+  for (const step of workflow.jobs.lighthouse.steps || []) {
     yamlLines.push(`      - name: ${step.name}`);
     if (step.uses) {
       yamlLines.push(`        uses: ${step.uses}`);

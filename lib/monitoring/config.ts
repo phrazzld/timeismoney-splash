@@ -108,10 +108,8 @@ export function validateEnvironmentConfig(): {
   if (environment === 'production') {
     // Error tracking validation
     if (process.env[ENV_VARS.SENTRY_DSN]) {
-      if (
-        !process.env[ENV_VARS.SENTRY_DSN].includes('@') ||
-        !process.env[ENV_VARS.SENTRY_DSN].startsWith('https://')
-      ) {
+      const sentryDsn = process.env[ENV_VARS.SENTRY_DSN];
+      if (sentryDsn && (!sentryDsn.includes('@') || !sentryDsn.startsWith('https://'))) {
         errors.push('Invalid Sentry DSN format');
       }
     } else {
@@ -120,7 +118,7 @@ export function validateEnvironmentConfig(): {
 
     // Sample rate validation
     if (process.env[ENV_VARS.SENTRY_SAMPLE_RATE]) {
-      const sampleRate = parseFloat(process.env[ENV_VARS.SENTRY_SAMPLE_RATE]);
+      const sampleRate = parseFloat(process.env[ENV_VARS.SENTRY_SAMPLE_RATE] || '1.0');
       if (isNaN(sampleRate) || sampleRate < 0 || sampleRate > 1) {
         errors.push('Sentry sample rate must be between 0 and 1');
       }
@@ -138,23 +136,20 @@ export function validateEnvironmentConfig(): {
     }
 
     // Webhook URL validation
-    if (
-      process.env[ENV_VARS.SLACK_WEBHOOK_URL] &&
-      !process.env[ENV_VARS.SLACK_WEBHOOK_URL].startsWith('https://')
-    ) {
+    const slackWebhookUrl = process.env[ENV_VARS.SLACK_WEBHOOK_URL];
+    if (slackWebhookUrl && !slackWebhookUrl.startsWith('https://')) {
       errors.push('Slack webhook URL must use HTTPS');
     }
 
-    if (
-      process.env[ENV_VARS.ALERT_WEBHOOK_URL] &&
-      !process.env[ENV_VARS.ALERT_WEBHOOK_URL].startsWith('https://')
-    ) {
+    const alertWebhookUrl = process.env[ENV_VARS.ALERT_WEBHOOK_URL];
+    if (alertWebhookUrl && !alertWebhookUrl.startsWith('https://')) {
       errors.push('Alert webhook URL must use HTTPS');
     }
 
     // Remote logging validation
-    if (process.env[ENV_VARS.LOGGING_ENDPOINT]) {
-      if (!process.env[ENV_VARS.LOGGING_ENDPOINT].startsWith('https://')) {
+    const loggingEndpoint = process.env[ENV_VARS.LOGGING_ENDPOINT];
+    if (loggingEndpoint) {
+      if (!loggingEndpoint.startsWith('https://')) {
         errors.push('Logging endpoint must use HTTPS');
       }
 
@@ -166,22 +161,25 @@ export function validateEnvironmentConfig(): {
     }
 
     // Numeric configuration validation
-    if (process.env[ENV_VARS.ALERT_COOLDOWN_MINUTES]) {
-      const cooldown = parseInt(process.env[ENV_VARS.ALERT_COOLDOWN_MINUTES], 10);
+    const alertCooldownEnv = process.env[ENV_VARS.ALERT_COOLDOWN_MINUTES];
+    if (alertCooldownEnv) {
+      const cooldown = parseInt(alertCooldownEnv, 10);
       if (isNaN(cooldown) || cooldown <= 0) {
         errors.push('Alert cooldown minutes must be a positive number');
       }
     }
 
-    if (process.env[ENV_VARS.LOGGING_BATCH_SIZE]) {
-      const batchSize = parseInt(process.env[ENV_VARS.LOGGING_BATCH_SIZE], 10);
+    const loggingBatchSizeEnv = process.env[ENV_VARS.LOGGING_BATCH_SIZE];
+    if (loggingBatchSizeEnv) {
+      const batchSize = parseInt(loggingBatchSizeEnv, 10);
       if (isNaN(batchSize) || batchSize <= 0) {
         errors.push('Logging batch size must be a positive number');
       }
     }
 
-    if (process.env[ENV_VARS.LOGGING_FLUSH_INTERVAL]) {
-      const flushInterval = parseInt(process.env[ENV_VARS.LOGGING_FLUSH_INTERVAL], 10);
+    const loggingFlushIntervalEnv = process.env[ENV_VARS.LOGGING_FLUSH_INTERVAL];
+    if (loggingFlushIntervalEnv) {
+      const flushInterval = parseInt(loggingFlushIntervalEnv, 10);
       if (isNaN(flushInterval) || flushInterval < 100) {
         errors.push('Logging flush interval must be at least 100ms');
       }

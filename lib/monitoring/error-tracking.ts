@@ -96,7 +96,7 @@ export function createErrorEvent(
     name: error.name,
     message: error.message,
     stack: error.stack,
-    componentStack: (error as unknown).componentStack,
+    componentStack: (error as Error & { componentStack?: string }).componentStack,
   };
 
   const errorEvent: ErrorEvent = {
@@ -123,7 +123,9 @@ export function createErrorEvent(
 export function sanitizeErrorForRemote(errorEvent: ErrorEvent): ErrorEvent {
   return {
     ...errorEvent,
-    context: errorEvent.context ? sanitizeContext(errorEvent.context) : undefined,
+    context: errorEvent.context
+      ? (sanitizeContext(errorEvent.context) as Record<string, unknown>)
+      : undefined,
   };
 }
 
@@ -184,8 +186,9 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
     try {
       // In a real implementation, this would initialize the external service (e.g., Sentry)
       // For testing, we use a mock service if available
-      if ((global as unknown).__TEST_ERROR_SERVICE__) {
-        this.externalService = (global as unknown).__TEST_ERROR_SERVICE__;
+      const globalWithTest = global as unknown as { __TEST_ERROR_SERVICE__?: unknown };
+      if (globalWithTest.__TEST_ERROR_SERVICE__) {
+        this.externalService = globalWithTest.__TEST_ERROR_SERVICE__;
       } else {
         // In production, this would be something like:
         // this.externalService = await import('@sentry/nextjs');
@@ -193,7 +196,10 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
         return;
       }
 
-      await this.externalService.init({
+      const service = this.externalService as {
+        init: (config: Record<string, unknown>) => Promise<void>;
+      };
+      await service.init({
         dsn: config.dsn,
         environment: config.environment,
         sampleRate: config.sampleRate,
@@ -234,7 +240,10 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
       const sanitizedEvent = sanitizeErrorForRemote(errorEvent);
 
       // Send to external service
-      await this.externalService.captureException(sanitizedEvent);
+      const service = this.externalService as {
+        captureException: (event: unknown) => Promise<void>;
+      };
+      await service.captureException(sanitizedEvent);
     } catch (error) {
       // Don't throw errors from error tracking to avoid cascading failures
       console.warn('Failed to capture error:', error);
@@ -251,7 +260,14 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
     }
 
     try {
-      await this.externalService.captureMessage(message, level, {
+      const service = this.externalService as {
+        captureMessage: (
+          message: string,
+          level: string,
+          options: Record<string, unknown>,
+        ) => Promise<void>;
+      };
+      await service.captureMessage(message, level, {
         extra: context ? sanitizeContext(context) : undefined,
       });
     } catch (error) {
@@ -265,7 +281,8 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
     }
 
     try {
-      this.externalService.setUser(user);
+      const service = this.externalService as { setUser: (user: Record<string, unknown>) => void };
+      service.setUser(user);
     } catch (error) {
       console.warn('Failed to set user context:', error);
     }
@@ -277,7 +294,8 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
     }
 
     try {
-      this.externalService.setTags(tags);
+      const service = this.externalService as { setTags: (tags: Record<string, unknown>) => void };
+      service.setTags(tags);
     } catch (error) {
       console.warn('Failed to set tags:', error);
     }
@@ -289,7 +307,10 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
     }
 
     try {
-      this.externalService.addBreadcrumb({
+      const service = this.externalService as {
+        addBreadcrumb: (breadcrumb: Record<string, unknown>) => void;
+      };
+      service.addBreadcrumb({
         message,
         category,
         data: data ? sanitizeContext(data) : undefined,
@@ -306,7 +327,8 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
     }
 
     try {
-      await this.externalService.flush();
+      const service = this.externalService as { flush: () => Promise<void> };
+      await service.flush();
     } catch (error) {
       console.warn('Failed to flush error tracking service:', error);
     }

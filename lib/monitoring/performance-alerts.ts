@@ -3,7 +3,7 @@
  */
 
 import { getCurrentCorrelationId, generateCorrelationId } from '@/lib/logging/correlation';
-import type { EnhancedMetric } from '@/lib/performance/types';
+import type { EnhancedMetric } from '@/lib/performance';
 import type { PerformanceAlertConfig, PerformanceAlert, AlertSeverity } from './types';
 
 /**
@@ -140,11 +140,11 @@ export function createPerformanceAlert(
     value: metric.value,
     threshold: thresholdValue,
     severity,
-    url: metric.url,
-    userAgent: metric.userAgent,
+    url: metric.url || 'unknown',
+    userAgent: metric.userAgent || 'unknown',
     context: {
       rating: metric.rating,
-      delta: metric.delta,
+      delta: metric.delta || 0,
       metricId: metric.id,
       metricTimestamp: metric.timestamp,
     },
@@ -200,8 +200,9 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
     try {
       // In a real implementation, this would initialize alert delivery services
       // For testing, we use a mock service if available
-      if ((global as unknown).__TEST_ALERT_DELIVERY__) {
-        this.alertDelivery = (global as unknown).__TEST_ALERT_DELIVERY__;
+      const globalWithTest = global as unknown as { __TEST_ALERT_DELIVERY__?: unknown };
+      if (globalWithTest.__TEST_ALERT_DELIVERY__) {
+        this.alertDelivery = globalWithTest.__TEST_ALERT_DELIVERY__;
       } else {
         // In production, this would initialize real delivery services
         console.warn('Alert delivery service not available - running in development mode');
@@ -270,16 +271,22 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
 
     const deliveryPromises: Promise<void>[] = [];
 
-    if (this.config.enableSlack) {
-      deliveryPromises.push(this.alertDelivery.deliverSlack(alert));
+    const delivery = this.alertDelivery as {
+      deliverSlack?: (alert: PerformanceAlert) => Promise<void>;
+      deliverEmail?: (alert: PerformanceAlert) => Promise<void>;
+      deliverWebhook?: (alert: PerformanceAlert) => Promise<void>;
+    };
+
+    if (this.config.enableSlack && delivery.deliverSlack) {
+      deliveryPromises.push(delivery.deliverSlack(alert));
     }
 
-    if (this.config.enableEmail) {
-      deliveryPromises.push(this.alertDelivery.deliverEmail(alert));
+    if (this.config.enableEmail && delivery.deliverEmail) {
+      deliveryPromises.push(delivery.deliverEmail(alert));
     }
 
-    if (this.config.enableWebhook) {
-      deliveryPromises.push(this.alertDelivery.deliverWebhook(alert));
+    if (this.config.enableWebhook && delivery.deliverWebhook) {
+      deliveryPromises.push(delivery.deliverWebhook(alert));
     }
 
     // Execute all deliveries in parallel, but don't fail if some fail

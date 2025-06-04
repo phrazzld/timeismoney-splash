@@ -254,14 +254,13 @@ export function createLighthouseConfig(
       assert: {
         assertions: createPerformanceBudgets(budgetConfig),
       },
+      ...(upload && {
+        upload: {
+          target: 'temporary-public-storage',
+        },
+      }),
     },
   };
-
-  if (upload) {
-    config.ci.upload = {
-      target: 'temporary-public-storage',
-    };
-  }
 
   return config;
 }

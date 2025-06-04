@@ -103,7 +103,7 @@ const monitoringStatus: MonitoringStatus = {
  * Initialize all monitoring services
  */
 export async function initializeMonitoring(
-  configOverrides?: Partial<MonitoringConfig>,
+  configOverrides?: Partial<import('./types').MonitoringConfig>,
 ): Promise<void> {
   try {
     // Get configuration
@@ -279,7 +279,7 @@ export async function captureError(
  * Convenience function to process a performance metric for alerting
  */
 export async function processPerformanceMetric(
-  metric: import('@/lib/performance/types').EnhancedMetric,
+  metric: import('@/lib/performance').EnhancedMetric,
 ): Promise<void> {
   try {
     if (!monitoringStatus.performanceAlerts.initialized) {

@@ -2,8 +2,8 @@
  * Types for Lighthouse CI configuration and performance monitoring
  */
 
-// Re-export existing types from T018 for convenience
-export type { BudgetViolation } from './monitor';
+// Import common types
+import type { BudgetViolation } from './types';
 
 /**
  * Lighthouse CI configuration types

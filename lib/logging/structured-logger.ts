@@ -362,8 +362,15 @@ export class StructuredLoggerImpl implements StructuredLogger {
     const entry: ErrorLogEntry = {
       ...this.createBaseEntry('error', message),
       type: 'error',
-      error: sanitizeError(error),
-      context: context ? sanitizeContext(context) : undefined,
+      error: sanitizeError(error) as {
+        readonly name: string;
+        readonly message: string;
+        readonly stack?: string;
+        readonly componentStack?: string;
+      },
+      context: context
+        ? (sanitizeContext(context) as Record<string, unknown> | undefined)
+        : undefined,
       url: typeof window !== 'undefined' ? window.location.href : 'unknown',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
     };

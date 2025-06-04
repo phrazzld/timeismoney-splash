@@ -9,7 +9,6 @@ import type {
   EnhancedMetric,
   PerformanceConfig,
   PerformanceObserverCallback,
-  WebVitalMetric,
   PerformanceRating,
 } from './types';
 
@@ -32,8 +31,8 @@ const WEB_VITAL_THRESHOLDS = {
 /**
  * Calculates performance rating based on metric value and thresholds
  */
-export function calculateRating(metric: WebVitalMetric, value: number): PerformanceRating {
-  const thresholds = WEB_VITAL_THRESHOLDS[metric];
+export function calculateRating(metricName: string, value: number): PerformanceRating {
+  const thresholds = WEB_VITAL_THRESHOLDS[metricName as keyof typeof WEB_VITAL_THRESHOLDS];
 
   if (!thresholds) {
     return 'needs-improvement';
@@ -52,8 +51,9 @@ export function calculateRating(metric: WebVitalMetric, value: number): Performa
  * Creates an enhanced metric from raw web-vitals data
  */
 export function createEnhancedMetric(rawMetric: RawMetric): EnhancedMetric {
-  const enhanced: EnhancedMetric = {
+  const enhanced: { -readonly [K in keyof EnhancedMetric]: EnhancedMetric[K] } = {
     ...rawMetric,
+    rating: rawMetric.rating || calculateRating(rawMetric.name, rawMetric.value),
     timestamp: new Date().toISOString(),
     url: typeof window !== 'undefined' ? window.location.href : 'unknown',
     userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
@@ -62,12 +62,16 @@ export function createEnhancedMetric(rawMetric: RawMetric): EnhancedMetric {
 
   // Add device memory if available
   if (typeof navigator !== 'undefined' && 'deviceMemory' in navigator) {
-    enhanced.deviceMemory = (navigator as unknown).deviceMemory;
+    const deviceMemory = (navigator as unknown as { deviceMemory?: number }).deviceMemory;
+    if (typeof deviceMemory === 'number') {
+      enhanced.deviceMemory = deviceMemory;
+    }
   }
 
   // Add connection type if available
   if (typeof navigator !== 'undefined' && 'connection' in navigator) {
-    const connection = (navigator as unknown).connection;
+    const connection = (navigator as unknown as { connection?: { effectiveType?: string } })
+      .connection;
     if (connection && connection.effectiveType) {
       enhanced.connectionType = connection.effectiveType;
     }
