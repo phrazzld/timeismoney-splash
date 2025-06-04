@@ -114,7 +114,7 @@ export function sanitizeContext(context: unknown, visited = new Set<unknown>()):
       return context.map((item) => sanitizeContext(item, visited));
     }
 
-    const sanitized: unknown = {};
+    const sanitized: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(context)) {
       // Check if key matches sensitive patterns
@@ -302,12 +302,12 @@ export class StructuredLoggerImpl implements StructuredLogger {
       event: {
         name: 'debug_log',
         category: 'debugging',
-        properties: context ? sanitizeContext(context) : undefined,
+        properties: context ? (sanitizeContext(context) as Record<string, unknown>) : undefined,
       },
     };
 
     if (context) {
-      (entry as unknown).context = sanitizeContext(context);
+      (entry as unknown as Record<string, unknown>).context = sanitizeContext(context);
     }
 
     this.log(entry);
@@ -323,12 +323,12 @@ export class StructuredLoggerImpl implements StructuredLogger {
       event: {
         name: 'info_log',
         category: 'information',
-        properties: context ? sanitizeContext(context) : undefined,
+        properties: context ? (sanitizeContext(context) as Record<string, unknown>) : undefined,
       },
     };
 
     if (context) {
-      (entry as unknown).context = sanitizeContext(context);
+      (entry as unknown as Record<string, unknown>).context = sanitizeContext(context);
     }
 
     this.log(entry);
@@ -344,12 +344,12 @@ export class StructuredLoggerImpl implements StructuredLogger {
       event: {
         name: 'warn_log',
         category: 'warning',
-        properties: context ? sanitizeContext(context) : undefined,
+        properties: context ? (sanitizeContext(context) as Record<string, unknown>) : undefined,
       },
     };
 
     if (context) {
-      (entry as unknown).context = sanitizeContext(context);
+      (entry as unknown as Record<string, unknown>).context = sanitizeContext(context);
     }
 
     this.log(entry);
