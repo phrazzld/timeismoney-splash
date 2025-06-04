@@ -61,7 +61,10 @@ export interface PerformanceBudgetConfig {
   };
 }
 
-export type PerformanceBudget = Record<string, [string, { minScore?: number; maxNumericValue?: number }]>;
+export type PerformanceBudget = Record<
+  string,
+  [string, { minScore?: number; maxNumericValue?: number }]
+>;
 
 /**
  * Bundle analysis types

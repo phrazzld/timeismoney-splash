@@ -1,6 +1,6 @@
 /**
  * ErrorBoundary component exports
- * 
+ *
  * Provides graceful error handling for React components with:
  * - Error catching and logging
  * - Custom fallback UI support
@@ -8,12 +8,12 @@
  * - Development error details
  * - Analytics integration
  * - Accessibility features
- * 
+ *
  * @example
  * ```tsx
  * import { ErrorBoundary } from '@/components/ErrorBoundary';
- * 
- * <ErrorBoundary 
+ *
+ * <ErrorBoundary
  *   onError={(error, errorInfo) => console.log('Error:', error)}
  *   enableRetry
  *   showErrorDetails
@@ -24,10 +24,10 @@
  */
 
 export { ErrorBoundary } from './ErrorBoundary';
-export type { 
-  ErrorBoundaryProps, 
-  ErrorBoundaryState, 
+export type {
+  ErrorBoundaryProps,
+  ErrorBoundaryState,
   ErrorBoundaryContext,
-  ErrorReport 
+  ErrorReport,
 } from './types';
 export { ErrorBoundary as default } from './ErrorBoundary';

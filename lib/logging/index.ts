@@ -1,24 +1,24 @@
 /**
  * Structured logging system with correlation ID support
- * 
+ *
  * This module provides a comprehensive logging solution with:
  * - Structured JSON logging
  * - Correlation ID management for request tracing
  * - Automatic sanitization of sensitive data
  * - Performance monitoring integration
  * - Error boundary integration
- * 
+ *
  * @example
  * ```ts
  * import { logger, generateCorrelationId, setCorrelationId } from '@/lib/logging';
- * 
+ *
  * // Set correlation ID for request tracing
  * const correlationId = generateCorrelationId();
  * setCorrelationId(correlationId);
- * 
+ *
  * // Log structured data
  * logger.info('User action completed', { userId: '123', action: 'login' });
- * 
+ *
  * // Log performance metrics
  * logger.logPerformance({
  *   type: 'performance',

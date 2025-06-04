@@ -66,12 +66,15 @@ export const LandingTemplate: React.FC<LandingTemplateProps> = ({
   const heroHeadingId = React.useId() + '-hero-heading';
 
   // Navigation sections configuration
-  const navigationSections = React.useMemo(() => [
-    { id: 'hero', label: 'Hero section' },
-    { id: 'features', label: 'Features' },
-    { id: 'testimonials', label: 'Testimonials' },
-    { id: 'cta', label: 'Call to Action' },
-  ], []);
+  const navigationSections = React.useMemo(
+    () => [
+      { id: 'hero', label: 'Hero section' },
+      { id: 'features', label: 'Features' },
+      { id: 'testimonials', label: 'Testimonials' },
+      { id: 'cta', label: 'Call to Action' },
+    ],
+    [],
+  );
 
   // Initialize scroll navigation
   const { activeSection, scrollToSection, scrollProgress } = useScrollNavigation({
@@ -94,7 +97,7 @@ export const LandingTemplate: React.FC<LandingTemplateProps> = ({
         element?.scrollIntoView({ behavior: 'smooth' });
       }
     },
-    [scrollToSection]
+    [scrollToSection],
   );
 
   // Main container styling - full height with responsive section spacing
@@ -112,7 +115,7 @@ export const LandingTemplate: React.FC<LandingTemplateProps> = ({
     'absolute top-4 left-4 z-50',
     'bg-white text-gray-900 px-4 py-2 rounded',
     'border border-gray-300 shadow-lg',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500'
+    'focus:outline-none focus:ring-2 focus:ring-blue-500',
   );
 
   return (
@@ -153,16 +156,11 @@ export const LandingTemplate: React.FC<LandingTemplateProps> = ({
         </a>
       </nav>
 
-      <main 
-        className={mainClasses} 
-        role="main" 
-        data-scroll-progress={scrollProgress}
-        {...props}
-      >
+      <main className={mainClasses} role="main" data-scroll-progress={scrollProgress} {...props}>
         {/* Hero Section - Primary above-fold content */}
-        <section 
+        <section
           id="hero"
-          role="region" 
+          role="region"
           aria-label="Hero section"
           tabIndex={-1}
           data-active={activeSection === 'hero'}
@@ -179,10 +177,10 @@ export const LandingTemplate: React.FC<LandingTemplateProps> = ({
         </section>
 
         {/* Features Section Placeholder */}
-        <section 
+        <section
           id="features"
-          className={sectionClasses} 
-          role="region" 
+          className={sectionClasses}
+          role="region"
           aria-label="Features"
           tabIndex={-1}
           data-active={activeSection === 'features'}
@@ -191,10 +189,10 @@ export const LandingTemplate: React.FC<LandingTemplateProps> = ({
         </section>
 
         {/* Testimonials Section Placeholder */}
-        <section 
+        <section
           id="testimonials"
-          className={sectionClasses} 
-          role="region" 
+          className={sectionClasses}
+          role="region"
           aria-label="Testimonials"
           tabIndex={-1}
           data-active={activeSection === 'testimonials'}
@@ -203,10 +201,10 @@ export const LandingTemplate: React.FC<LandingTemplateProps> = ({
         </section>
 
         {/* Call to Action Section Placeholder */}
-        <section 
+        <section
           id="cta"
-          className={sectionClasses} 
-          role="region" 
+          className={sectionClasses}
+          role="region"
           aria-label="Call to Action"
           tabIndex={-1}
           data-active={activeSection === 'cta'}

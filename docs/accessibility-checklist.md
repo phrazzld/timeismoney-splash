@@ -201,11 +201,11 @@ pnpm test:e2e:debug --grep @accessibility
 
 ---
 
-**Date Completed**: ******\_\_\_******
+**Date Completed**: **\*\***\_\_\_**\*\***
 
-**Tested By**: ******\_\_\_******
+**Tested By**: **\*\***\_\_\_**\*\***
 
-**Approved By**: ******\_\_\_******
+**Approved By**: **\*\***\_\_\_**\*\***
 
 ## Notes
 

@@ -2,11 +2,11 @@
  * Monitoring configuration management
  */
 
-import type { 
-  MonitoringConfig, 
-  ErrorTrackingConfig, 
-  PerformanceAlertConfig, 
-  RemoteLoggingConfig 
+import type {
+  MonitoringConfig,
+  ErrorTrackingConfig,
+  PerformanceAlertConfig,
+  RemoteLoggingConfig,
 } from './types';
 
 /**
@@ -17,13 +17,13 @@ const ENV_VARS = {
   SENTRY_DSN: 'NEXT_PUBLIC_SENTRY_DSN',
   SENTRY_ENVIRONMENT: 'SENTRY_ENVIRONMENT',
   SENTRY_SAMPLE_RATE: 'SENTRY_SAMPLE_RATE',
-  
+
   // Performance alerts
   ALERT_WEBHOOK_URL: 'MONITORING_WEBHOOK_URL',
   ALERT_EMAIL_ENDPOINT: 'ALERT_EMAIL_ENDPOINT',
   SLACK_WEBHOOK_URL: 'SLACK_WEBHOOK_URL',
   ALERT_COOLDOWN_MINUTES: 'ALERT_COOLDOWN_MINUTES',
-  
+
   // Remote logging
   LOGGING_ENDPOINT: 'LOGGING_ENDPOINT',
   LOGGING_API_KEY: 'LOGGING_API_KEY',
@@ -36,11 +36,12 @@ const ENV_VARS = {
  */
 function getDefaultErrorTrackingConfig(): ErrorTrackingConfig {
   const environment = process.env.NODE_ENV || 'development';
-  
+
   return {
     enabled: environment === 'production' && Boolean(process.env[ENV_VARS.SENTRY_DSN]),
     dsn: process.env[ENV_VARS.SENTRY_DSN],
-    environment: (process.env[ENV_VARS.SENTRY_ENVIRONMENT] || environment) as ErrorTrackingConfig['environment'],
+    environment: (process.env[ENV_VARS.SENTRY_ENVIRONMENT] ||
+      environment) as ErrorTrackingConfig['environment'],
     sampleRate: parseFloat(process.env[ENV_VARS.SENTRY_SAMPLE_RATE] || '1.0'),
     enableAutoSessionTracking: true,
     enablePerformanceMonitoring: true,
@@ -53,13 +54,13 @@ function getDefaultErrorTrackingConfig(): ErrorTrackingConfig {
  */
 function getDefaultPerformanceAlertConfig(): PerformanceAlertConfig {
   const environment = process.env.NODE_ENV || 'development';
-  
+
   return {
-    enabled: environment === 'production' && (
-      Boolean(process.env[ENV_VARS.SLACK_WEBHOOK_URL]) ||
-      Boolean(process.env[ENV_VARS.ALERT_EMAIL_ENDPOINT]) ||
-      Boolean(process.env[ENV_VARS.ALERT_WEBHOOK_URL])
-    ),
+    enabled:
+      environment === 'production' &&
+      (Boolean(process.env[ENV_VARS.SLACK_WEBHOOK_URL]) ||
+        Boolean(process.env[ENV_VARS.ALERT_EMAIL_ENDPOINT]) ||
+        Boolean(process.env[ENV_VARS.ALERT_WEBHOOK_URL])),
     thresholds: {
       lcp: { warning: 2500, error: 4000 },
       fid: { warning: 100, error: 300 },
@@ -79,7 +80,7 @@ function getDefaultPerformanceAlertConfig(): PerformanceAlertConfig {
  */
 function getDefaultRemoteLoggingConfig(): RemoteLoggingConfig {
   const environment = process.env.NODE_ENV || 'development';
-  
+
   return {
     enabled: environment === 'production' && Boolean(process.env[ENV_VARS.LOGGING_ENDPOINT]),
     endpoint: process.env[ENV_VARS.LOGGING_ENDPOINT],
@@ -94,10 +95,10 @@ function getDefaultRemoteLoggingConfig(): RemoteLoggingConfig {
 /**
  * Validates environment variable configuration
  */
-export function validateEnvironmentConfig(): { 
-  isValid: boolean; 
-  errors: string[]; 
-  warnings: string[]; 
+export function validateEnvironmentConfig(): {
+  isValid: boolean;
+  errors: string[];
+  warnings: string[];
 } {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -107,8 +108,10 @@ export function validateEnvironmentConfig(): {
   if (environment === 'production') {
     // Error tracking validation
     if (process.env[ENV_VARS.SENTRY_DSN]) {
-      if (!process.env[ENV_VARS.SENTRY_DSN].includes('@') || 
-          !process.env[ENV_VARS.SENTRY_DSN].startsWith('https://')) {
+      if (
+        !process.env[ENV_VARS.SENTRY_DSN].includes('@') ||
+        !process.env[ENV_VARS.SENTRY_DSN].startsWith('https://')
+      ) {
         errors.push('Invalid Sentry DSN format');
       }
     } else {
@@ -126,8 +129,8 @@ export function validateEnvironmentConfig(): {
     // Alert configuration validation
     const hasAlertConfig = Boolean(
       process.env[ENV_VARS.SLACK_WEBHOOK_URL] ||
-      process.env[ENV_VARS.ALERT_EMAIL_ENDPOINT] ||
-      process.env[ENV_VARS.ALERT_WEBHOOK_URL]
+        process.env[ENV_VARS.ALERT_EMAIL_ENDPOINT] ||
+        process.env[ENV_VARS.ALERT_WEBHOOK_URL],
     );
 
     if (!hasAlertConfig) {
@@ -135,13 +138,17 @@ export function validateEnvironmentConfig(): {
     }
 
     // Webhook URL validation
-    if (process.env[ENV_VARS.SLACK_WEBHOOK_URL] && 
-        !process.env[ENV_VARS.SLACK_WEBHOOK_URL].startsWith('https://')) {
+    if (
+      process.env[ENV_VARS.SLACK_WEBHOOK_URL] &&
+      !process.env[ENV_VARS.SLACK_WEBHOOK_URL].startsWith('https://')
+    ) {
       errors.push('Slack webhook URL must use HTTPS');
     }
 
-    if (process.env[ENV_VARS.ALERT_WEBHOOK_URL] && 
-        !process.env[ENV_VARS.ALERT_WEBHOOK_URL].startsWith('https://')) {
+    if (
+      process.env[ENV_VARS.ALERT_WEBHOOK_URL] &&
+      !process.env[ENV_VARS.ALERT_WEBHOOK_URL].startsWith('https://')
+    ) {
       errors.push('Alert webhook URL must use HTTPS');
     }
 
@@ -150,7 +157,7 @@ export function validateEnvironmentConfig(): {
       if (!process.env[ENV_VARS.LOGGING_ENDPOINT].startsWith('https://')) {
         errors.push('Logging endpoint must use HTTPS');
       }
-      
+
       if (!process.env[ENV_VARS.LOGGING_API_KEY]) {
         errors.push('Logging API key is required when endpoint is configured');
       }
@@ -203,10 +210,10 @@ export function getMonitoringConfig(): MonitoringConfig {
  * Gets monitoring configuration with overrides
  */
 export function getMonitoringConfigWithOverrides(
-  overrides: Partial<MonitoringConfig> = {}
+  overrides: Partial<MonitoringConfig> = {},
 ): MonitoringConfig {
   const defaultConfig = getMonitoringConfig();
-  
+
   return {
     errorTracking: { ...defaultConfig.errorTracking, ...overrides.errorTracking },
     performanceAlerts: { ...defaultConfig.performanceAlerts, ...overrides.performanceAlerts },
@@ -220,16 +227,16 @@ export function getMonitoringConfigWithOverrides(
 export function logMonitoringConfig(): void {
   const config = getMonitoringConfig();
   const validation = validateEnvironmentConfig();
-  
+
   console.log('Monitoring Configuration:');
   console.log('- Error Tracking:', config.errorTracking.enabled ? 'ENABLED' : 'DISABLED');
   console.log('- Performance Alerts:', config.performanceAlerts.enabled ? 'ENABLED' : 'DISABLED');
   console.log('- Remote Logging:', config.remoteLogging.enabled ? 'ENABLED' : 'DISABLED');
-  
+
   if (validation.warnings.length > 0) {
     console.warn('Configuration Warnings:', validation.warnings);
   }
-  
+
   if (validation.errors.length > 0) {
     console.error('Configuration Errors:', validation.errors);
   }

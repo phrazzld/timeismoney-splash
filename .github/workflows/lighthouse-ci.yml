@@ -9,47 +9,47 @@ on:
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
-          
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        
+
       - name: Build application
         run: pnpm build
-        
+
       - name: Start application
         run: |
           pnpm start &
           sleep 10
           npx wait-on http://localhost:3000 --timeout 60000
-        
+
       - name: Run Lighthouse CI
         run: npx @lhci/cli@0.12.x autorun
         env:
           LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.sha }}
           LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.ref_name }}
           LHCI_BUILD_CONTEXT__COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
-          
+
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lighthouse-reports
           path: .lighthouseci/
-          
+
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
         uses: treosh/lighthouse-ci-action@v10
