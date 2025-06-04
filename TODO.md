@@ -39,7 +39,7 @@
 
 ### Low Priority
 
-- [ ] Clean up deprecated subdependencies in package ecosystem
+- [x] Clean up deprecated subdependencies in package ecosystem
 
 ## Rationale for Current Commit
 
