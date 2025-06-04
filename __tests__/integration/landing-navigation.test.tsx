@@ -3,10 +3,11 @@
  */
 
 import * as React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LandingTemplate } from '../../app/landing/template';
 import type { HeroProps } from '../../components/organisms/Hero';
+import * as useScrollNavigationModule from '../../lib/hooks/useScrollNavigation';
 
 // Mock scroll utilities
 const mockScrollToSection = jest.fn(() => Promise.resolve());
@@ -20,10 +21,10 @@ jest.mock('../../lib/scroll', () => ({
 const mockUseScrollNavigation = {
   activeSection: 'hero',
   sections: [
-    { id: 'hero', label: 'Hero', element: null as any },
-    { id: 'features', label: 'Features', element: null as any },
-    { id: 'testimonials', label: 'Testimonials', element: null as any },
-    { id: 'cta', label: 'Call to Action', element: null as any },
+    { id: 'hero', label: 'Hero', element: null as unknown },
+    { id: 'features', label: 'Features', element: null as unknown },
+    { id: 'testimonials', label: 'Testimonials', element: null as unknown },
+    { id: 'cta', label: 'Call to Action', element: null as unknown },
   ],
   scrollToSection: mockScrollToSection,
   isScrolling: false,
@@ -31,12 +32,12 @@ const mockUseScrollNavigation = {
 };
 
 jest.mock('../../lib/hooks/useScrollNavigation', () => ({
-  useScrollNavigation: () => mockUseScrollNavigation,
+  useScrollNavigation: (): typeof mockUseScrollNavigation => mockUseScrollNavigation,
 }));
 
 // Mock Hero component
 jest.mock('../../components/organisms/Hero', () => ({
-  Hero: ({ heading, ...props }: any) => (
+  Hero: ({ heading, ...props }: unknown): React.ReactElement => (
     <div data-testid="hero-component" data-heading={heading} {...props}>
       Hero Component: {heading}
     </div>
@@ -97,7 +98,7 @@ describe('Landing Template Navigation Integration', () => {
       render(<LandingTemplate heroProps={mockHeroProps} />);
 
       const skipLink = screen.getByText('Skip to main content').closest('a')!;
-      
+
       // Should be positioned off-screen initially
       expect(skipLink).toHaveClass('sr-only', 'focus:not-sr-only');
     });
@@ -107,7 +108,7 @@ describe('Landing Template Navigation Integration', () => {
       render(<LandingTemplate heroProps={mockHeroProps} />);
 
       const skipToFeatures = screen.getByText('Skip to features').closest('a')!;
-      
+
       await user.click(skipToFeatures);
 
       expect(mockScrollToSection).toHaveBeenCalledWith('features');
@@ -118,7 +119,7 @@ describe('Landing Template Navigation Integration', () => {
       render(<LandingTemplate heroProps={mockHeroProps} />);
 
       const skipToFeatures = screen.getByText('Skip to features').closest('a')!;
-      
+
       // Focus and press Enter
       skipToFeatures.focus();
       await user.keyboard('{Enter}');
@@ -129,8 +130,8 @@ describe('Landing Template Navigation Integration', () => {
 
   describe('Navigation State Integration', () => {
     test('hook is initialized with correct sections', () => {
-      const useScrollNavigationMock = require('../../lib/hooks/useScrollNavigation').useScrollNavigation;
-      
+      const useScrollNavigationMock = useScrollNavigationModule.useScrollNavigation as jest.Mock;
+
       render(<LandingTemplate heroProps={mockHeroProps} />);
 
       expect(useScrollNavigationMock).toHaveBeenCalledWith({
@@ -183,7 +184,7 @@ describe('Landing Template Navigation Integration', () => {
       render(<LandingTemplate heroProps={mockHeroProps} />);
 
       const skipToFeatures = screen.getByText('Skip to features').closest('a')!;
-      
+
       expect(skipToFeatures).toHaveAttribute('href', '#features');
       expect(skipToFeatures).toHaveAttribute('aria-label', 'Skip to features section');
     });
@@ -223,12 +224,7 @@ describe('Landing Template Navigation Integration', () => {
 
   describe('Custom Props and Children', () => {
     test('accepts custom className', () => {
-      render(
-        <LandingTemplate 
-          heroProps={mockHeroProps} 
-          className="custom-landing-class"
-        />
-      );
+      render(<LandingTemplate heroProps={mockHeroProps} className="custom-landing-class" />);
 
       const main = screen.getByRole('main');
       expect(main).toHaveClass('custom-landing-class');
@@ -238,7 +234,7 @@ describe('Landing Template Navigation Integration', () => {
       render(
         <LandingTemplate heroProps={mockHeroProps}>
           <section data-testid="custom-section">Custom content</section>
-        </LandingTemplate>
+        </LandingTemplate>,
       );
 
       expect(screen.getByTestId('custom-section')).toBeInTheDocument();
@@ -247,11 +243,11 @@ describe('Landing Template Navigation Integration', () => {
 
     test('passes through additional HTML attributes', () => {
       render(
-        <LandingTemplate 
+        <LandingTemplate
           heroProps={mockHeroProps}
           data-testid="landing-main"
           id="custom-main-id"
-        />
+        />,
       );
 
       const main = screen.getByRole('main');
@@ -263,14 +259,13 @@ describe('Landing Template Navigation Integration', () => {
   describe('Error Handling', () => {
     test('handles missing scroll navigation gracefully', () => {
       // Mock hook to return error state
-      jest.mocked(require('../../lib/hooks/useScrollNavigation').useScrollNavigation)
-        .mockReturnValueOnce({
-          activeSection: null,
-          sections: [],
-          scrollToSection: jest.fn(),
-          isScrolling: false,
-          scrollProgress: 0,
-        });
+      jest.mocked(useScrollNavigationModule.useScrollNavigation as jest.Mock).mockReturnValueOnce({
+        activeSection: null,
+        sections: [],
+        scrollToSection: jest.fn(),
+        isScrolling: false,
+        scrollProgress: 0,
+      });
 
       expect(() => {
         render(<LandingTemplate heroProps={mockHeroProps} />);
@@ -284,10 +279,10 @@ describe('Landing Template Navigation Integration', () => {
       render(<LandingTemplate heroProps={mockHeroProps} />);
 
       const skipLink = screen.getByText('Skip to features').closest('a')!;
-      
+
       // Should not throw when scroll fails
       await user.click(skipLink);
-      
+
       expect(mockScrollToSection).toHaveBeenCalled();
     });
   });
@@ -300,7 +295,7 @@ describe('Landing Template Navigation Integration', () => {
       rerender(<LandingTemplate heroProps={mockHeroProps} />);
 
       // Hook should not be called again unnecessarily
-      const useScrollNavigationMock = require('../../lib/hooks/useScrollNavigation').useScrollNavigation;
+      const useScrollNavigationMock = useScrollNavigationModule.useScrollNavigation as jest.Mock;
       expect(useScrollNavigationMock).toHaveBeenCalledTimes(2); // Initial + rerender
     });
 
@@ -312,9 +307,9 @@ describe('Landing Template Navigation Integration', () => {
       rerender(<LandingTemplate heroProps={mockHeroProps} />);
 
       // Section configuration should be stable
-      const useScrollNavigationMock = require('../../lib/hooks/useScrollNavigation').useScrollNavigation;
+      const useScrollNavigationMock = useScrollNavigationModule.useScrollNavigation as jest.Mock;
       const calls = useScrollNavigationMock.mock.calls;
-      
+
       // All calls should have the same sections configuration
       expect(calls[0][0].sections).toEqual(calls[1][0].sections);
       expect(calls[1][0].sections).toEqual(calls[2][0].sections);

@@ -5,8 +5,13 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ErrorBoundary } from './ErrorBoundary';
-import { generateCorrelationId, setCorrelationId, clearCorrelationId } from '@/lib/logging/correlation';
-import type { ErrorBoundaryProps } from './types';
+import {
+  generateCorrelationId,
+  setCorrelationId,
+  clearCorrelationId,
+} from '@/lib/logging/correlation';
+import type { ErrorBoundaryProps as _ErrorBoundaryProps } from './types';
+import * as logging from '@/lib/logging';
 
 // Mock logging system
 jest.mock('@/lib/logging', () => ({
@@ -21,8 +26,7 @@ describe('ErrorBoundary Component (T018)', () => {
 
   beforeEach(() => {
     // Mock logger
-    const logging = require('@/lib/logging');
-    mockLoggerError = logging.logger.error.mockClear();
+    mockLoggerError = (logging.logger.error as jest.Mock).mockClear();
 
     // Suppress console.error during tests
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -37,9 +41,9 @@ describe('ErrorBoundary Component (T018)', () => {
   });
 
   // Test component that throws an error
-  const ThrowError: React.FC<{ shouldThrow?: boolean; message?: string }> = ({ 
-    shouldThrow = true, 
-    message = 'Test error' 
+  const ThrowError: React.FC<{ shouldThrow?: boolean; message?: string }> = ({
+    shouldThrow = true,
+    message = 'Test error',
   }) => {
     if (shouldThrow) {
       throw new Error(message);
@@ -50,11 +54,11 @@ describe('ErrorBoundary Component (T018)', () => {
   describe('Error Catching and Handling', () => {
     it('should catch and handle component errors', () => {
       const onError = jest.fn();
-      
+
       render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(onError).toHaveBeenCalledWith(
@@ -64,7 +68,7 @@ describe('ErrorBoundary Component (T018)', () => {
         }),
         expect.objectContaining({
           componentStack: expect.stringContaining('ThrowError'),
-        })
+        }),
       );
     });
 
@@ -72,7 +76,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByTestId('error-boundary')).toBeInTheDocument();
@@ -84,7 +88,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError shouldThrow={false} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText('No error')).toBeInTheDocument();
@@ -97,7 +101,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary fallback={customFallback} testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText('Custom error message')).toBeInTheDocument();
@@ -105,14 +109,14 @@ describe('ErrorBoundary Component (T018)', () => {
     });
 
     it('should render custom fallback function when provided', () => {
-      const customFallback = (error: Error) => (
+      const customFallback = (error: Error): JSX.Element => (
         <div>Custom error: {error.message}</div>
       );
 
       render(
         <ErrorBoundary fallback={customFallback} testId="error-boundary">
           <ThrowError message="Custom test error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText('Custom error: Custom test error')).toBeInTheDocument();
@@ -127,7 +131,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError message="Logging test error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(mockLoggerError).toHaveBeenCalledWith(
@@ -142,7 +146,7 @@ describe('ErrorBoundary Component (T018)', () => {
           url: expect.any(String),
           userAgent: expect.any(String),
           correlationId,
-        })
+        }),
       );
     });
 
@@ -152,26 +156,28 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       const logCall = mockLoggerError.mock.calls[0];
       const context = logCall[2];
-      
+
       expect(context.correlationId).toBeDefined();
-      expect(context.correlationId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      expect(context.correlationId).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
     });
 
     it('should include error ID for tracking', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       const logCall = mockLoggerError.mock.calls[0];
       const context = logCall[2];
-      
+
       expect(context.errorId).toBeDefined();
       expect(typeof context.errorId).toBe('string');
       expect(context.errorId.length).toBeGreaterThan(0);
@@ -181,12 +187,12 @@ describe('ErrorBoundary Component (T018)', () => {
   describe('Retry Functionality', () => {
     it('should retry rendering when retry button is clicked', async () => {
       let shouldThrow = true;
-      const TestComponent = () => <ThrowError shouldThrow={shouldThrow} />;
+      const TestComponent = (): JSX.Element => <ThrowError shouldThrow={shouldThrow} />;
 
       render(
         <ErrorBoundary enableRetry testId="error-boundary">
           <TestComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should show error UI initially
@@ -210,7 +216,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary enableRetry retryButtonText="Reload Component" testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByRole('button', { name: 'Reload Component' })).toBeInTheDocument();
@@ -221,7 +227,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary enableRetry={false} testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.queryByRole('button')).not.toBeInTheDocument();
@@ -233,7 +239,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary enableRetry onError={onError} testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // First error
@@ -261,7 +267,7 @@ describe('ErrorBoundary Component (T018)', () => {
         render(
           <ErrorBoundary showErrorDetails testId="error-boundary">
             <ThrowError message="Detailed error message" />
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
 
         expect(screen.getByText(/error details/i)).toBeInTheDocument();
@@ -279,7 +285,7 @@ describe('ErrorBoundary Component (T018)', () => {
         render(
           <ErrorBoundary showErrorDetails testId="error-boundary">
             <ThrowError message="Detailed error message" />
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
 
         expect(screen.queryByText(/error details/i)).not.toBeInTheDocument();
@@ -297,7 +303,7 @@ describe('ErrorBoundary Component (T018)', () => {
         render(
           <ErrorBoundary showErrorDetails testId="error-boundary">
             <ThrowError />
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
 
         expect(screen.getByText(/component stack/i)).toBeInTheDocument();
@@ -312,7 +318,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       const errorContainer = screen.getByTestId('error-boundary');
@@ -324,7 +330,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary className="custom-error-class" testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByTestId('error-boundary')).toHaveClass('custom-error-class');
@@ -334,12 +340,12 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       const retryButton = screen.getByRole('button', { name: /try again/i });
       expect(retryButton).toBeInTheDocument();
-      
+
       // Button should be focusable
       retryButton.focus();
       expect(retryButton).toHaveFocus();
@@ -348,7 +354,7 @@ describe('ErrorBoundary Component (T018)', () => {
 
   describe('Edge Cases and Error Scenarios', () => {
     it('should handle null error gracefully', () => {
-      const ThrowNullError = () => {
+      const ThrowNullError = (): never => {
         throw null;
       };
 
@@ -357,21 +363,21 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <ThrowNullError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(onError).toHaveBeenCalledWith(
         null,
         expect.objectContaining({
           componentStack: expect.any(String),
-        })
+        }),
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
     it('should handle string errors gracefully', () => {
-      const ThrowStringError = () => {
+      const ThrowStringError = (): never => {
         throw 'String error';
       };
 
@@ -380,14 +386,14 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <ThrowStringError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(onError).toHaveBeenCalledWith(
         'String error',
         expect.objectContaining({
           componentStack: expect.any(String),
-        })
+        }),
       );
     });
 
@@ -397,17 +403,17 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError message={longMessage} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
     it('should handle errors with circular references in props', () => {
-      const CircularComponent = () => {
-        const obj: any = { name: 'test' };
+      const CircularComponent = (): JSX.Element => {
+        const obj: unknown = { name: 'test' };
         obj.self = obj;
-        
+
         throw new Error('Error with circular reference');
       };
 
@@ -416,7 +422,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <CircularComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(onError).toHaveBeenCalled();
@@ -429,7 +435,7 @@ describe('ErrorBoundary Component (T018)', () => {
       const { rerender } = render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError key="1" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Simulate multiple error scenarios
@@ -437,7 +443,7 @@ describe('ErrorBoundary Component (T018)', () => {
         rerender(
           <ErrorBoundary testId="error-boundary">
             <ThrowError key={i.toString()} message={`Error ${i}`} />
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
       }
 
@@ -446,26 +452,26 @@ describe('ErrorBoundary Component (T018)', () => {
 
     it('should handle rapid error and retry cycles', async () => {
       let shouldThrow = true;
-      const TestComponent = () => <ThrowError shouldThrow={shouldThrow} />;
+      const TestComponent = (): JSX.Element => <ThrowError shouldThrow={shouldThrow} />;
 
       render(
         <ErrorBoundary enableRetry testId="error-boundary">
           <TestComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Rapid error/retry cycles
       for (let i = 0; i < 5; i++) {
         shouldThrow = true;
         fireEvent.click(screen.getByRole('button', { name: /try again/i }));
-        
+
         await waitFor(() => {
           expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
         });
 
         shouldThrow = false;
         fireEvent.click(screen.getByRole('button', { name: /try again/i }));
-        
+
         await waitFor(() => {
           expect(screen.getByText('No error')).toBeInTheDocument();
         });
@@ -475,8 +481,8 @@ describe('ErrorBoundary Component (T018)', () => {
 
   describe('Integration with Other Components', () => {
     it('should work with async components', async () => {
-      const AsyncComponent = () => {
-        const [shouldThrow, setShouldThrow] = React.useState(true);
+      const AsyncComponent = (): JSX.Element => {
+        const [shouldThrow, _setShouldThrow] = React.useState(true);
 
         React.useEffect(() => {
           if (shouldThrow) {
@@ -492,7 +498,7 @@ describe('ErrorBoundary Component (T018)', () => {
       render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <AsyncComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       await waitFor(() => {
@@ -501,7 +507,7 @@ describe('ErrorBoundary Component (T018)', () => {
     });
 
     it('should work with nested error boundaries', () => {
-      const NestedComponent = () => <ThrowError message="Nested error" />;
+      const NestedComponent = (): JSX.Element => <ThrowError message="Nested error" />;
 
       const outerOnError = jest.fn();
       const innerOnError = jest.fn();
@@ -513,7 +519,7 @@ describe('ErrorBoundary Component (T018)', () => {
               <NestedComponent />
             </ErrorBoundary>
           </div>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Inner boundary should catch the error
@@ -526,8 +532,8 @@ describe('ErrorBoundary Component (T018)', () => {
 
     it('should work with context providers', () => {
       const TestContext = React.createContext<string>('default');
-      
-      const ContextConsumer = () => {
+
+      const ContextConsumer = (): never => {
         const value = React.useContext(TestContext);
         throw new Error(`Context error: ${value}`);
       };
@@ -539,14 +545,14 @@ describe('ErrorBoundary Component (T018)', () => {
           <ErrorBoundary onError={onError} testId="error-boundary">
             <ContextConsumer />
           </ErrorBoundary>
-        </TestContext.Provider>
+        </TestContext.Provider>,
       );
 
       expect(onError).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Context error: test-value',
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
   });

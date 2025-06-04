@@ -9,7 +9,7 @@ import {
   shouldTriggerAlert,
   calculateAlertSeverity,
 } from '@/lib/monitoring/performance-alerts';
-import type { PerformanceAlertConfig, PerformanceAlert } from '@/lib/monitoring/types';
+import type { PerformanceAlertConfig } from '@/lib/monitoring/types';
 import type { EnhancedMetric } from '@/lib/performance/types';
 
 // Mock alert delivery
@@ -29,7 +29,7 @@ describe('Performance Alerting System', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Reset global state
-    delete (global as any).__TEST_ALERT_DELIVERY__;
+    delete (global as unknown).__TEST_ALERT_DELIVERY__;
   });
 
   describe('Configuration Validation', () => {
@@ -68,8 +68,9 @@ describe('Performance Alerting System', () => {
         enableWebhook: false,
       };
 
-      expect(() => validatePerformanceAlertConfig(invalidConfig))
-        .toThrow('Warning threshold must be less than error threshold for lcp');
+      expect(() => validatePerformanceAlertConfig(invalidConfig)).toThrow(
+        'Warning threshold must be less than error threshold for lcp',
+      );
     });
 
     it('should reject negative cooldown period', () => {
@@ -88,8 +89,9 @@ describe('Performance Alerting System', () => {
         enableWebhook: false,
       };
 
-      expect(() => validatePerformanceAlertConfig(invalidConfig))
-        .toThrow('Cooldown period must be positive');
+      expect(() => validatePerformanceAlertConfig(invalidConfig)).toThrow(
+        'Cooldown period must be positive',
+      );
     });
 
     it('should reject invalid max alerts per hour', () => {
@@ -108,8 +110,9 @@ describe('Performance Alerting System', () => {
         enableWebhook: false,
       };
 
-      expect(() => validatePerformanceAlertConfig(invalidConfig))
-        .toThrow('Max alerts per hour must be at least 1');
+      expect(() => validatePerformanceAlertConfig(invalidConfig)).toThrow(
+        'Max alerts per hour must be at least 1',
+      );
     });
 
     it('should require at least one delivery method when enabled', () => {
@@ -128,8 +131,9 @@ describe('Performance Alerting System', () => {
         enableWebhook: false,
       };
 
-      expect(() => validatePerformanceAlertConfig(invalidConfig))
-        .toThrow('At least one delivery method must be enabled when alerting is enabled');
+      expect(() => validatePerformanceAlertConfig(invalidConfig)).toThrow(
+        'At least one delivery method must be enabled when alerting is enabled',
+      );
     });
   });
 
@@ -162,7 +166,7 @@ describe('Performance Alerting System', () => {
     });
 
     it('should handle unknown metrics gracefully', () => {
-      const severity = calculateAlertSeverity('unknown-metric' as any, 1000, thresholds);
+      const severity = calculateAlertSeverity('unknown-metric' as unknown, 1000, thresholds);
       expect(severity).toBeNull();
     });
 
@@ -241,7 +245,7 @@ describe('Performance Alerting System', () => {
 
       // First alert should trigger
       expect(shouldTriggerAlert(metric, config, cooldownState)).toBe(true);
-      
+
       // Set cooldown state
       cooldownState.set('lcp', now);
 
@@ -249,7 +253,7 @@ describe('Performance Alerting System', () => {
       expect(shouldTriggerAlert(metric, config, cooldownState)).toBe(false);
 
       // Alert after cooldown should trigger
-      cooldownState.set('lcp', now - (16 * 60 * 1000)); // 16 minutes ago
+      cooldownState.set('lcp', now - 16 * 60 * 1000); // 16 minutes ago
       expect(shouldTriggerAlert(metric, config, cooldownState)).toBe(true);
     });
 
@@ -385,7 +389,7 @@ describe('Performance Alerting System', () => {
         enableWebhook: false,
       };
 
-      (global as any).__TEST_ALERT_DELIVERY__ = mockAlertDelivery;
+      (global as unknown).__TEST_ALERT_DELIVERY__ = mockAlertDelivery;
 
       const alerter = createPerformanceAlerter();
       await alerter.initialize(config);
@@ -409,7 +413,7 @@ describe('Performance Alerting System', () => {
           metric: 'lcp',
           value: 3000,
           severity: 'warning',
-        })
+        }),
       );
     });
 
@@ -429,7 +433,7 @@ describe('Performance Alerting System', () => {
         enableWebhook: false,
       };
 
-      (global as any).__TEST_ALERT_DELIVERY__ = mockAlertDelivery;
+      (global as unknown).__TEST_ALERT_DELIVERY__ = mockAlertDelivery;
 
       const alerter = createPerformanceAlerter();
       await alerter.initialize(config);
@@ -472,7 +476,7 @@ describe('Performance Alerting System', () => {
         deliverSlack: jest.fn().mockRejectedValue(new Error('Slack service unavailable')),
       };
 
-      (global as any).__TEST_ALERT_DELIVERY__ = failingAlertDelivery;
+      (global as unknown).__TEST_ALERT_DELIVERY__ = failingAlertDelivery;
 
       const alerter = createPerformanceAlerter();
       await alerter.initialize(config);
@@ -509,7 +513,7 @@ describe('Performance Alerting System', () => {
         enableWebhook: false,
       };
 
-      (global as any).__TEST_ALERT_DELIVERY__ = mockAlertDelivery;
+      (global as unknown).__TEST_ALERT_DELIVERY__ = mockAlertDelivery;
 
       const alerter = createPerformanceAlerter();
       await alerter.initialize(config);

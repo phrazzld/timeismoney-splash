@@ -2,26 +2,25 @@
  * Remote logging system implementation
  */
 
-import { getCurrentCorrelationId, generateCorrelationId } from '@/lib/logging/correlation';
 import { sanitizeContext } from '@/lib/logging/structured-logger';
 import type { LogEntry } from '@/lib/logging/types';
-import type { 
-  RemoteLoggingConfig, 
-  RemoteLogEntry, 
-  LogBatch, 
+import type {
+  RemoteLoggingConfig,
+  RemoteLogEntry,
+  LogBatch,
   RemoteLoggingResult,
   CircuitBreaker,
   CircuitBreakerState,
-  CircuitBreakerConfig 
+  CircuitBreakerConfig,
 } from './types';
 
 /**
  * UUID v4 generator
  */
 function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -69,7 +68,7 @@ export function validateRemoteLoggingConfig(config: RemoteLoggingConfig): void {
 export function createRemoteLogEntry(
   logEntry: LogEntry,
   source: 'client' | 'server',
-  environment: string
+  environment: string,
 ): RemoteLogEntry {
   // Extract relevant data based on log entry type
   let data: Record<string, unknown> = {};
@@ -128,7 +127,7 @@ export function createRemoteLogEntry(
  */
 export function createLogBatch(
   entries: ReadonlyArray<RemoteLogEntry>,
-  metadata: LogBatch['metadata']
+  metadata: LogBatch['metadata'],
 ): LogBatch {
   return {
     id: generateUUID(),
@@ -167,8 +166,8 @@ class CircuitBreakerImpl implements CircuitBreaker {
     try {
       const result = await Promise.race([
         fn(),
-        new Promise<never>((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), this.config.timeoutMs)
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout')), this.config.timeoutMs),
         ),
       ]);
 
@@ -202,7 +201,12 @@ class CircuitBreakerImpl implements CircuitBreaker {
     }
   }
 
-  getMetrics() {
+  getMetrics(): {
+    totalCalls: number;
+    successfulCalls: number;
+    failedCalls: number;
+    lastFailureTime: Date | null;
+  } {
     return {
       totalCalls: this.failureCount + this.successCount,
       successfulCalls: this.successCount,
@@ -240,7 +244,7 @@ interface RemoteLogger {
 class RemoteLoggerImpl implements RemoteLogger {
   private config?: RemoteLoggingConfig;
   private buffer: RemoteLogEntry[] = [];
-  private httpClient?: any;
+  private httpClient?: unknown;
   private circuitBreaker?: CircuitBreaker;
   private isInitialized = false;
   private flushTimer?: NodeJS.Timeout;
@@ -263,8 +267,8 @@ class RemoteLoggerImpl implements RemoteLogger {
     try {
       // In a real implementation, this would set up HTTP client
       // For testing, we use a mock client if available
-      if ((global as any).__TEST_HTTP_CLIENT__) {
-        this.httpClient = (global as any).__TEST_HTTP_CLIENT__;
+      if ((global as unknown).__TEST_HTTP_CLIENT__) {
+        this.httpClient = (global as unknown).__TEST_HTTP_CLIENT__;
       } else {
         // In production, this would be a real HTTP client
         console.warn('HTTP client not available - running in development mode');
@@ -284,7 +288,7 @@ class RemoteLoggerImpl implements RemoteLogger {
       // Set up flush timer
       if (config.flushInterval > 0) {
         this.flushTimer = setInterval(() => {
-          this.flush().catch(error => {
+          this.flush().catch((error) => {
             console.warn('Auto-flush failed:', error);
           });
         }, config.flushInterval);
@@ -306,9 +310,9 @@ class RemoteLoggerImpl implements RemoteLogger {
     try {
       // Convert to remote log entry
       const remoteEntry = createRemoteLogEntry(
-        logEntry, 
-        'client', 
-        this.config.endpoint?.includes('localhost') ? 'development' : 'production'
+        logEntry,
+        'client',
+        this.config.endpoint?.includes('localhost') ? 'development' : 'production',
       );
 
       // Add to buffer
@@ -340,7 +344,7 @@ class RemoteLoggerImpl implements RemoteLogger {
 
     try {
       await this.transmitBatch(batch);
-      
+
       // Update success metrics
       this.metrics.totalBatches++;
       this.metrics.totalEntries += entriesCount;
@@ -350,7 +354,7 @@ class RemoteLoggerImpl implements RemoteLogger {
     } catch (error) {
       console.warn('Failed to transmit log batch:', error);
       this.metrics.failedTransmissions++;
-      
+
       // In a real implementation, failed entries might be queued for retry
       // For now, we just log the failure
     }
@@ -378,16 +382,12 @@ class RemoteLoggerImpl implements RemoteLogger {
 
     while (attempt <= this.config.maxRetries) {
       try {
-        const response = await this.httpClient.post(
-          this.config.endpoint,
-          batch,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.config.apiKey}`,
-            },
-          }
-        );
+        const response = await this.httpClient.post(this.config.endpoint, batch, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.config.apiKey}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -406,7 +406,7 @@ class RemoteLoggerImpl implements RemoteLogger {
         if (attempt <= this.config.maxRetries) {
           // Exponential backoff
           const backoffMs = this.config.retryBackoffMs * Math.pow(2, attempt - 1);
-          await new Promise(resolve => setTimeout(resolve, backoffMs));
+          await new Promise((resolve) => setTimeout(resolve, backoffMs));
         }
       }
     }

@@ -4,19 +4,15 @@
 
 import { getCurrentCorrelationId, generateCorrelationId } from '@/lib/logging/correlation';
 import { sanitizeContext } from '@/lib/logging/structured-logger';
-import type { 
-  ErrorTrackingConfig, 
-  ErrorEvent, 
-  ErrorTrackingService 
-} from './types';
+import type { ErrorTrackingConfig, ErrorEvent, ErrorTrackingService } from './types';
 
 /**
  * UUID v4 generator
  */
 function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -86,7 +82,7 @@ function createErrorFingerprint(error: ErrorEvent['error']): string[] {
  * Creates an error event from Error object
  */
 export function createErrorEvent(
-  error: Error, 
+  error: Error,
   options: {
     url: string;
     userAgent: string;
@@ -94,13 +90,13 @@ export function createErrorEvent(
     context?: Record<string, unknown>;
     user?: ErrorEvent['user'];
     tags?: Record<string, string>;
-  }
+  },
 ): ErrorEvent {
   const errorData = {
     name: error.name,
     message: error.message,
     stack: error.stack,
-    componentStack: (error as any).componentStack,
+    componentStack: (error as unknown).componentStack,
   };
 
   const errorEvent: ErrorEvent = {
@@ -172,7 +168,7 @@ class ErrorRateLimiter {
  */
 class ErrorTrackingServiceImpl implements ErrorTrackingService {
   private config?: ErrorTrackingConfig;
-  private externalService?: any;
+  private externalService?: unknown;
   private isInitialized = false;
   private rateLimiter = new ErrorRateLimiter();
   private cleanupTimer?: NodeJS.Timeout;
@@ -188,8 +184,8 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
     try {
       // In a real implementation, this would initialize the external service (e.g., Sentry)
       // For testing, we use a mock service if available
-      if ((global as any).__TEST_ERROR_SERVICE__) {
-        this.externalService = (global as any).__TEST_ERROR_SERVICE__;
+      if ((global as unknown).__TEST_ERROR_SERVICE__) {
+        this.externalService = (global as unknown).__TEST_ERROR_SERVICE__;
       } else {
         // In production, this would be something like:
         // this.externalService = await import('@sentry/nextjs');
@@ -246,9 +242,9 @@ class ErrorTrackingServiceImpl implements ErrorTrackingService {
   }
 
   async captureMessage(
-    message: string, 
-    level: ErrorEvent['level'], 
-    context?: Record<string, unknown>
+    message: string,
+    level: ErrorEvent['level'],
+    context?: Record<string, unknown>,
   ): Promise<void> {
     if (!this.config?.enabled || !this.isInitialized || !this.externalService) {
       return;

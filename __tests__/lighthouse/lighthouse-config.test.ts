@@ -2,8 +2,12 @@
  * Tests for Lighthouse CI configuration (T021)
  */
 
-import { validateLighthouseConfig, createPerformanceBudgets, analyzeBundleSize } from '@/lib/performance/lighthouse-config';
-import type { LighthouseConfig, PerformanceBudget, BundleAnalysis } from '@/lib/performance/lighthouse-types';
+import {
+  validateLighthouseConfig,
+  createPerformanceBudgets,
+  analyzeBundleSize,
+} from '@/lib/performance/lighthouse-config';
+import type { LighthouseConfig } from '@/lib/performance/lighthouse-types';
 
 describe('Lighthouse Configuration (T021)', () => {
   describe('validateLighthouseConfig', () => {
@@ -42,7 +46,9 @@ describe('Lighthouse Configuration (T021)', () => {
         },
       } as LighthouseConfig;
 
-      expect(() => validateLighthouseConfig(incompleteConfig)).toThrow('Missing assert configuration');
+      expect(() => validateLighthouseConfig(incompleteConfig)).toThrow(
+        'Missing assert configuration',
+      );
     });
 
     it('should reject configuration with invalid performance score threshold', () => {
@@ -60,7 +66,9 @@ describe('Lighthouse Configuration (T021)', () => {
         },
       };
 
-      expect(() => validateLighthouseConfig(invalidConfig)).toThrow('Invalid performance score threshold');
+      expect(() => validateLighthouseConfig(invalidConfig)).toThrow(
+        'Invalid performance score threshold',
+      );
     });
 
     it('should validate Core Web Vitals assertions', () => {
@@ -131,7 +139,7 @@ describe('Lighthouse Configuration (T021)', () => {
         'max-potential-fid': ['error', { maxNumericValue: 100 }],
         'total-blocking-time': ['error', { maxNumericValue: 300 }],
         'speed-index': ['error', { maxNumericValue: 3000 }],
-        'interactive': ['error', { maxNumericValue: 3000 }],
+        interactive: ['error', { maxNumericValue: 3000 }],
       });
     });
 
@@ -156,22 +164,34 @@ describe('Lighthouse Configuration (T021)', () => {
       });
 
       expect(strictBudgets['categories:performance']).toEqual(['error', { minScore: 0.98 }]);
-      expect(strictBudgets['largest-contentful-paint']).toEqual(['error', { maxNumericValue: 2000 }]);
-      expect(strictBudgets['cumulative-layout-shift']).toEqual(['error', { maxNumericValue: 0.05 }]);
+      expect(strictBudgets['largest-contentful-paint']).toEqual([
+        'error',
+        { maxNumericValue: 2000 },
+      ]);
+      expect(strictBudgets['cumulative-layout-shift']).toEqual([
+        'error',
+        { maxNumericValue: 0.05 },
+      ]);
     });
 
     it('should reject invalid budget values', () => {
-      expect(() => createPerformanceBudgets({
-        performance: 105, // Invalid: > 100
-      })).toThrow('Invalid performance score');
+      expect(() =>
+        createPerformanceBudgets({
+          performance: 105, // Invalid: > 100
+        }),
+      ).toThrow('Invalid performance score');
 
-      expect(() => createPerformanceBudgets({
-        lcp: -100, // Invalid: negative
-      })).toThrow('Invalid LCP threshold');
+      expect(() =>
+        createPerformanceBudgets({
+          lcp: -100, // Invalid: negative
+        }),
+      ).toThrow('Invalid LCP threshold');
 
-      expect(() => createPerformanceBudgets({
-        cls: 2, // Invalid: > 1
-      })).toThrow('Invalid CLS threshold');
+      expect(() =>
+        createPerformanceBudgets({
+          cls: 2, // Invalid: > 1
+        }),
+      ).toThrow('Invalid CLS threshold');
     });
   });
 
@@ -229,8 +249,12 @@ describe('Lighthouse Configuration (T021)', () => {
 
       const analysis = analyzeBundleSize(heavyVendorBundle);
 
-      expect(analysis.recommendations).toContain('Vendor chunk is too large (300KB), consider splitting');
-      expect(analysis.recommendations).toContain('Review third-party dependencies for optimization opportunities');
+      expect(analysis.recommendations).toContain(
+        'Vendor chunk is too large (300KB), consider splitting',
+      );
+      expect(analysis.recommendations).toContain(
+        'Review third-party dependencies for optimization opportunities',
+      );
     });
   });
 
@@ -261,12 +285,15 @@ describe('Lighthouse Configuration (T021)', () => {
         enableWarnings: true,
         warningThresholds: {
           lcp: 2000, // Warning at 2s, error at 2.5s
-          fid: 80,   // Warning at 80ms, error at 100ms
+          fid: 80, // Warning at 80ms, error at 100ms
         },
       });
 
       expect(budgets).toHaveProperty('largest-contentful-paint-warning');
-      expect(budgets['largest-contentful-paint-warning']).toEqual(['warn', { maxNumericValue: 2000 }]);
+      expect(budgets['largest-contentful-paint-warning']).toEqual([
+        'warn',
+        { maxNumericValue: 2000 },
+      ]);
     });
   });
 
@@ -335,9 +362,11 @@ describe('Lighthouse Configuration (T021)', () => {
     it('should handle malformed configuration gracefully', () => {
       const malformedConfig = {
         ci: 'invalid',
-      } as any;
+      } as unknown;
 
-      expect(() => validateLighthouseConfig(malformedConfig)).toThrow('Invalid configuration format');
+      expect(() => validateLighthouseConfig(malformedConfig)).toThrow(
+        'Invalid configuration format',
+      );
     });
 
     it('should validate URL format', () => {
@@ -369,7 +398,9 @@ describe('Lighthouse Configuration (T021)', () => {
         },
       };
 
-      expect(() => validateLighthouseConfig(emptyAssertionsConfig)).toThrow('No assertions defined');
+      expect(() => validateLighthouseConfig(emptyAssertionsConfig)).toThrow(
+        'No assertions defined',
+      );
     });
   });
 });

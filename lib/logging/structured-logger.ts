@@ -2,16 +2,16 @@
  * Structured logger implementation with JSON formatting
  */
 
-import type { 
-  LogLevel, 
-  LoggerConfig, 
-  StructuredLogger, 
+import type {
+  LogLevel,
+  LoggerConfig,
+  StructuredLogger,
   LogEntry,
   BaseLogEntry,
   PerformanceLogEntry,
   PageViewLogEntry,
   CustomLogEntry,
-  ErrorLogEntry
+  ErrorLogEntry,
 } from './types';
 import { getCurrentCorrelationId, generateCorrelationId } from './correlation';
 
@@ -52,7 +52,7 @@ const SENSITIVE_PATTERNS = [
 /**
  * Sanitizes error objects for safe logging
  */
-export function sanitizeError(error: any): {
+export function sanitizeError(error: unknown): {
   name: string;
   message: string;
   stack?: string;
@@ -61,29 +61,29 @@ export function sanitizeError(error: any): {
   if (error === null) {
     return { name: 'Unknown', message: 'null' };
   }
-  
+
   if (error === undefined) {
     return { name: 'Unknown', message: 'undefined' };
   }
-  
+
   if (error instanceof Error) {
-    const result: any = {
+    const result: unknown = {
       name: error.name,
       message: error.message,
     };
-    
+
     if (error.stack) {
       result.stack = error.stack;
     }
-    
+
     // Handle React error boundaries component stack
     if ('componentStack' in error && typeof error.componentStack === 'string') {
       result.componentStack = error.componentStack;
     }
-    
+
     return result;
   }
-  
+
   // Handle non-Error objects
   return {
     name: 'Unknown',
@@ -94,44 +94,44 @@ export function sanitizeError(error: any): {
 /**
  * Sanitizes context objects to prevent sensitive data leakage
  */
-export function sanitizeContext(context: any, visited = new Set<any>()): any {
+export function sanitizeContext(context: unknown, visited = new Set<unknown>()): unknown {
   if (context === null || context === undefined) {
     return context;
   }
-  
+
   // Handle circular references
   if (visited.has(context)) {
     return '[Circular Reference]';
   }
-  
+
   if (typeof context === 'function') {
     return '[Function]';
   }
-  
+
   if (typeof context !== 'object') {
     return context;
   }
-  
+
   visited.add(context);
-  
+
   try {
     if (Array.isArray(context)) {
-      return context.map(item => sanitizeContext(item, visited));
+      return context.map((item) => sanitizeContext(item, visited));
     }
-    
-    const sanitized: any = {};
-    
+
+    const sanitized: unknown = {};
+
     for (const [key, value] of Object.entries(context)) {
       // Check if key matches sensitive patterns
-      const isSensitive = SENSITIVE_PATTERNS.some(pattern => pattern.test(key));
-      
+      const isSensitive = SENSITIVE_PATTERNS.some((pattern) => pattern.test(key));
+
       if (isSensitive) {
         sanitized[key] = '[REDACTED]';
       } else {
         sanitized[key] = sanitizeContext(value, visited);
       }
     }
-    
+
     return sanitized;
   } finally {
     visited.delete(context);
@@ -173,22 +173,22 @@ function shouldLog(level: LogLevel, minLevel: LogLevel): boolean {
  */
 function normalizeConfig(config: Partial<LoggerConfig> = {}): LoggerConfig {
   const normalized = { ...DEFAULT_CONFIG, ...config };
-  
+
   // Validate minLevel
   if (!LOG_LEVELS.hasOwnProperty(normalized.minLevel)) {
     normalized.minLevel = DEFAULT_CONFIG.minLevel;
   }
-  
+
   // Validate maxEntries
   if (normalized.maxEntries < 1) {
     normalized.maxEntries = DEFAULT_CONFIG.maxEntries;
   }
-  
+
   // Validate flushInterval
   if (normalized.flushInterval < 100) {
     normalized.flushInterval = DEFAULT_CONFIG.flushInterval;
   }
-  
+
   return normalized;
 }
 
@@ -211,11 +211,11 @@ export class StructuredLoggerImpl implements StructuredLogger {
   private setupFlushTimer(): void {
     if (this.config.flushInterval > 0) {
       this.flushTimer = setInterval(() => {
-        this.flush().catch(error => {
+        this.flush().catch((error) => {
           console.error('Auto-flush failed:', error);
         });
       }, this.config.flushInterval);
-      
+
       // Don't keep the process alive
       if (this.flushTimer.unref) {
         this.flushTimer.unref();
@@ -242,15 +242,15 @@ export class StructuredLoggerImpl implements StructuredLogger {
     if (!shouldLog(entry.level, this.config.minLevel)) {
       return;
     }
-    
+
     // Add to in-memory storage
     this.addToEntries(entry);
-    
+
     // Console logging
     if (this.config.enableConsole) {
       this.logToConsole(entry);
     }
-    
+
     // Remote logging would be handled here
     if (this.config.enableRemote) {
       this.scheduleRemoteLog(entry);
@@ -262,7 +262,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
    */
   private addToEntries(entry: LogEntry): void {
     this.entries.push(entry);
-    
+
     // Maintain size limit
     if (this.entries.length > this.config.maxEntries) {
       this.entries.splice(0, this.entries.length - this.config.maxEntries);
@@ -274,7 +274,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
    */
   private logToConsole(entry: LogEntry): void {
     const formatted = formatLogEntry(entry);
-    
+
     switch (entry.level) {
       case 'debug':
       case 'info':
@@ -292,7 +292,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
   /**
    * Schedules remote logging (placeholder for future implementation)
    */
-  private scheduleRemoteLog(entry: LogEntry): void {
+  private scheduleRemoteLog(_entry: LogEntry): void {
     // In a real implementation, this would queue the entry for remote transmission
     // For now, this is a no-op
   }
@@ -310,11 +310,11 @@ export class StructuredLoggerImpl implements StructuredLogger {
         properties: context ? sanitizeContext(context) : undefined,
       },
     };
-    
+
     if (context) {
-      (entry as any).context = sanitizeContext(context);
+      (entry as unknown).context = sanitizeContext(context);
     }
-    
+
     this.log(entry);
   }
 
@@ -331,11 +331,11 @@ export class StructuredLoggerImpl implements StructuredLogger {
         properties: context ? sanitizeContext(context) : undefined,
       },
     };
-    
+
     if (context) {
-      (entry as any).context = sanitizeContext(context);
+      (entry as unknown).context = sanitizeContext(context);
     }
-    
+
     this.log(entry);
   }
 
@@ -352,11 +352,11 @@ export class StructuredLoggerImpl implements StructuredLogger {
         properties: context ? sanitizeContext(context) : undefined,
       },
     };
-    
+
     if (context) {
-      (entry as any).context = sanitizeContext(context);
+      (entry as unknown).context = sanitizeContext(context);
     }
-    
+
     this.log(entry);
   }
 
@@ -372,7 +372,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
       url: typeof window !== 'undefined' ? window.location.href : 'unknown',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
     };
-    
+
     this.log(entry);
   }
 
@@ -384,7 +384,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
       ...this.createBaseEntry('info', entry.message),
       ...entry,
     };
-    
+
     this.log(fullEntry);
   }
 
@@ -396,7 +396,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
       ...this.createBaseEntry('info', entry.message),
       ...entry,
     };
-    
+
     this.log(fullEntry);
   }
 
@@ -408,7 +408,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
       ...this.createBaseEntry('info', entry.message),
       ...entry,
     };
-    
+
     this.log(fullEntry);
   }
 
@@ -421,9 +421,9 @@ export class StructuredLoggerImpl implements StructuredLogger {
       // For now, just clear the entries
       if (this.config.enableRemote && this.entries.length > 0) {
         // Simulate remote logging delay
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
       }
-      
+
       // Clear entries after successful flush
       this.entries.splice(0);
     } catch (error) {
@@ -447,7 +447,7 @@ export class StructuredLoggerImpl implements StructuredLogger {
       clearInterval(this.flushTimer);
       this.flushTimer = undefined;
     }
-    
+
     // Final flush attempt
     this.flush().catch(() => {
       // Ignore errors during cleanup

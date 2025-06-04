@@ -17,7 +17,7 @@ const NODE_VERSION_PATTERN = /^(1[6-9]|[2-9]\d)(\.\d+(\.\d+)?)?$/;
 /**
  * Creates a GitHub Actions workflow configuration for Lighthouse CI
  */
-export function createGitHubWorkflow(config: GitHubWorkflowConfig): any {
+export function createGitHubWorkflow(config: GitHubWorkflowConfig): unknown {
   const {
     name,
     triggers,
@@ -31,7 +31,7 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): any {
   } = config;
 
   // Build the workflow trigger configuration
-  const on: any = {};
+  const on: unknown = {};
 
   for (const trigger of triggers) {
     switch (trigger) {
@@ -51,7 +51,7 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): any {
   }
 
   // Build the job steps
-  const steps: any[] = [
+  const steps: unknown[] = [
     {
       name: 'Checkout code',
       uses: 'actions/checkout@v4',
@@ -71,8 +71,12 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): any {
       name: 'Cache dependencies',
       uses: 'actions/cache@v3',
       with: {
-        path: cacheStrategy === 'npm' ? '~/.npm' : 
-              cacheStrategy === 'yarn' ? '~/.yarn' : '~/.pnpm-store',
+        path:
+          cacheStrategy === 'npm'
+            ? '~/.npm'
+            : cacheStrategy === 'yarn'
+              ? '~/.yarn'
+              : '~/.pnpm-store',
         key: `$\{\{ runner.os }}-${cacheStrategy}-$\{\{ hashFiles('**/package-lock.json') }}`,
         'restore-keys': `$\{\{ runner.os }}-${cacheStrategy}-`,
       },
@@ -82,16 +86,22 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): any {
   steps.push(
     {
       name: 'Install dependencies',
-      run: cacheStrategy === 'yarn' ? 'yarn install --frozen-lockfile' :
-           cacheStrategy === 'pnpm' ? 'pnpm install --frozen-lockfile' :
-           'npm ci',
+      run:
+        cacheStrategy === 'yarn'
+          ? 'yarn install --frozen-lockfile'
+          : cacheStrategy === 'pnpm'
+            ? 'pnpm install --frozen-lockfile'
+            : 'npm ci',
     },
     {
       name: 'Build application',
-      run: cacheStrategy === 'yarn' ? 'yarn build' :
-           cacheStrategy === 'pnpm' ? 'pnpm build' :
-           'npm run build',
-    }
+      run:
+        cacheStrategy === 'yarn'
+          ? 'yarn build'
+          : cacheStrategy === 'pnpm'
+            ? 'pnpm build'
+            : 'npm run build',
+    },
   );
 
   // Add bundle analysis if enabled
@@ -141,7 +151,7 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): any {
   }
 
   // Build the job configuration
-  const job: any = {
+  const job: unknown = {
     'runs-on': 'ubuntu-latest',
     steps,
   };
@@ -156,8 +166,8 @@ export function createGitHubWorkflow(config: GitHubWorkflowConfig): any {
   }
 
   // Add environment variables
-  const jobEnv: any = {};
-  
+  const jobEnv: unknown = {};
+
   if (lighthouseConfig.serverToken) {
     jobEnv.LHCI_TOKEN = lighthouseConfig.serverToken;
   }
@@ -199,7 +209,7 @@ export function validateWorkflowConfig(config: GitHubWorkflowConfig): boolean {
 
   // Validate triggers
   for (const trigger of config.triggers) {
-    if (!VALID_TRIGGERS.includes(trigger as any)) {
+    if (!VALID_TRIGGERS.includes(trigger as unknown)) {
       throw new Error(`Invalid trigger type: ${trigger}`);
     }
   }
@@ -239,7 +249,7 @@ export function validateWorkflowConfig(config: GitHubWorkflowConfig): boolean {
 /**
  * Parses Lighthouse CI workflow results
  */
-export function parseWorkflowResults(rawResults: any): WorkflowResult {
+export function parseWorkflowResults(rawResults: unknown): WorkflowResult {
   if (!rawResults || typeof rawResults !== 'object') {
     throw new Error('Invalid workflow results format');
   }
@@ -248,7 +258,7 @@ export function parseWorkflowResults(rawResults: any): WorkflowResult {
     throw new Error('Invalid workflow results format: missing reports');
   }
 
-  const reports = rawResults.reports.map((report: any) => {
+  const reports = rawResults.reports.map((report: unknown) => {
     // Convert scores from 0-1 to 0-100
     const scores: Record<string, number> = {};
     if (report.scores) {
@@ -286,15 +296,18 @@ export function parseWorkflowResults(rawResults: any): WorkflowResult {
 
   // Calculate summary statistics
   const totalUrls = reports.length;
-  const passedUrls = reports.filter(r => r.passed).length;
+  const passedUrls = reports.filter((r) => r.passed).length;
   const failedUrls = totalUrls - passedUrls;
-  
+
   const performanceScores = reports
-    .map(r => r.scores.performance || 0)
-    .filter(score => score > 0);
-  const averagePerformanceScore = performanceScores.length > 0
-    ? Math.round(performanceScores.reduce((sum, score) => sum + score, 0) / performanceScores.length)
-    : 0;
+    .map((r) => r.scores.performance || 0)
+    .filter((score) => score > 0);
+  const averagePerformanceScore =
+    performanceScores.length > 0
+      ? Math.round(
+          performanceScores.reduce((sum, score) => sum + score, 0) / performanceScores.length,
+        )
+      : 0;
 
   const overallPassed = failedUrls === 0 && rawResults.status !== 'failure';
 
@@ -315,7 +328,7 @@ export function parseWorkflowResults(rawResults: any): WorkflowResult {
 /**
  * Creates a default GitHub Actions workflow for Lighthouse CI
  */
-export function createDefaultWorkflow(): any {
+export function createDefaultWorkflow(): unknown {
   return createGitHubWorkflow({
     name: 'Lighthouse CI',
     triggers: ['push', 'pull_request'],
@@ -336,14 +349,14 @@ export function createDefaultWorkflow(): any {
  */
 export function generateWorkflowYAML(config: GitHubWorkflowConfig): string {
   const workflow = createGitHubWorkflow(config);
-  
+
   // Simple YAML serialization (could use js-yaml library in production)
   const yamlLines: string[] = [];
-  
+
   yamlLines.push(`name: ${workflow.name}`);
   yamlLines.push('');
   yamlLines.push('on:');
-  
+
   for (const [trigger, triggerConfig] of Object.entries(workflow.on)) {
     if (trigger === 'schedule') {
       yamlLines.push(`  ${trigger}:`);
@@ -360,12 +373,12 @@ export function generateWorkflowYAML(config: GitHubWorkflowConfig): string {
       yamlLines.push(`  ${trigger}: {}`);
     }
   }
-  
+
   yamlLines.push('');
   yamlLines.push('jobs:');
   yamlLines.push('  lighthouse:');
   yamlLines.push(`    runs-on: ${workflow.jobs.lighthouse['runs-on']}`);
-  
+
   if (workflow.jobs.lighthouse.strategy) {
     yamlLines.push('    strategy:');
     yamlLines.push('      matrix:');
@@ -375,14 +388,14 @@ export function generateWorkflowYAML(config: GitHubWorkflowConfig): string {
       yamlLines.push(`            url: ${env.url}`);
     }
   }
-  
+
   if (workflow.jobs.lighthouse.env) {
     yamlLines.push('    env:');
     for (const [key, value] of Object.entries(workflow.jobs.lighthouse.env)) {
       yamlLines.push(`      ${key}: ${value}`);
     }
   }
-  
+
   yamlLines.push('    steps:');
   for (const step of workflow.jobs.lighthouse.steps) {
     yamlLines.push(`      - name: ${step.name}`);
@@ -408,6 +421,6 @@ export function generateWorkflowYAML(config: GitHubWorkflowConfig): string {
       yamlLines.push(`        if: ${step.if}`);
     }
   }
-  
+
   return yamlLines.join('\n');
 }

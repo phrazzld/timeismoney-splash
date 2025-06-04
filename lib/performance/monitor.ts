@@ -2,9 +2,8 @@
  * Performance monitor orchestration and management
  */
 
-import { setupWebVitals, getWebVitalMetrics, clearWebVitalMetrics, WebVitalsCollector } from './web-vitals';
-import { generateCorrelationId, getCurrentCorrelationId } from '../logging/correlation';
-import type { 
+import { setupWebVitals, WebVitalsCollector } from './web-vitals';
+import type {
   PerformanceConfig,
   PerformanceMonitor,
   EnhancedMetric,
@@ -69,7 +68,7 @@ export function validateConfig(config: PerformanceConfig): void {
     if (thresholds.good < 0 || thresholds.poor < 0) {
       throw new Error(`Invalid thresholds for ${metric}: values must be positive`);
     }
-    
+
     if (thresholds.good >= thresholds.poor) {
       throw new Error(`Invalid thresholds for ${metric}: good must be less than poor`);
     }
@@ -95,11 +94,11 @@ function normalizeConfig(config: Partial<PerformanceConfig> = {}): PerformanceCo
  */
 export function calculateBudgetViolations(
   metrics: ReadonlyArray<EnhancedMetric>,
-  thresholds: PerformanceThresholds
+  thresholds: PerformanceThresholds,
 ): BudgetViolation[] {
   const violations: BudgetViolation[] = [];
 
-  metrics.forEach(metric => {
+  metrics.forEach((metric) => {
     const threshold = thresholds[metric.name];
     if (!threshold) {
       return;
@@ -146,7 +145,7 @@ export function getDeviceInfo(): DeviceInfo {
   if (typeof navigator !== 'undefined') {
     // Device memory (experimental API)
     if ('deviceMemory' in navigator) {
-      deviceInfo.deviceMemory = (navigator as any).deviceMemory;
+      deviceInfo.deviceMemory = (navigator as unknown).deviceMemory;
     }
 
     // Hardware concurrency
@@ -156,7 +155,7 @@ export function getDeviceInfo(): DeviceInfo {
 
     // Network information (experimental API)
     if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
+      const connection = (navigator as unknown).connection;
       if (connection) {
         deviceInfo.connectionType = connection.type;
         deviceInfo.effectiveType = connection.effectiveType;
@@ -205,17 +204,19 @@ export function getNavigationMetrics(): NavigationMetrics {
   if (performance.getEntriesByType) {
     try {
       const paintEntries = performance.getEntriesByType('paint');
-      
-      const firstPaint = paintEntries.find(entry => entry.name === 'first-paint');
+
+      const firstPaint = paintEntries.find((entry) => entry.name === 'first-paint');
       if (firstPaint) {
         metrics.firstPaint = firstPaint.startTime;
       }
 
-      const firstContentfulPaint = paintEntries.find(entry => entry.name === 'first-contentful-paint');
+      const firstContentfulPaint = paintEntries.find(
+        (entry) => entry.name === 'first-contentful-paint',
+      );
       if (firstContentfulPaint) {
         metrics.firstContentfulPaint = firstContentfulPaint.startTime;
       }
-    } catch (error) {
+    } catch {
       // Paint entries not available or not supported
     }
   }
@@ -233,8 +234,8 @@ export function getResourceMetrics(): ResourceMetric[] {
 
   try {
     const resourceEntries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
-    
-    return resourceEntries.map(entry => ({
+
+    return resourceEntries.map((entry) => ({
       name: entry.name,
       type: entry.initiatorType,
       startTime: entry.startTime,
@@ -341,7 +342,7 @@ export class PerformanceMonitorImpl implements PerformanceMonitor {
    */
   onMetric(callback: PerformanceObserverCallback): () => void {
     this.callbacks.add(callback);
-    
+
     // Return unsubscribe function
     return () => {
       this.callbacks.delete(callback);
@@ -359,7 +360,7 @@ export class PerformanceMonitorImpl implements PerformanceMonitor {
 
       // In a real implementation, this would send metrics to a remote endpoint
       // For now, we'll just simulate the flush operation
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50));
 
       // Clear metrics after successful flush
       this.clearMetrics();
@@ -375,7 +376,7 @@ export class PerformanceMonitorImpl implements PerformanceMonitor {
    * Sets up web vitals collection
    */
   private setupWebVitalsCollection(): void {
-    const metricHandler = (metric: EnhancedMetric) => {
+    const metricHandler = (metric: EnhancedMetric): void => {
       if (!this.isStarted) {
         return;
       }
@@ -403,7 +404,7 @@ export class PerformanceMonitorImpl implements PerformanceMonitor {
   private setupAutoFlush(): void {
     if (this.config.flushInterval > 0) {
       this.flushTimer = setInterval(() => {
-        this.flush().catch(error => {
+        this.flush().catch((error) => {
           console.error('Auto-flush failed:', error);
         });
       }, this.config.flushInterval);
@@ -431,7 +432,7 @@ export class PerformanceMonitorImpl implements PerformanceMonitor {
    * Notifies all registered callbacks
    */
   private notifyCallbacks(metric: EnhancedMetric): void {
-    this.callbacks.forEach(callback => {
+    this.callbacks.forEach((callback) => {
       try {
         callback(metric);
       } catch (error) {

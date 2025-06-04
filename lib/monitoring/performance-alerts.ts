@@ -4,19 +4,15 @@
 
 import { getCurrentCorrelationId, generateCorrelationId } from '@/lib/logging/correlation';
 import type { EnhancedMetric } from '@/lib/performance/types';
-import type { 
-  PerformanceAlertConfig, 
-  PerformanceAlert, 
-  AlertSeverity 
-} from './types';
+import type { PerformanceAlertConfig, PerformanceAlert, AlertSeverity } from './types';
 
 /**
  * UUID v4 generator
  */
 function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -57,7 +53,7 @@ export function validatePerformanceAlertConfig(config: PerformanceAlertConfig): 
 export function calculateAlertSeverity(
   metricName: string,
   value: number,
-  thresholds: PerformanceAlertConfig['thresholds']
+  thresholds: PerformanceAlertConfig['thresholds'],
 ): AlertSeverity | null {
   const threshold = thresholds[metricName as keyof typeof thresholds];
   if (!threshold) {
@@ -86,7 +82,7 @@ export function shouldTriggerAlert(
   metric: EnhancedMetric,
   config: PerformanceAlertConfig,
   cooldownState: Map<string, number>,
-  hourlyCount?: Map<number, number>
+  hourlyCount?: Map<number, number>,
 ): boolean {
   if (!config.enabled) {
     return false;
@@ -103,7 +99,7 @@ export function shouldTriggerAlert(
   const now = Date.now();
   const cooldownMs = config.cooldownMinutes * 60 * 1000;
 
-  if (lastAlertTime && (now - lastAlertTime) < cooldownMs) {
+  if (lastAlertTime && now - lastAlertTime < cooldownMs) {
     return false;
   }
 
@@ -111,7 +107,7 @@ export function shouldTriggerAlert(
   if (hourlyCount) {
     const hourKey = Math.floor(now / (60 * 60 * 1000));
     const currentHourCount = hourlyCount.get(hourKey) || 0;
-    
+
     if (currentHourCount >= config.maxAlertsPerHour) {
       return false;
     }
@@ -125,7 +121,7 @@ export function shouldTriggerAlert(
  */
 export function createPerformanceAlert(
   metric: EnhancedMetric,
-  thresholds: PerformanceAlertConfig['thresholds']
+  thresholds: PerformanceAlertConfig['thresholds'],
 ): PerformanceAlert {
   const severity = calculateAlertSeverity(metric.name, metric.value, thresholds);
   const threshold = thresholds[metric.name as keyof typeof thresholds];
@@ -183,7 +179,7 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
   private config?: PerformanceAlertConfig;
   private cooldownState = new Map<string, number>();
   private hourlyCount = new Map<number, number>();
-  private alertDelivery?: any;
+  private alertDelivery?: unknown;
   private isInitialized = false;
   private metrics: AlerterMetrics = {
     totalAlerts: 0,
@@ -204,8 +200,8 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
     try {
       // In a real implementation, this would initialize alert delivery services
       // For testing, we use a mock service if available
-      if ((global as any).__TEST_ALERT_DELIVERY__) {
-        this.alertDelivery = (global as any).__TEST_ALERT_DELIVERY__;
+      if ((global as unknown).__TEST_ALERT_DELIVERY__) {
+        this.alertDelivery = (global as unknown).__TEST_ALERT_DELIVERY__;
       } else {
         // In production, this would initialize real delivery services
         console.warn('Alert delivery service not available - running in development mode');
@@ -255,7 +251,7 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
     }
   }
 
-  private updateState(metricName: string, severity: AlertSeverity): void {
+  private updateState(metricName: string, _severity: AlertSeverity): void {
     const now = Date.now();
 
     // Update cooldown state
@@ -288,7 +284,7 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
 
     // Execute all deliveries in parallel, but don't fail if some fail
     const results = await Promise.allSettled(deliveryPromises);
-    
+
     // Log any delivery failures
     results.forEach((result, index) => {
       if (result.status === 'rejected') {
@@ -301,14 +297,15 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
 
   private updateMetrics(alert: PerformanceAlert): void {
     this.metrics.totalAlerts++;
-    this.metrics.alertsByMetric[alert.metric] = (this.metrics.alertsByMetric[alert.metric] || 0) + 1;
+    this.metrics.alertsByMetric[alert.metric] =
+      (this.metrics.alertsByMetric[alert.metric] || 0) + 1;
     this.metrics.alertsBySeverity[alert.severity]++;
     this.metrics.lastAlertTime = Date.now();
   }
 
   private cleanupState(): void {
     const now = Date.now();
-    const oneHourAgo = now - (60 * 60 * 1000);
+    const oneHourAgo = now - 60 * 60 * 1000;
 
     // Clean up old hourly counts
     for (const [hourKey] of this.hourlyCount.entries()) {
@@ -319,7 +316,7 @@ class PerformanceAlerterImpl implements PerformanceAlerter {
     }
 
     // Clean up old cooldown state (keep for 24 hours)
-    const oneDayAgo = now - (24 * 60 * 60 * 1000);
+    const oneDayAgo = now - 24 * 60 * 60 * 1000;
     for (const [metricName, lastAlertTime] of this.cooldownState.entries()) {
       if (lastAlertTime < oneDayAgo) {
         this.cooldownState.delete(metricName);

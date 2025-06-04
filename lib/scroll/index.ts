@@ -2,12 +2,12 @@
  * Core scroll utilities for smooth scrolling and navigation
  */
 
-import type { ScrollToOptions, ScrollTarget, ScrollPosition } from './types';
-import { 
-  isSmoothScrollSupported, 
+import type { ScrollToOptions, ScrollPosition } from './types';
+import {
+  isSmoothScrollSupported,
   isIntersectionObserverSupported,
   smoothScrollPolyfill,
-  calculateScrollPosition 
+  calculateScrollPosition,
 } from './utils';
 
 /**
@@ -21,14 +21,14 @@ const DEFAULT_SCROLL_OPTIONS: Required<ScrollToOptions> = {
 
 /**
  * Scrolls to a specific element with cross-browser compatibility
- * 
+ *
  * @param target - Element selector string or HTMLElement reference
  * @param options - Scroll behavior options
  * @returns Promise that resolves when scroll is complete
  */
 export async function scrollToElement(
-  target: string | HTMLElement, 
-  options: ScrollToOptions = {}
+  target: string | HTMLElement,
+  options: ScrollToOptions = {},
 ): Promise<void> {
   // Validate input
   if (target === null || target === undefined) {
@@ -37,7 +37,7 @@ export async function scrollToElement(
 
   // Get element reference
   let element: HTMLElement;
-  
+
   if (typeof target === 'string') {
     const found = document.querySelector(target) as HTMLElement;
     if (!found) {
@@ -68,9 +68,9 @@ export async function scrollToElement(
         block: scrollOptions.block,
         inline: scrollOptions.inline,
       });
-      
+
       // Return promise that resolves when smooth scroll likely completes
-      return new Promise(resolve => setTimeout(resolve, 1000));
+      return new Promise((resolve) => setTimeout(resolve, 1000));
     } else {
       // Fallback to polyfill for smooth scroll
       if (scrollOptions.behavior === 'smooth') {
@@ -95,17 +95,17 @@ export async function scrollToElement(
 
 /**
  * Scrolls to a specific section and manages focus for accessibility
- * 
+ *
  * @param sectionId - ID of the section to scroll to
  * @param options - Scroll behavior options
  * @returns Promise that resolves when scroll and focus are complete
  */
 export async function scrollToSection(
-  sectionId: string, 
-  options: ScrollToOptions = {}
+  sectionId: string,
+  options: ScrollToOptions = {},
 ): Promise<void> {
   const element = document.getElementById(sectionId);
-  
+
   if (!element) {
     throw new Error(`Section with ID "${sectionId}" not found`);
   }
@@ -119,7 +119,7 @@ export async function scrollToSection(
     if (!element.hasAttribute('tabIndex')) {
       element.setAttribute('tabIndex', '-1');
     }
-    
+
     // Focus the element after a brief delay to ensure scroll completes
     setTimeout(() => {
       element.focus();
@@ -132,18 +132,18 @@ export async function scrollToSection(
 
 /**
  * Gets the current scroll position with percentage calculation
- * 
+ *
  * @returns Current scroll position data
  */
 export function getScrollPosition(): ScrollPosition {
   const x = window.scrollX || 0;
   const y = window.scrollY || 0;
-  
+
   // Calculate scroll percentage
   const documentHeight = document.documentElement.scrollHeight;
   const windowHeight = window.innerHeight;
   const maxScroll = Math.max(0, documentHeight - windowHeight);
-  
+
   let percentage = 0;
   if (maxScroll > 0) {
     percentage = Math.min(100, Math.max(0, (y / maxScroll) * 100));
@@ -158,27 +158,23 @@ export function getScrollPosition(): ScrollPosition {
 
 /**
  * Checks if an element is currently in the viewport
- * 
+ *
  * @param element - Element to check
  * @param threshold - Intersection threshold (0-1, default 0.1)
  * @returns Promise that resolves with visibility status
  */
-export function isElementInView(
-  element: HTMLElement, 
-  threshold: number = 0.1
-): Promise<boolean> {
+export function isElementInView(element: HTMLElement, threshold: number = 0.1): Promise<boolean> {
   return new Promise((resolve) => {
     // Fallback for browsers without IntersectionObserver
     if (!isIntersectionObserverSupported()) {
       // Simple fallback using getBoundingClientRect
       try {
         const rect = element.getBoundingClientRect();
-        const isVisible = (
+        const isVisible =
           rect.top >= 0 &&
           rect.left >= 0 &&
           rect.bottom <= window.innerHeight &&
-          rect.right <= window.innerWidth
-        );
+          rect.right <= window.innerWidth;
         resolve(isVisible);
       } catch {
         resolve(false);
@@ -193,7 +189,7 @@ export function isElementInView(
         observer.disconnect();
         resolve(isIntersecting);
       },
-      { threshold }
+      { threshold },
     );
 
     observer.observe(element);

@@ -2,9 +2,9 @@
  * Lighthouse CI configuration and validation utilities
  */
 
-import type { 
-  LighthouseConfig, 
-  PerformanceBudgetConfig, 
+import type {
+  LighthouseConfig,
+  PerformanceBudgetConfig,
   PerformanceBudget,
   BundleStats,
   BundleAnalysis,
@@ -13,28 +13,30 @@ import type {
 /**
  * Default performance budget thresholds
  */
-const DEFAULT_BUDGETS: Required<Omit<PerformanceBudgetConfig, 'enableWarnings' | 'warningThresholds'>> = {
+const DEFAULT_BUDGETS: Required<
+  Omit<PerformanceBudgetConfig, 'enableWarnings' | 'warningThresholds'>
+> = {
   performance: 95,
   accessibility: 95,
   bestPractices: 90,
   seo: 95,
-  lcp: 2500,    // 2.5s - "good" threshold
-  fid: 100,     // 100ms - "good" threshold
-  cls: 0.1,     // 0.1 - "good" threshold
-  fcp: 1800,    // 1.8s - optimistic target
-  tbt: 300,     // 300ms - reasonable target
-  tti: 3000,    // 3s - interactive threshold
-  si: 3000,     // 3s - speed index target
+  lcp: 2500, // 2.5s - "good" threshold
+  fid: 100, // 100ms - "good" threshold
+  cls: 0.1, // 0.1 - "good" threshold
+  fcp: 1800, // 1.8s - optimistic target
+  tbt: 300, // 300ms - reasonable target
+  tti: 3000, // 3s - interactive threshold
+  si: 3000, // 3s - speed index target
 };
 
 /**
  * Bundle size budgets (in bytes)
  */
 const BUNDLE_BUDGETS = {
-  maxTotalSize: 300000,      // 300KB
-  maxGzippedSize: 100000,    // 100KB gzipped
-  maxChunkSize: 200000,      // 200KB per chunk
-  vendorThreshold: 150000,   // 150KB vendor chunk warning
+  maxTotalSize: 300000, // 300KB
+  maxGzippedSize: 100000, // 100KB gzipped
+  maxChunkSize: 200000, // 200KB per chunk
+  vendorThreshold: 150000, // 150KB vendor chunk warning
 };
 
 /**
@@ -75,7 +77,7 @@ export function validateLighthouseConfig(config: LighthouseConfig): boolean {
   }
 
   // Validate assertion values
-  for (const [key, [level, config]] of Object.entries(assert.assertions)) {
+  for (const [_key, [level, config]] of Object.entries(assert.assertions)) {
     if (level !== 'error' && level !== 'warn') {
       throw new Error(`Invalid assertion level: ${level}`);
     }
@@ -100,7 +102,7 @@ export function validateLighthouseConfig(config: LighthouseConfig): boolean {
  * Creates performance budget assertions for Lighthouse CI
  */
 export function createPerformanceBudgets(
-  config: PerformanceBudgetConfig & { enableWarnings?: boolean; warningThresholds?: any }
+  config: PerformanceBudgetConfig & { enableWarnings?: boolean; warningThresholds?: unknown },
 ): PerformanceBudget {
   // Validate input values
   if (config.performance !== undefined && (config.performance < 0 || config.performance > 100)) {
@@ -134,7 +136,7 @@ export function createPerformanceBudgets(
     // Additional performance metrics
     'total-blocking-time': ['error', { maxNumericValue: budgets.tbt }],
     'speed-index': ['error', { maxNumericValue: budgets.si }],
-    'interactive': ['error', { maxNumericValue: budgets.tti }],
+    interactive: ['error', { maxNumericValue: budgets.tti }],
   };
 
   // Add warning thresholds if enabled
@@ -169,8 +171,8 @@ export function analyzeBundleSize(stats: BundleStats): BundleAnalysis {
   const recommendations: string[] = [];
 
   // Check total size budget
-  const isWithinBudget = size <= BUNDLE_BUDGETS.maxTotalSize && 
-                        gzippedSize <= BUNDLE_BUDGETS.maxGzippedSize;
+  const isWithinBudget =
+    size <= BUNDLE_BUDGETS.maxTotalSize && gzippedSize <= BUNDLE_BUDGETS.maxGzippedSize;
 
   if (!isWithinBudget) {
     if (size > BUNDLE_BUDGETS.maxTotalSize) {
@@ -184,24 +186,29 @@ export function analyzeBundleSize(stats: BundleStats): BundleAnalysis {
   }
 
   // Analyze individual chunks
-  const chunksWithPercentage = chunks.map(chunk => ({
+  const chunksWithPercentage = chunks.map((chunk) => ({
     ...chunk,
     percentage: Math.round((chunk.size / size) * 100),
   }));
 
   for (const chunk of chunksWithPercentage) {
     if (chunk.size > BUNDLE_BUDGETS.maxChunkSize) {
-      recommendations.push(`Chunk "${chunk.name}" is too large (${Math.round(chunk.size / 1000)}KB)`);
+      recommendations.push(
+        `Chunk "${chunk.name}" is too large (${Math.round(chunk.size / 1000)}KB)`,
+      );
     }
 
     if (chunk.name === 'vendor' && chunk.size > BUNDLE_BUDGETS.vendorThreshold) {
-      recommendations.push(`Vendor chunk is too large (${Math.round(chunk.size / 1000)}KB), consider splitting`);
+      recommendations.push(
+        `Vendor chunk is too large (${Math.round(chunk.size / 1000)}KB), consider splitting`,
+      );
       recommendations.push('Review third-party dependencies for optimization opportunities');
     }
   }
 
   // General optimization recommendations
-  if (size > BUNDLE_BUDGETS.maxTotalSize * 0.8) { // Within 80% of budget
+  if (size > BUNDLE_BUDGETS.maxTotalSize * 0.8) {
+    // Within 80% of budget
     recommendations.push('Consider implementing tree shaking to eliminate unused code');
     recommendations.push('Review and minimize third-party dependencies');
   }
@@ -230,7 +237,7 @@ export function createLighthouseConfig(
     numberOfRuns?: number;
     preset?: 'mobile' | 'desktop';
     upload?: boolean;
-  } = {}
+  } = {},
 ): LighthouseConfig {
   const { numberOfRuns = 3, preset = 'mobile', upload = false } = options;
 
@@ -262,11 +269,10 @@ export function createLighthouseConfig(
 /**
  * Validates Core Web Vitals thresholds against industry standards
  */
-export function validateCoreWebVitals(metrics: {
-  lcp?: number;
-  fid?: number;
-  cls?: number;
-}): { isValid: boolean; warnings: string[] } {
+export function validateCoreWebVitals(metrics: { lcp?: number; fid?: number; cls?: number }): {
+  isValid: boolean;
+  warnings: string[];
+} {
   const warnings: string[] = [];
   let isValid = true;
 
@@ -320,5 +326,5 @@ export const DEFAULT_LIGHTHOUSE_CONFIG = createLighthouseConfig(
     numberOfRuns: 3,
     preset: 'mobile',
     upload: true,
-  }
+  },
 );

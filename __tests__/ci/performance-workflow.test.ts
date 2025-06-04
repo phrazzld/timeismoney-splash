@@ -2,8 +2,12 @@
  * Tests for CI performance workflow configuration (T021)
  */
 
-import { createGitHubWorkflow, validateWorkflowConfig, parseWorkflowResults } from '@/lib/performance/ci-workflow';
-import type { GitHubWorkflowConfig, WorkflowResult } from '@/lib/performance/lighthouse-types';
+import {
+  createGitHubWorkflow,
+  validateWorkflowConfig,
+  parseWorkflowResults,
+} from '@/lib/performance/ci-workflow';
+import type { GitHubWorkflowConfig } from '@/lib/performance/lighthouse-types';
 
 // Mock YAML parser
 jest.mock('js-yaml', () => ({
@@ -85,13 +89,13 @@ describe('CI Performance Workflow (T021)', () => {
       });
 
       const steps = workflow.jobs.lighthouse.steps;
-      
+
       // Should include cache step
       expect(steps).toContainEqual(
         expect.objectContaining({
           name: 'Cache dependencies',
           uses: 'actions/cache@v3',
-        })
+        }),
       );
 
       // Should include bundle analysis
@@ -99,7 +103,7 @@ describe('CI Performance Workflow (T021)', () => {
         expect.objectContaining({
           name: 'Analyze bundle size',
           run: 'npx @next/bundle-analyzer',
-        })
+        }),
       );
 
       // Should include Slack notification
@@ -107,7 +111,7 @@ describe('CI Performance Workflow (T021)', () => {
         expect.objectContaining({
           name: 'Notify Slack on failure',
           if: 'failure()',
-        })
+        }),
       );
     });
 
@@ -176,7 +180,9 @@ describe('CI Performance Workflow (T021)', () => {
         // Missing nodeVersion and lighthouseConfig
       } as GitHubWorkflowConfig;
 
-      expect(() => validateWorkflowConfig(invalidConfig)).toThrow('Missing required field: nodeVersion');
+      expect(() => validateWorkflowConfig(invalidConfig)).toThrow(
+        'Missing required field: nodeVersion',
+      );
     });
 
     it('should validate Node.js version format', () => {
@@ -189,20 +195,24 @@ describe('CI Performance Workflow (T021)', () => {
         },
       };
 
-      expect(() => validateWorkflowConfig(invalidNodeVersion)).toThrow('Invalid Node.js version format');
+      expect(() => validateWorkflowConfig(invalidNodeVersion)).toThrow(
+        'Invalid Node.js version format',
+      );
     });
 
     it('should validate trigger types', () => {
       const invalidTriggers: GitHubWorkflowConfig = {
         name: 'Lighthouse CI',
-        triggers: ['invalid_trigger'] as any,
+        triggers: ['invalid_trigger'] as unknown,
         nodeVersion: '20',
         lighthouseConfig: {
           configPath: './lighthouserc.js',
         },
       };
 
-      expect(() => validateWorkflowConfig(invalidTriggers)).toThrow('Invalid trigger type: invalid_trigger');
+      expect(() => validateWorkflowConfig(invalidTriggers)).toThrow(
+        'Invalid trigger type: invalid_trigger',
+      );
     });
 
     it('should validate environment URLs', () => {
@@ -213,12 +223,12 @@ describe('CI Performance Workflow (T021)', () => {
         lighthouseConfig: {
           configPath: './lighthouserc.js',
         },
-        environments: [
-          { name: 'invalid', url: 'not-a-url' },
-        ],
+        environments: [{ name: 'invalid', url: 'not-a-url' }],
       };
 
-      expect(() => validateWorkflowConfig(invalidEnvironments)).toThrow('Invalid URL format: not-a-url');
+      expect(() => validateWorkflowConfig(invalidEnvironments)).toThrow(
+        'Invalid URL format: not-a-url',
+      );
     });
   });
 
@@ -293,12 +303,12 @@ describe('CI Performance Workflow (T021)', () => {
             scores: {
               performance: 0.85,
               accessibility: 0.95,
-              bestPractices: 0.90,
+              bestPractices: 0.9,
               seo: 0.95,
             },
             metrics: {
               'largest-contentful-paint': 3500, // Violates budget
-              'cumulative-layout-shift': 0.15,  // Violates budget
+              'cumulative-layout-shift': 0.15, // Violates budget
             },
             budgetViolations: [
               { metric: 'largest-contentful-paint', actual: 3500, budget: 2500 },
@@ -371,7 +381,7 @@ describe('CI Performance Workflow (T021)', () => {
       });
 
       const lhciStep = workflow.jobs.lighthouse.steps.find(
-        step => step.name === 'Run Lighthouse CI'
+        (step) => step.name === 'Run Lighthouse CI',
       );
 
       expect(lhciStep?.run).toContain('npx @lhci/cli@0.12.x autorun');
@@ -392,7 +402,7 @@ describe('CI Performance Workflow (T021)', () => {
         expect.objectContaining({
           name: 'Comment PR with results',
           uses: 'treosh/lighthouse-ci-action@v10',
-        })
+        }),
       );
     });
 
@@ -420,7 +430,9 @@ describe('CI Performance Workflow (T021)', () => {
         // Missing required fields
       };
 
-      expect(() => parseWorkflowResults(malformedResults as any)).toThrow('Invalid workflow results format');
+      expect(() => parseWorkflowResults(malformedResults as unknown)).toThrow(
+        'Invalid workflow results format',
+      );
     });
 
     it('should handle missing workflow file gracefully', () => {
@@ -451,7 +463,9 @@ describe('CI Performance Workflow (T021)', () => {
         })),
       };
 
-      expect(() => validateWorkflowConfig(tooManyEnvironments)).toThrow('Too many environments in matrix (max 20)');
+      expect(() => validateWorkflowConfig(tooManyEnvironments)).toThrow(
+        'Too many environments in matrix (max 20)',
+      );
     });
   });
 });

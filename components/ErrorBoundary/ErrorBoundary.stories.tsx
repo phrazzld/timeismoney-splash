@@ -5,17 +5,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
-import type { ErrorBoundaryProps } from './types';
+import type { ErrorBoundaryProps as _ErrorBoundaryProps } from './types';
 
 // Component that throws an error for testing
-const ThrowError: React.FC<{ message?: string; shouldThrow?: boolean }> = ({ 
+const ThrowError: React.FC<{ message?: string; shouldThrow?: boolean }> = ({
   message = 'Test error for Storybook',
-  shouldThrow = true 
+  shouldThrow = true,
 }) => {
   if (shouldThrow) {
     throw new Error(message);
   }
-  return <div className="p-4 bg-green-100 text-green-800 rounded">Component rendered successfully!</div>;
+  return (
+    <div className="p-4 bg-green-100 text-green-800 rounded">Component rendered successfully!</div>
+  );
 };
 
 // Component with async error
@@ -27,14 +29,18 @@ const AsyncError: React.FC = () => {
       setShouldThrow(true);
     }, 2000);
 
-    return () => clearTimeout(timer);
+    return (): void => clearTimeout(timer);
   }, []);
 
   if (shouldThrow) {
     throw new Error('Async error after 2 seconds');
   }
 
-  return <div className="p-4 bg-blue-100 text-blue-800 rounded">Loading... (will error in 2 seconds)</div>;
+  return (
+    <div className="p-4 bg-blue-100 text-blue-800 rounded">
+      Loading... (will error in 2 seconds)
+    </div>
+  );
 };
 
 // Normal working component
@@ -58,18 +64,18 @@ const ComplexComponent: React.FC<{ shouldError?: boolean }> = ({ shouldError = f
       throw new Error('Error triggered by useEffect when count > 2');
     }
 
-    setData(prev => [...prev, `Item ${count}`]);
+    setData((prev) => [...prev, `Item ${count}`]);
   }, [count, shouldError]);
 
   return (
     <div className="p-4 border rounded-lg">
       <h4 className="font-semibold mb-2">Complex Component with Hooks</h4>
       <p>Count: {count}</p>
-      <button 
-        onClick={() => setCount(c => c + 1)}
+      <button
+        onClick={() => setCount((c) => c + 1)}
         className="mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
       >
-        Increment (will error when count > 2)
+        Increment (will error when count &gt; 2)
       </button>
       <div className="mt-2">
         <strong>Data:</strong>
@@ -193,7 +199,7 @@ export const CustomFallback: Story = {
       <div className="p-8 bg-purple-100 border border-purple-300 rounded-lg text-center">
         <div className="text-purple-600 text-6xl mb-4">🔮</div>
         <h2 className="text-2xl font-bold text-purple-800 mb-2">Magic Error!</h2>
-        <p className="text-purple-600">Something magical went wrong, but don't worry!</p>
+        <p className="text-purple-600">Something magical went wrong, but don&apos;t worry!</p>
       </div>
     ),
     testId: 'error-boundary',
@@ -274,7 +280,9 @@ export const ComplexComponentError: Story = {
     <div className="space-y-4">
       <div className="p-4 bg-blue-100 rounded-lg">
         <h3 className="font-semibold text-blue-800 mb-2">Instructions:</h3>
-        <p className="text-blue-600">Click the increment button more than 2 times to trigger an error in useEffect.</p>
+        <p className="text-blue-600">
+          Click the increment button more than 2 times to trigger an error in useEffect.
+        </p>
       </div>
       <ErrorBoundary {...args}>
         <ComplexComponent shouldError />
@@ -333,10 +341,10 @@ export const NestedErrorBoundaries: Story = {
         <h3 className="font-semibold text-gray-800 mb-2">Nested Error Boundaries:</h3>
         <p className="text-gray-600">Outer boundary catches errors from inner boundary.</p>
       </div>
-      
+
       {/* Outer Error Boundary */}
-      <ErrorBoundary 
-        enableRetry 
+      <ErrorBoundary
+        enableRetry
         testId="outer-boundary"
         fallback={
           <div className="p-4 bg-blue-100 border border-blue-300 rounded">
@@ -346,10 +354,10 @@ export const NestedErrorBoundaries: Story = {
       >
         <div className="p-4 border rounded-lg">
           <h4 className="font-semibold mb-2">Outer Component</h4>
-          
+
           {/* Inner Error Boundary */}
-          <ErrorBoundary 
-            enableRetry 
+          <ErrorBoundary
+            enableRetry
             testId="inner-boundary"
             fallback={
               <div className="p-3 bg-green-100 border border-green-300 rounded">
@@ -380,21 +388,21 @@ export const MultipleErrorBoundaries: Story = {
           <WorkingComponent />
         </div>
       </ErrorBoundary>
-      
+
       <ErrorBoundary enableRetry testId="boundary-2">
         <div className="p-4 border rounded-lg">
           <h4 className="font-semibold mb-2">Section 2</h4>
           <ThrowError message="Section 2 error" />
         </div>
       </ErrorBoundary>
-      
+
       <ErrorBoundary enableRetry testId="boundary-3">
         <div className="p-4 border rounded-lg">
           <h4 className="font-semibold mb-2">Section 3</h4>
           <ComplexComponent />
         </div>
       </ErrorBoundary>
-      
+
       <ErrorBoundary enableRetry testId="boundary-4">
         <div className="p-4 border rounded-lg">
           <h4 className="font-semibold mb-2">Section 4</h4>

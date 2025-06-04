@@ -11,8 +11,13 @@ import {
   isWebVitalSupported,
   WebVitalsCollector,
 } from './web-vitals';
-import { generateCorrelationId, setCorrelationId, clearCorrelationId } from '../logging/correlation';
-import type { RawMetric, EnhancedMetric, PerformanceConfig } from './types';
+import {
+  generateCorrelationId,
+  setCorrelationId,
+  clearCorrelationId,
+} from '../logging/correlation';
+import type { RawMetric, PerformanceConfig } from './types';
+import * as webVitals from 'web-vitals';
 
 // Mock web-vitals library
 jest.mock('web-vitals', () => ({
@@ -34,13 +39,12 @@ describe('Web Vitals Integration (T018)', () => {
 
   beforeEach(() => {
     // Reset mocks
-    const webVitals = require('web-vitals');
-    mockOnLCP = webVitals.onLCP.mockClear();
-    mockOnFID = webVitals.onFID.mockClear();
-    mockOnCLS = webVitals.onCLS.mockClear();
-    mockOnFCP = webVitals.onFCP.mockClear();
-    mockOnINP = webVitals.onINP.mockClear();
-    mockOnTTFB = webVitals.onTTFB.mockClear();
+    mockOnLCP = (webVitals.onLCP as jest.Mock).mockClear();
+    mockOnFID = (webVitals.onFID as jest.Mock).mockClear();
+    mockOnCLS = (webVitals.onCLS as jest.Mock).mockClear();
+    mockOnFCP = (webVitals.onFCP as jest.Mock).mockClear();
+    mockOnINP = (webVitals.onINP as jest.Mock).mockClear();
+    mockOnTTFB = (webVitals.onTTFB as jest.Mock).mockClear();
 
     // Clear metrics
     clearWebVitalMetrics();
@@ -126,7 +130,7 @@ describe('Web Vitals Integration (T018)', () => {
           url: 'https://example.com/test',
           userAgent: 'Mozilla/5.0 (Test Browser)',
           timestamp: expect.any(String),
-        })
+        }),
       );
     });
 
@@ -205,7 +209,9 @@ describe('Web Vitals Integration (T018)', () => {
       const enhanced = createEnhancedMetric(rawMetric);
 
       expect(enhanced.correlationId).toBeDefined();
-      expect(enhanced.correlationId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      expect(enhanced.correlationId).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
     });
 
     it('should include device memory when available', () => {
@@ -289,7 +295,7 @@ describe('Web Vitals Integration (T018)', () => {
     });
 
     it('should handle unknown metrics gracefully', () => {
-      expect(calculateRating('UNKNOWN' as any, 1000)).toBe('needs-improvement');
+      expect(calculateRating('UNKNOWN' as unknown, 1000)).toBe('needs-improvement');
     });
   });
 
@@ -411,7 +417,7 @@ describe('Web Vitals Integration (T018)', () => {
 
       // Verify no new metrics are collected after stop
       const initialMetrics = collector.getMetrics();
-      
+
       const lcpMetric: RawMetric = {
         name: 'LCP',
         value: 1500,
@@ -421,7 +427,7 @@ describe('Web Vitals Integration (T018)', () => {
 
       // This should not add to collector metrics since it's stopped
       mockOnLCP.mock.calls[0][0](lcpMetric);
-      
+
       expect(collector.getMetrics()).toHaveLength(initialMetrics.length);
     });
 
@@ -442,7 +448,7 @@ describe('Web Vitals Integration (T018)', () => {
       mockOnLCP.mock.calls[0][0](lcpMetric);
 
       expect(metricCallback).toHaveBeenCalledWith(
-        expect.objectContaining({ name: 'LCP', value: 1500 })
+        expect.objectContaining({ name: 'LCP', value: 1500 }),
       );
 
       // Test unsubscribe
@@ -458,10 +464,11 @@ describe('Web Vitals Integration (T018)', () => {
       };
 
       const sampledCollector = new WebVitalsCollector(sampledConfig);
-      
+
       // Mock Math.random to control sampling
       const originalRandom = Math.random;
-      Math.random = jest.fn()
+      Math.random = jest
+        .fn()
         .mockReturnValueOnce(0.3) // Should sample (< 0.5)
         .mockReturnValueOnce(0.7); // Should not sample (> 0.5)
 
@@ -492,7 +499,6 @@ describe('Web Vitals Integration (T018)', () => {
 
         mockOnLCP.mock.calls[0][0](lcpMetric2);
         expect(metricCallback).toHaveBeenCalledTimes(1); // Still only 1 call
-
       } finally {
         Math.random = originalRandom;
         sampledCollector.stop();
@@ -532,10 +538,10 @@ describe('Web Vitals Integration (T018)', () => {
   describe('Performance Impact', () => {
     it('should have minimal performance overhead', () => {
       const callback = jest.fn();
-      
+
       const start = performance.now();
       setupWebVitals(callback);
-      
+
       // Simulate many metric reports
       for (let i = 0; i < 100; i++) {
         const metric: RawMetric = {
@@ -547,10 +553,10 @@ describe('Web Vitals Integration (T018)', () => {
 
         mockOnLCP.mock.calls[0][0](metric);
       }
-      
+
       const end = performance.now();
       const timePerMetric = (end - start) / 100;
-      
+
       // Should process each metric in less than 1ms
       expect(timePerMetric).toBeLessThan(1);
     });

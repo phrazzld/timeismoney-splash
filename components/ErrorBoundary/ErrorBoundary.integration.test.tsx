@@ -6,7 +6,13 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ErrorBoundary } from './ErrorBoundary';
 import { AnalyticsProvider } from '../AnalyticsProvider';
-import { generateCorrelationId, setCorrelationId, clearCorrelationId } from '@/lib/logging/correlation';
+import {
+  generateCorrelationId,
+  setCorrelationId,
+  clearCorrelationId,
+} from '@/lib/logging/correlation';
+import * as analytics from '@/lib/analytics';
+import * as logging from '@/lib/logging';
 
 // Mock analytics and logging
 jest.mock('@/lib/analytics', () => ({
@@ -31,12 +37,10 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
 
   beforeEach(() => {
     // Mock analytics
-    const analytics = require('@/lib/analytics');
-    mockAnalyticsTrack = analytics.analytics.track.mockClear();
+    mockAnalyticsTrack = (analytics.analytics.track as jest.Mock).mockClear();
 
     // Mock logger
-    const logging = require('@/lib/logging');
-    mockLoggerError = logging.logger.error.mockClear();
+    mockLoggerError = ((logging as unknown).logger.error as jest.Mock).mockClear();
 
     // Suppress console.error during tests
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -51,9 +55,9 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
   });
 
   // Test component that throws an error
-  const ThrowError: React.FC<{ shouldThrow?: boolean; message?: string }> = ({ 
-    shouldThrow = true, 
-    message = 'Integration test error' 
+  const ThrowError: React.FC<{ shouldThrow?: boolean; message?: string }> = ({
+    shouldThrow = true,
+    message = 'Integration test error',
   }) => {
     if (shouldThrow) {
       throw new Error(message);
@@ -70,7 +74,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       if (shouldError && count > 0) {
         throw new Error('Error in useEffect');
       }
-      
+
       setData(`Data loaded: ${count}`);
     }, [count, shouldError]);
 
@@ -78,7 +82,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       <div>
         <div>Count: {count}</div>
         <div>Data: {data}</div>
-        <button onClick={() => setCount(c => c + 1)}>Increment</button>
+        <button onClick={() => setCount((c) => c + 1)}>Increment</button>
       </div>
     );
   };
@@ -93,7 +97,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
           <ErrorBoundary testId="error-boundary">
             <ThrowError />
           </ErrorBoundary>
-        </AnalyticsProvider>
+        </AnalyticsProvider>,
       );
 
       // Should show error UI
@@ -105,7 +109,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
         expect.any(Error),
         expect.objectContaining({
           correlationId,
-        })
+        }),
       );
     });
 
@@ -115,7 +119,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
           <ErrorBoundary testId="error-boundary">
             <ThrowError message="Analytics integration error" />
           </ErrorBoundary>
-        </AnalyticsProvider>
+        </AnalyticsProvider>,
       );
 
       // Analytics should track the error
@@ -125,7 +129,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
           errorMessage: 'Analytics integration error',
           errorName: 'Error',
           errorId: expect.any(String),
-        })
+        }),
       );
     });
 
@@ -134,7 +138,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
         render(
           <ErrorBoundary testId="error-boundary">
             <ThrowError />
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
       }).not.toThrow();
 
@@ -149,7 +153,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       render(
         <ErrorBoundary onError={onError} enableRetry testId="error-boundary">
           <ComplexComponent shouldError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Component should render initially
@@ -169,7 +173,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
     it('should recover from errors in complex components', async () => {
       let shouldError = true;
 
-      const TestWrapper = () => (
+      const TestWrapper = (): JSX.Element => (
         <ErrorBoundary enableRetry testId="error-boundary">
           <ComplexComponent shouldError={shouldError} />
         </ErrorBoundary>
@@ -198,7 +202,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
     });
 
     it('should handle async component errors', async () => {
-      const AsyncErrorComponent = () => {
+      const AsyncErrorComponent = (): JSX.Element => {
         const [loading, setLoading] = React.useState(true);
 
         React.useEffect(() => {
@@ -207,7 +211,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
             throw new Error('Async component error');
           }, 100);
 
-          return () => clearTimeout(timer);
+          return (): void => clearTimeout(timer);
         }, []);
 
         if (loading) {
@@ -222,16 +226,19 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <AsyncErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should show loading initially
       expect(screen.getByText('Loading...')).toBeInTheDocument();
 
       // Wait for async error
-      await waitFor(() => {
-        expect(onError).toHaveBeenCalled();
-      }, { timeout: 200 });
+      await waitFor(
+        () => {
+          expect(onError).toHaveBeenCalled();
+        },
+        { timeout: 200 },
+      );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
@@ -239,7 +246,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
 
   describe('Performance Impact Integration', () => {
     it('should not impact performance of non-erroring components', () => {
-      const RenderTracker = () => {
+      const RenderTracker = (): JSX.Element => {
         const renderCount = React.useRef(0);
         renderCount.current += 1;
 
@@ -249,7 +256,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       const { rerender } = render(
         <ErrorBoundary testId="error-boundary">
           <RenderTracker />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText('Render count: 1')).toBeInTheDocument();
@@ -259,7 +266,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
         rerender(
           <ErrorBoundary testId="error-boundary">
             <RenderTracker />
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
       }
 
@@ -269,8 +276,8 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
 
     it('should handle high-frequency error scenarios', async () => {
       let errorCount = 0;
-      
-      const HighFrequencyErrorComponent = () => {
+
+      const HighFrequencyErrorComponent = (): JSX.Element => {
         errorCount++;
         if (errorCount <= 10) {
           throw new Error(`High frequency error ${errorCount}`);
@@ -283,7 +290,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       render(
         <ErrorBoundary onError={onError} enableRetry testId="error-boundary">
           <HighFrequencyErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should catch the first error
@@ -292,7 +299,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       // Retry multiple times rapidly
       for (let i = 0; i < 9; i++) {
         fireEvent.click(screen.getByRole('button', { name: /try again/i }));
-        
+
         await waitFor(() => {
           expect(onError).toHaveBeenCalledTimes(i + 2);
         });
@@ -314,7 +321,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       const { rerender } = render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
@@ -324,7 +331,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       rerender(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should still show error state
@@ -339,7 +346,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       const { rerender } = render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <ThrowError key="error-component" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
@@ -348,7 +355,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       rerender(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <div key="normal-component">Normal component</div>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should render the new component
@@ -367,7 +374,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       const { rerender } = render(
         <ErrorBoundary showErrorDetails testId="error-boundary">
           <ThrowError message="Dev error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/error details/i)).toBeInTheDocument();
@@ -379,7 +386,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       rerender(
         <ErrorBoundary showErrorDetails testId="error-boundary">
           <ThrowError message="Prod error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.queryByText(/error details/i)).not.toBeInTheDocument();
@@ -396,7 +403,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       const { unmount } = render(
         <ErrorBoundary onError={onError} testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(onError).toHaveBeenCalled();
@@ -410,7 +417,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
         const { unmount } = render(
           <ErrorBoundary testId="error-boundary">
             <ThrowError message={`Cycle ${i}`} />
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
 
         expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
@@ -424,7 +431,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <ThrowError />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       const errorContainer = screen.getByTestId('error-boundary');
@@ -433,7 +440,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
     });
 
     it('should maintain focus management during errors', () => {
-      const FocusableComponent = () => {
+      const FocusableComponent = (): JSX.Element => {
         const buttonRef = React.useRef<HTMLButtonElement>(null);
 
         React.useEffect(() => {
@@ -451,7 +458,7 @@ describe('ErrorBoundary Integration Tests (T018)', () => {
       render(
         <ErrorBoundary testId="error-boundary">
           <FocusableComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should show error boundary

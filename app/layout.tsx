@@ -119,20 +119,18 @@ export default function RootLayout({
           </>
         )}
 
-        <ErrorBoundary 
-          enableRetry 
+        <ErrorBoundary
+          enableRetry
           showErrorDetails={process.env.NODE_ENV === 'development'}
           fallback={
             <div className="min-h-screen flex items-center justify-center p-4">
               <div className="max-w-md text-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                  Application Error
-                </h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">Application Error</h1>
                 <p className="text-gray-600 mb-6">
-                  We're sorry, but something went wrong. Please try refreshing the page.
+                  We&apos;re sorry, but something went wrong. Please try refreshing the page.
                 </p>
-                <button 
-                  onClick={() => window.location.reload()} 
+                <button
+                  onClick={() => window.location.reload()}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Refresh Page

@@ -8,7 +8,7 @@ import {
   createLogBatch,
   createRemoteLogEntry,
 } from '@/lib/monitoring/remote-logging';
-import type { RemoteLoggingConfig, LogBatch, RemoteLogEntry } from '@/lib/monitoring/types';
+import type { RemoteLoggingConfig, RemoteLogEntry } from '@/lib/monitoring/types';
 import type { LogEntry } from '@/lib/logging/types';
 
 // Mock HTTP client
@@ -26,7 +26,7 @@ describe('Remote Logging System', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Reset global state
-    delete (global as any).__TEST_HTTP_CLIENT__;
+    delete (global as unknown).__TEST_HTTP_CLIENT__;
   });
 
   describe('Configuration Validation', () => {
@@ -55,8 +55,9 @@ describe('Remote Logging System', () => {
         retryBackoffMs: 1000,
       };
 
-      expect(() => validateRemoteLoggingConfig(invalidConfig))
-        .toThrow('Invalid endpoint URL format');
+      expect(() => validateRemoteLoggingConfig(invalidConfig)).toThrow(
+        'Invalid endpoint URL format',
+      );
     });
 
     it('should reject invalid batch size', () => {
@@ -70,8 +71,9 @@ describe('Remote Logging System', () => {
         retryBackoffMs: 1000,
       };
 
-      expect(() => validateRemoteLoggingConfig(invalidConfig))
-        .toThrow('Batch size must be positive');
+      expect(() => validateRemoteLoggingConfig(invalidConfig)).toThrow(
+        'Batch size must be positive',
+      );
     });
 
     it('should reject invalid flush interval', () => {
@@ -85,8 +87,9 @@ describe('Remote Logging System', () => {
         retryBackoffMs: 1000,
       };
 
-      expect(() => validateRemoteLoggingConfig(invalidConfig))
-        .toThrow('Flush interval must be at least 100ms');
+      expect(() => validateRemoteLoggingConfig(invalidConfig)).toThrow(
+        'Flush interval must be at least 100ms',
+      );
     });
 
     it('should reject negative retry configuration', () => {
@@ -100,8 +103,9 @@ describe('Remote Logging System', () => {
         retryBackoffMs: 1000,
       };
 
-      expect(() => validateRemoteLoggingConfig(invalidConfig))
-        .toThrow('Max retries must be non-negative');
+      expect(() => validateRemoteLoggingConfig(invalidConfig)).toThrow(
+        'Max retries must be non-negative',
+      );
     });
 
     it('should require endpoint and API key when enabled', () => {
@@ -115,8 +119,9 @@ describe('Remote Logging System', () => {
         retryBackoffMs: 1000,
       };
 
-      expect(() => validateRemoteLoggingConfig(invalidConfig))
-        .toThrow('Endpoint is required when remote logging is enabled');
+      expect(() => validateRemoteLoggingConfig(invalidConfig)).toThrow(
+        'Endpoint is required when remote logging is enabled',
+      );
     });
   });
 
@@ -350,7 +355,7 @@ describe('Remote Logging System', () => {
       };
 
       mockHttpClient.post.mockResolvedValue({ ok: true, status: 200 });
-      (global as any).__TEST_HTTP_CLIENT__ = mockHttpClient;
+      (global as unknown).__TEST_HTTP_CLIENT__ = mockHttpClient;
 
       const logger = createRemoteLogger();
       await logger.initialize(config);
@@ -376,15 +381,13 @@ describe('Remote Logging System', () => {
       expect(mockHttpClient.post).toHaveBeenCalledWith(
         'https://api.logging-service.com/logs',
         expect.objectContaining({
-          entries: expect.arrayContaining([
-            expect.objectContaining({ message: 'Test message' }),
-          ]),
+          entries: expect.arrayContaining([expect.objectContaining({ message: 'Test message' })]),
         }),
         expect.objectContaining({
           headers: expect.objectContaining({
-            'Authorization': 'Bearer test-api-key-123',
+            Authorization: 'Bearer test-api-key-123',
           }),
-        })
+        }),
       );
     });
 
@@ -400,7 +403,7 @@ describe('Remote Logging System', () => {
       };
 
       mockHttpClient.post.mockResolvedValue({ ok: true, status: 200 });
-      (global as any).__TEST_HTTP_CLIENT__ = mockHttpClient;
+      (global as unknown).__TEST_HTTP_CLIENT__ = mockHttpClient;
 
       const logger = createRemoteLogger();
       await logger.initialize(config);
@@ -417,16 +420,14 @@ describe('Remote Logging System', () => {
       await logger.sendLogEntry(logEntry);
 
       // Wait for flush interval
-      await new Promise(resolve => setTimeout(resolve, 150));
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
       expect(mockHttpClient.post).toHaveBeenCalledWith(
         'https://api.logging-service.com/logs',
         expect.objectContaining({
-          entries: expect.arrayContaining([
-            expect.objectContaining({ message: 'Test message' }),
-          ]),
+          entries: expect.arrayContaining([expect.objectContaining({ message: 'Test message' })]),
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
@@ -447,7 +448,7 @@ describe('Remote Logging System', () => {
         .mockRejectedValueOnce(new Error('Network error'))
         .mockResolvedValueOnce({ ok: true, status: 200 });
 
-      (global as any).__TEST_HTTP_CLIENT__ = mockHttpClient;
+      (global as unknown).__TEST_HTTP_CLIENT__ = mockHttpClient;
 
       const logger = createRemoteLogger();
       await logger.initialize(config);
@@ -464,7 +465,7 @@ describe('Remote Logging System', () => {
       await logger.sendLogEntry(logEntry);
 
       // Wait for retries to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       expect(mockHttpClient.post).toHaveBeenCalledTimes(3);
     });
@@ -482,7 +483,7 @@ describe('Remote Logging System', () => {
 
       // Mock all calls to fail
       mockHttpClient.post.mockRejectedValue(new Error('Service unavailable'));
-      (global as any).__TEST_HTTP_CLIENT__ = mockHttpClient;
+      (global as unknown).__TEST_HTTP_CLIENT__ = mockHttpClient;
 
       const logger = createRemoteLogger();
       await logger.initialize(config);
@@ -498,8 +499,8 @@ describe('Remote Logging System', () => {
 
       // Send multiple entries - circuit breaker should open after failures
       for (let i = 0; i < 10; i++) {
-        await logger.sendLogEntry({ ...logEntry, message: \`Message \${i}\` });
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await logger.sendLogEntry({ ...logEntry, message: `Message ${i}` });
+        await new Promise((resolve) => setTimeout(resolve, 50));
       }
 
       // Circuit breaker should limit the number of actual HTTP calls
@@ -518,7 +519,7 @@ describe('Remote Logging System', () => {
       };
 
       mockHttpClient.post.mockResolvedValue({ ok: false, status: 400, statusText: 'Bad Request' });
-      (global as any).__TEST_HTTP_CLIENT__ = mockHttpClient;
+      (global as unknown).__TEST_HTTP_CLIENT__ = mockHttpClient;
 
       const logger = createRemoteLogger();
       await logger.initialize(config);
@@ -548,7 +549,7 @@ describe('Remote Logging System', () => {
       };
 
       mockHttpClient.post.mockResolvedValue({ ok: true, status: 200 });
-      (global as any).__TEST_HTTP_CLIENT__ = mockHttpClient;
+      (global as unknown).__TEST_HTTP_CLIENT__ = mockHttpClient;
 
       const logger = createRemoteLogger();
       await logger.initialize(config);

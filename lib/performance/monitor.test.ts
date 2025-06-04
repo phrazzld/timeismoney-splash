@@ -12,15 +12,13 @@ import {
   getNavigationMetrics,
   getResourceMetrics,
 } from './monitor';
-import { generateCorrelationId, setCorrelationId, clearCorrelationId } from '../logging/correlation';
-import type { 
-  PerformanceConfig, 
-  EnhancedMetric, 
-  BudgetViolation,
-  DeviceInfo,
-  NavigationMetrics,
-  ResourceMetric,
-} from './types';
+import {
+  generateCorrelationId,
+  setCorrelationId,
+  clearCorrelationId,
+} from '../logging/correlation';
+import type { PerformanceConfig, EnhancedMetric } from './types';
+import * as webVitalsModule from './web-vitals';
 
 // Mock web-vitals integration
 jest.mock('./web-vitals', () => ({
@@ -36,8 +34,7 @@ describe('Performance Monitor (T018)', () => {
 
   beforeEach(() => {
     // Reset mocks
-    const webVitals = require('./web-vitals');
-    mockSetupWebVitals = webVitals.setupWebVitals.mockClear();
+    mockSetupWebVitals = (webVitalsModule.setupWebVitals as jest.Mock).mockClear();
 
     // Clear correlation ID
     clearCorrelationId();
@@ -95,7 +92,7 @@ describe('Performance Monitor (T018)', () => {
       };
 
       const customMonitor = createPerformanceMonitor(customConfig);
-      
+
       expect(customMonitor.config.enableLCP).toBe(true);
       expect(customMonitor.config.enableFID).toBe(false);
       expect(customMonitor.config.sampleRate).toBe(0.5);
@@ -124,7 +121,7 @@ describe('Performance Monitor (T018)', () => {
 
       // Should create monitor with corrected values
       const monitor = createPerformanceMonitor(invalidConfig);
-      
+
       expect(monitor.config.sampleRate).toBeLessThanOrEqual(1);
       expect(monitor.config.bufferSize).toBeGreaterThan(0);
       expect(monitor.config.flushInterval).toBeGreaterThan(0);
@@ -134,13 +131,13 @@ describe('Performance Monitor (T018)', () => {
   describe('Monitor Lifecycle', () => {
     it('should start monitoring successfully', () => {
       monitor.start();
-      
+
       expect(mockSetupWebVitals).toHaveBeenCalledWith(
         expect.any(Function),
         expect.objectContaining({
           enableLCP: monitor.config.enableLCP,
           enableFID: monitor.config.enableFID,
-        })
+        }),
       );
     });
 
@@ -161,9 +158,9 @@ describe('Performance Monitor (T018)', () => {
     it('should not start if already started', () => {
       monitor.start();
       const callCount = mockSetupWebVitals.mock.calls.length;
-      
+
       monitor.start(); // Second start should be ignored
-      
+
       expect(mockSetupWebVitals.mock.calls.length).toBe(callCount);
     });
   });
@@ -176,7 +173,7 @@ describe('Performance Monitor (T018)', () => {
 
     it('should collect metrics correctly', () => {
       monitor.start();
-      
+
       expect(monitor.getMetrics()).toHaveLength(0);
 
       // Simulate metric callback
@@ -340,7 +337,7 @@ describe('Performance Monitor (T018)', () => {
 
       // Should not throw even if callback errors
       expect(() => metricCallback(testMetric)).not.toThrow();
-      
+
       expect(errorCallback).toHaveBeenCalled();
       expect(goodCallback).toHaveBeenCalled(); // Should still be called
     });
@@ -384,9 +381,9 @@ describe('Performance Monitor (T018)', () => {
       const violations = calculateBudgetViolations(metrics, getDefaultConfig().thresholds);
 
       expect(violations).toHaveLength(2); // LCP and FID should violate
-      
-      const lcpViolation = violations.find(v => v.metric === 'LCP');
-      const fidViolation = violations.find(v => v.metric === 'FID');
+
+      const lcpViolation = violations.find((v) => v.metric === 'LCP');
+      const fidViolation = violations.find((v) => v.metric === 'FID');
 
       expect(lcpViolation).toBeDefined();
       expect(lcpViolation!.severity).toBe('error');
@@ -455,9 +452,9 @@ describe('Performance Monitor (T018)', () => {
 
     it('should handle missing device APIs gracefully', () => {
       // Ensure APIs are not available
-      delete (navigator as any).deviceMemory;
-      delete (navigator as any).hardwareConcurrency;
-      delete (navigator as any).connection;
+      delete (navigator as unknown).deviceMemory;
+      delete (navigator as unknown).hardwareConcurrency;
+      delete (navigator as unknown).connection;
 
       const deviceInfo = getDeviceInfo();
 
@@ -545,7 +542,7 @@ describe('Performance Monitor (T018)', () => {
         },
       ];
 
-      jest.spyOn(performance, 'getEntriesByType').mockReturnValue(mockResourceEntries as any);
+      jest.spyOn(performance, 'getEntriesByType').mockReturnValue(mockResourceEntries as unknown);
 
       const resourceMetrics = getResourceMetrics();
 
@@ -603,14 +600,14 @@ describe('Performance Monitor (T018)', () => {
       monitor.flush = jest.fn().mockRejectedValue(new Error('Flush error'));
 
       await expect(monitor.flush()).rejects.toThrow('Flush error');
-      
+
       // Restore original method
       monitor.flush = originalFlush;
     });
 
     it('should clean up properly on stop', () => {
       monitor.start();
-      
+
       // Add some metrics
       const metricCallback = mockSetupWebVitals.mock.calls[0][0];
       const testMetric: EnhancedMetric = {

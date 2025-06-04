@@ -4,10 +4,10 @@
 
 import { onLCP, onCLS, onFCP, onINP, onTTFB } from 'web-vitals';
 import { getCurrentCorrelationId, generateCorrelationId } from '../logging/correlation';
-import type { 
-  RawMetric, 
-  EnhancedMetric, 
-  PerformanceConfig, 
+import type {
+  RawMetric,
+  EnhancedMetric,
+  PerformanceConfig,
   PerformanceObserverCallback,
   WebVitalMetric,
   PerformanceRating,
@@ -34,11 +34,11 @@ const WEB_VITAL_THRESHOLDS = {
  */
 export function calculateRating(metric: WebVitalMetric, value: number): PerformanceRating {
   const thresholds = WEB_VITAL_THRESHOLDS[metric];
-  
+
   if (!thresholds) {
     return 'needs-improvement';
   }
-  
+
   if (value <= thresholds.good) {
     return 'good';
   } else if (value <= thresholds.poor) {
@@ -62,12 +62,12 @@ export function createEnhancedMetric(rawMetric: RawMetric): EnhancedMetric {
 
   // Add device memory if available
   if (typeof navigator !== 'undefined' && 'deviceMemory' in navigator) {
-    enhanced.deviceMemory = (navigator as any).deviceMemory;
+    enhanced.deviceMemory = (navigator as unknown).deviceMemory;
   }
 
   // Add connection type if available
   if (typeof navigator !== 'undefined' && 'connection' in navigator) {
-    const connection = (navigator as any).connection;
+    const connection = (navigator as unknown).connection;
     if (connection && connection.effectiveType) {
       enhanced.connectionType = connection.effectiveType;
     }
@@ -82,9 +82,9 @@ export function createEnhancedMetric(rawMetric: RawMetric): EnhancedMetric {
 export function isWebVitalSupported(): boolean {
   try {
     // Check if web-vitals functions are available
-    return typeof onLCP === 'function' && 
-           typeof onINP === 'function' && 
-           typeof onCLS === 'function';
+    return (
+      typeof onLCP === 'function' && typeof onINP === 'function' && typeof onCLS === 'function'
+    );
   } catch (error) {
     console.warn('Web Vitals library not available:', error);
     return false;
@@ -96,7 +96,7 @@ export function isWebVitalSupported(): boolean {
  */
 export function setupWebVitals(
   callback: PerformanceObserverCallback,
-  config: Partial<PerformanceConfig> = {}
+  config: Partial<PerformanceConfig> = {},
 ): void {
   if (!isWebVitalSupported()) {
     console.warn('Web Vitals not supported in this environment');
@@ -113,13 +113,13 @@ export function setupWebVitals(
   };
 
   // Create wrapper function to enhance metrics and store them
-  const enhancedCallback = (rawMetric: RawMetric) => {
+  const enhancedCallback = (rawMetric: RawMetric): void => {
     try {
       const enhanced = createEnhancedMetric(rawMetric);
-      
+
       // Store metric
       collectedMetrics.push(enhanced);
-      
+
       // Call provided callback
       callback(enhanced);
     } catch (error) {
@@ -192,7 +192,7 @@ export class WebVitalsCollector {
     this.isCollecting = true;
 
     // Set up metric collection with sampling
-    const metricHandler = (rawMetric: RawMetric) => {
+    const metricHandler = (rawMetric: RawMetric): void => {
       if (!this.isCollecting) {
         return;
       }
@@ -260,7 +260,7 @@ export class WebVitalsCollector {
    */
   onMetric(callback: PerformanceObserverCallback): () => void {
     this.callbacks.add(callback);
-    
+
     // Return unsubscribe function
     return () => {
       this.callbacks.delete(callback);
@@ -273,7 +273,7 @@ export class WebVitalsCollector {
   async flush(): Promise<void> {
     // In a real implementation, this would send metrics to a remote endpoint
     // For now, just clear the metrics
-    await new Promise(resolve => setTimeout(resolve, 10)); // Simulate async operation
+    await new Promise((resolve) => setTimeout(resolve, 10)); // Simulate async operation
     this.clearMetrics();
   }
 
@@ -293,7 +293,7 @@ export class WebVitalsCollector {
    * Notifies all registered callbacks
    */
   private notifyCallbacks(metric: EnhancedMetric): void {
-    this.callbacks.forEach(callback => {
+    this.callbacks.forEach((callback) => {
       try {
         callback(metric);
       } catch (error) {

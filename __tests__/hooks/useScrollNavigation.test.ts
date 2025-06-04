@@ -4,7 +4,7 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useScrollNavigation } from '../../lib/hooks/useScrollNavigation';
-import type { UseScrollNavigationOptions } from '../../lib/hooks/useScrollNavigation';
+import * as scrollUtils from '../../lib/scroll';
 
 // Mock scroll utilities
 jest.mock('../../lib/scroll', () => ({
@@ -21,20 +21,20 @@ class MockIntersectionObserver {
   observe = jest.fn();
   disconnect = jest.fn();
   unobserve = jest.fn();
-  
+
   constructor(private callback: IntersectionObserverCallback) {}
-  
-  trigger(entries: Partial<IntersectionObserverEntry>[]) {
-    this.callback(entries as IntersectionObserverEntry[], this as any);
+
+  trigger(entries: Partial<IntersectionObserverEntry>[]): void {
+    this.callback(entries as IntersectionObserverEntry[], this as unknown);
   }
 }
 
-global.IntersectionObserver = MockIntersectionObserver as any;
+global.IntersectionObserver = MockIntersectionObserver as unknown;
 
 describe('useScrollNavigation', () => {
   let mockElements: HTMLElement[];
   let mockObserver: MockIntersectionObserver;
-  
+
   const defaultSections = [
     { id: 'hero', label: 'Hero' },
     { id: 'features', label: 'Features' },
@@ -44,13 +44,13 @@ describe('useScrollNavigation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup DOM
     document.body.innerHTML = '';
     mockElements = [];
-    
+
     // Create mock sections
-    defaultSections.forEach(section => {
+    defaultSections.forEach((section) => {
       const element = document.createElement('section');
       element.id = section.id;
       element.setAttribute('role', 'region');
@@ -60,7 +60,7 @@ describe('useScrollNavigation', () => {
     });
 
     // Mock IntersectionObserver
-    (global.IntersectionObserver as any) = jest.fn((callback) => {
+    (global.IntersectionObserver as unknown) = jest.fn((callback) => {
       mockObserver = new MockIntersectionObserver(callback);
       return mockObserver;
     });
@@ -68,9 +68,7 @@ describe('useScrollNavigation', () => {
 
   describe('Initialization', () => {
     test('initializes with correct default state', () => {
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       expect(result.current.activeSection).toBeNull();
       expect(result.current.sections).toHaveLength(4);
@@ -79,20 +77,18 @@ describe('useScrollNavigation', () => {
     });
 
     test('finds and maps sections correctly', () => {
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       const sections = result.current.sections;
-      
+
       expect(sections[0]).toEqual({
         id: 'hero',
         label: 'Hero',
         element: mockElements[0],
       });
-      
+
       expect(sections[1]).toEqual({
-        id: 'features', 
+        id: 'features',
         label: 'Features',
         element: mockElements[1],
       });
@@ -105,46 +101,44 @@ describe('useScrollNavigation', () => {
         { id: 'features', label: 'Features' },
       ];
 
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: sectionsWithMissing })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: sectionsWithMissing }));
 
       // Should only include existing sections
       expect(result.current.sections).toHaveLength(2);
-      expect(result.current.sections.map(s => s.id)).toEqual(['hero', 'features']);
+      expect(result.current.sections.map((s) => s.id)).toEqual(['hero', 'features']);
     });
   });
 
   describe('Section Detection', () => {
     test('detects active section when element is in view', () => {
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       act(() => {
         // Simulate hero section coming into view
-        mockObserver.trigger([{
-          target: mockElements[0], // hero
-          isIntersecting: true,
-          intersectionRatio: 0.8,
-        }]);
+        mockObserver.trigger([
+          {
+            target: mockElements[0], // hero
+            isIntersecting: true,
+            intersectionRatio: 0.8,
+          },
+        ]);
       });
 
       expect(result.current.activeSection).toBe('hero');
     });
 
     test('updates active section when different section comes into view', () => {
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       // First, hero section is active
       act(() => {
-        mockObserver.trigger([{
-          target: mockElements[0], // hero
-          isIntersecting: true,
-          intersectionRatio: 0.8,
-        }]);
+        mockObserver.trigger([
+          {
+            target: mockElements[0], // hero
+            isIntersecting: true,
+            intersectionRatio: 0.8,
+          },
+        ]);
       });
 
       expect(result.current.activeSection).toBe('hero');
@@ -161,7 +155,7 @@ describe('useScrollNavigation', () => {
             target: mockElements[1], // features
             isIntersecting: true,
             intersectionRatio: 0.9,
-          }
+          },
         ]);
       });
 
@@ -169,9 +163,7 @@ describe('useScrollNavigation', () => {
     });
 
     test('chooses section with highest intersection ratio when multiple in view', () => {
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       act(() => {
         mockObserver.trigger([
@@ -184,7 +176,7 @@ describe('useScrollNavigation', () => {
             target: mockElements[1], // features
             isIntersecting: true,
             intersectionRatio: 0.7, // Higher ratio
-          }
+          },
         ]);
       });
 
@@ -193,28 +185,25 @@ describe('useScrollNavigation', () => {
 
     test('respects custom threshold', () => {
       const customThreshold = 0.8;
-      
-      renderHook(() => 
-        useScrollNavigation({ 
+
+      renderHook(() =>
+        useScrollNavigation({
           sections: defaultSections,
-          threshold: customThreshold 
-        })
+          threshold: customThreshold,
+        }),
       );
 
-      expect(global.IntersectionObserver).toHaveBeenCalledWith(
-        expect.any(Function),
-        { threshold: customThreshold }
-      );
+      expect(global.IntersectionObserver).toHaveBeenCalledWith(expect.any(Function), {
+        threshold: customThreshold,
+      });
     });
   });
 
   describe('scrollToSection Function', () => {
     test('calls scroll utility with correct section', async () => {
-      const mockScrollToSection = require('../../lib/scroll').scrollToSection;
-      
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const mockScrollToSection = scrollUtils.scrollToSection as jest.Mock;
+
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       await act(async () => {
         await result.current.scrollToSection('features');
@@ -224,9 +213,7 @@ describe('useScrollNavigation', () => {
     });
 
     test('handles invalid section ID gracefully', async () => {
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       await act(async () => {
         await expect(result.current.scrollToSection('invalid')).rejects.toThrow();
@@ -234,17 +221,15 @@ describe('useScrollNavigation', () => {
     });
 
     test('sets isScrolling state during scroll operation', async () => {
-      const mockScrollToSection = require('../../lib/scroll').scrollToSection;
-      mockScrollToSection.mockImplementation(() => 
-        new Promise(resolve => setTimeout(resolve, 100))
+      const mockScrollToSection = scrollUtils.scrollToSection as jest.Mock;
+      mockScrollToSection.mockImplementation(
+        () => new Promise((resolve) => setTimeout(resolve, 100)),
       );
 
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       let scrollingPromise: Promise<void>;
-      
+
       act(() => {
         scrollingPromise = result.current.scrollToSection('features');
       });
@@ -267,11 +252,11 @@ describe('useScrollNavigation', () => {
       const focusSpy = jest.spyOn(mockElements[1], 'focus');
       mockElements[1].tabIndex = -1; // Make focusable
 
-      const { result } = renderHook(() => 
-        useScrollNavigation({ 
+      const { result } = renderHook(() =>
+        useScrollNavigation({
           sections: defaultSections,
-          focusOnScroll: true 
-        })
+          focusOnScroll: true,
+        }),
       );
 
       await act(async () => {
@@ -284,11 +269,11 @@ describe('useScrollNavigation', () => {
     test('does not focus when focusOnScroll is disabled', async () => {
       const focusSpy = jest.spyOn(mockElements[1], 'focus');
 
-      const { result } = renderHook(() => 
-        useScrollNavigation({ 
+      const { result } = renderHook(() =>
+        useScrollNavigation({
           sections: defaultSections,
-          focusOnScroll: false 
-        })
+          focusOnScroll: false,
+        }),
       );
 
       await act(async () => {
@@ -301,12 +286,10 @@ describe('useScrollNavigation', () => {
 
   describe('Scroll Progress Tracking', () => {
     test('updates scroll progress based on position', () => {
-      const mockGetScrollPosition = require('../../lib/scroll').getScrollPosition;
+      const mockGetScrollPosition = scrollUtils.getScrollPosition as jest.Mock;
       mockGetScrollPosition.mockReturnValue({ x: 0, y: 300, percentage: 50 });
 
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       // Trigger scroll event
       act(() => {
@@ -320,17 +303,15 @@ describe('useScrollNavigation', () => {
   describe('Performance Optimizations', () => {
     test('debounces scroll events with default timing', () => {
       jest.useFakeTimers();
-      
-      const mockGetScrollPosition = require('../../lib/scroll').getScrollPosition;
+
+      const mockGetScrollPosition = scrollUtils.getScrollPosition as jest.Mock;
       let callCount = 0;
       mockGetScrollPosition.mockImplementation(() => {
         callCount++;
         return { x: 0, y: 0, percentage: 0 };
       });
 
-      renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       // Fire multiple scroll events rapidly
       act(() => {
@@ -355,19 +336,19 @@ describe('useScrollNavigation', () => {
 
     test('uses custom debounce timing when provided', () => {
       jest.useFakeTimers();
-      
-      const mockGetScrollPosition = require('../../lib/scroll').getScrollPosition;
+
+      const mockGetScrollPosition = scrollUtils.getScrollPosition as jest.Mock;
       let callCount = 0;
       mockGetScrollPosition.mockImplementation(() => {
         callCount++;
         return { x: 0, y: 0, percentage: 0 };
       });
 
-      renderHook(() => 
-        useScrollNavigation({ 
+      renderHook(() =>
+        useScrollNavigation({
           sections: defaultSections,
-          debounceMs: 500 
-        })
+          debounceMs: 500,
+        }),
       );
 
       act(() => {
@@ -392,9 +373,7 @@ describe('useScrollNavigation', () => {
 
   describe('Cleanup', () => {
     test('disconnects intersection observer on unmount', () => {
-      const { unmount } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { unmount } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       unmount();
 
@@ -404,24 +383,20 @@ describe('useScrollNavigation', () => {
     test('removes scroll event listener on unmount', () => {
       const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
 
-      const { unmount } = renderHook(() => 
-        useScrollNavigation({ sections: defaultSections })
-      );
+      const { unmount } = renderHook(() => useScrollNavigation({ sections: defaultSections }));
 
       unmount();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'scroll',
-        expect.any(Function),
-        { passive: true }
-      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function), {
+        passive: true,
+      });
     });
   });
 
   describe('Error Handling', () => {
     test('handles missing IntersectionObserver gracefully', () => {
       const originalIntersectionObserver = global.IntersectionObserver;
-      (global as any).IntersectionObserver = undefined;
+      (global as unknown).IntersectionObserver = undefined;
 
       expect(() => {
         renderHook(() => useScrollNavigation({ sections: defaultSections }));
@@ -437,9 +412,7 @@ describe('useScrollNavigation', () => {
         { id: 'missing-section', label: 'Missing' },
       ];
 
-      const { result } = renderHook(() => 
-        useScrollNavigation({ sections: sectionsWithMissing })
-      );
+      const { result } = renderHook(() => useScrollNavigation({ sections: sectionsWithMissing }));
 
       // Should only find existing sections
       expect(result.current.sections).toHaveLength(1);

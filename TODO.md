@@ -3,17 +3,20 @@
 ## ESLint/TypeScript Issues to Fix
 
 ### High Priority
-- [ ] Fix unused variable errors in test files (prefix with `_` or remove)
-- [ ] Add missing return type annotations across test files
-- [ ] Replace `require()` imports with ES6 imports in test files
-- [ ] Fix unsafe function type annotations
 
-### Medium Priority  
+- [x] Fix unused variable errors in test files (prefix with `_` or remove)
+- [x] Add missing return type annotations across test files
+- [x] Replace `require()` imports with ES6 imports in test files
+- [x] Fix unsafe function type annotations
+
+### Medium Priority
+
 - [ ] Clean up unused imports in infrastructure files
 - [ ] Add proper type definitions for mock objects
 - [ ] Standardize test file patterns
 
 ### Files needing attention:
+
 - `__tests__/ci/performance-workflow.test.ts` - unused vars
 - `__tests__/hooks/useScrollNavigation.test.ts` - require imports, return types
 - `__tests__/integration/` - multiple files with require imports
@@ -24,6 +27,7 @@
 ## Rationale for Current Commit
 
 The current changes fix critical Next.js build errors:
+
 1. Added 'use client' directives for React hooks compatibility
 2. Updated web-vitals to remove deprecated FID metric
 3. Fixed import paths for scroll utilities

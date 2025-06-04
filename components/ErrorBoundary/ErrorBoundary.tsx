@@ -139,18 +139,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
    * Logs the error using structured logging
    */
   private logError(error: Error, errorInfo: ErrorInfo, errorReport: ErrorReport): void {
-    logger.error(
-      'Component error caught by ErrorBoundary',
-      error,
-      {
-        errorId: errorReport.errorId,
-        componentStack: errorInfo.componentStack,
-        url: errorReport.url,
-        userAgent: errorReport.userAgent,
-        correlationId: errorReport.correlationId,
-        retryCount: this.retryCount,
-      }
-    );
+    logger.error('Component error caught by ErrorBoundary', error, {
+      errorId: errorReport.errorId,
+      componentStack: errorInfo.componentStack,
+      url: errorReport.url,
+      userAgent: errorReport.userAgent,
+      correlationId: errorReport.correlationId,
+      retryCount: this.retryCount,
+    });
   }
 
   /**
@@ -159,19 +155,21 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   private trackError(error: Error, errorInfo: ErrorInfo, errorReport: ErrorReport): void {
     try {
       // Try to import analytics dynamically
-      import('@/lib/analytics').then(({ analytics }) => {
-        analytics.track('Component Error', {
-          errorId: errorReport.errorId,
-          errorName: errorReport.error.name,
-          errorMessage: errorReport.error.message,
-          componentStack: errorInfo.componentStack,
-          url: errorReport.url,
-          correlationId: errorReport.correlationId,
-          retryCount: this.retryCount,
+      import('@/lib/analytics')
+        .then(({ analytics }) => {
+          analytics.track('Component Error', {
+            errorId: errorReport.errorId,
+            errorName: errorReport.error.name,
+            errorMessage: errorReport.error.message,
+            componentStack: errorInfo.componentStack,
+            url: errorReport.url,
+            correlationId: errorReport.correlationId,
+            retryCount: this.retryCount,
+          });
+        })
+        .catch(() => {
+          // Analytics not available, continue silently
         });
-      }).catch(() => {
-        // Analytics not available, continue silently
-      });
     } catch {
       // Analytics tracking failed, continue silently
     }
@@ -180,13 +178,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   /**
    * Captures the error in the monitoring system
    */
-  private captureErrorInMonitoring(error: Error, errorInfo: ErrorInfo, errorReport: ErrorReport): void {
+  private captureErrorInMonitoring(
+    error: Error,
+    errorInfo: ErrorInfo,
+    errorReport: ErrorReport,
+  ): void {
     try {
       // Create enhanced error with component stack
       const enhancedError = new Error(error.message);
       enhancedError.name = error.name;
       enhancedError.stack = error.stack;
-      (enhancedError as any).componentStack = errorInfo.componentStack;
+      (enhancedError as unknown).componentStack = errorInfo.componentStack;
 
       // Capture error with enhanced context
       captureError(enhancedError, {
@@ -220,7 +222,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   private handleRetry = (): void => {
     if (this.retryCount < this.maxRetries) {
       this.retryCount += 1;
-      
+
       this.setState({
         hasError: false,
         error: undefined,
@@ -287,7 +289,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       showErrorDetails: boolean;
       className?: string;
       testId?: string;
-    }
+    },
   ): ReactNode {
     const isDevelopment = process.env.NODE_ENV === 'development';
     const canRetry = options.enableRetry && this.retryCount < this.maxRetries;
@@ -296,26 +298,22 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       'flex flex-col items-center justify-center',
       'p-8 border border-red-200 rounded-lg bg-red-50',
       'text-center space-y-4',
-      options.className
+      options.className,
     );
 
-    const headingClasses = cn(
-      'text-xl font-semibold text-red-800'
-    );
+    const headingClasses = cn('text-xl font-semibold text-red-800');
 
-    const textClasses = cn(
-      'text-red-600 max-w-md'
-    );
+    const textClasses = cn('text-red-600 max-w-md');
 
     const buttonClasses = cn(
       'px-4 py-2 bg-red-600 text-white rounded',
       'hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500',
-      'transition-colors duration-200'
+      'transition-colors duration-200',
     );
 
     const detailsClasses = cn(
       'mt-6 p-4 bg-red-100 rounded border border-red-200',
-      'text-left text-sm text-red-800 max-w-2xl'
+      'text-left text-sm text-red-800 max-w-2xl',
     );
 
     return (
@@ -339,9 +337,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
             />
           </svg>
-          <h2 className={headingClasses}>
-            Something went wrong
-          </h2>
+          <h2 className={headingClasses}>Something went wrong</h2>
         </div>
 
         <p className={textClasses}>
@@ -350,11 +346,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         </p>
 
         {canRetry && (
-          <button
-            onClick={this.handleRetry}
-            className={buttonClasses}
-            type="button"
-          >
+          <button onClick={this.handleRetry} className={buttonClasses} type="button">
             {options.retryButtonText}
           </button>
         )}

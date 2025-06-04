@@ -31,7 +31,7 @@ describe('Error Tracking Service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Reset global variables
-    delete (global as any).__TEST_ERROR_SERVICE__;
+    delete (global as unknown).__TEST_ERROR_SERVICE__;
   });
 
   describe('Configuration Validation', () => {
@@ -60,8 +60,7 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: 100,
       };
 
-      expect(() => validateErrorTrackingConfig(invalidConfig))
-        .toThrow('Invalid DSN format');
+      expect(() => validateErrorTrackingConfig(invalidConfig)).toThrow('Invalid DSN format');
     });
 
     it('should reject invalid sample rate', () => {
@@ -75,8 +74,9 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: 100,
       };
 
-      expect(() => validateErrorTrackingConfig(invalidConfig))
-        .toThrow('Sample rate must be between 0 and 1');
+      expect(() => validateErrorTrackingConfig(invalidConfig)).toThrow(
+        'Sample rate must be between 0 and 1',
+      );
     });
 
     it('should reject invalid environment', () => {
@@ -90,8 +90,9 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: 100,
       } as ErrorTrackingConfig;
 
-      expect(() => validateErrorTrackingConfig(invalidConfig))
-        .toThrow('Environment must be development, staging, or production');
+      expect(() => validateErrorTrackingConfig(invalidConfig)).toThrow(
+        'Environment must be development, staging, or production',
+      );
     });
 
     it('should reject negative maxBreadcrumbs', () => {
@@ -105,8 +106,9 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: -10, // Invalid: negative
       };
 
-      expect(() => validateErrorTrackingConfig(invalidConfig))
-        .toThrow('Max breadcrumbs must be positive');
+      expect(() => validateErrorTrackingConfig(invalidConfig)).toThrow(
+        'Max breadcrumbs must be positive',
+      );
     });
   });
 
@@ -139,7 +141,7 @@ describe('Error Tracking Service', () => {
     });
 
     it('should create error event with component stack', () => {
-      const error = new Error('React component error') as any;
+      const error = new Error('React component error') as unknown;
       error.componentStack = 'in TestComponent (at App.js:10:5)';
 
       const errorEvent = createErrorEvent(error, {
@@ -179,11 +181,7 @@ describe('Error Tracking Service', () => {
         level: 'error',
       });
 
-      expect(errorEvent.fingerprint).toEqual([
-        'TypeError',
-        'Cannot read property',
-        'utils.js:42',
-      ]);
+      expect(errorEvent.fingerprint).toEqual(['TypeError', 'Cannot read property', 'utils.js:42']);
     });
   });
 
@@ -204,7 +202,7 @@ describe('Error Tracking Service', () => {
         context: {
           userId: '123',
           password: 'secret123', // Should be redacted
-          authToken: 'bearer-token', // Should be redacted  
+          authToken: 'bearer-token', // Should be redacted
           apiKey: 'key-123', // Should be redacted
           normalData: 'safe-value',
         },
@@ -222,7 +220,7 @@ describe('Error Tracking Service', () => {
     });
 
     it('should handle circular references in context', () => {
-      const circular: any = { name: 'test' };
+      const circular: unknown = { name: 'test' };
       circular.self = circular;
 
       const errorEvent: ErrorEvent = {
@@ -285,7 +283,7 @@ describe('Error Tracking Service', () => {
       };
 
       // Mock the external service
-      (global as any).__TEST_ERROR_SERVICE__ = mockErrorService;
+      (global as unknown).__TEST_ERROR_SERVICE__ = mockErrorService;
 
       const service = createErrorTrackingService();
       await service.initialize(config);
@@ -327,7 +325,7 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: 100,
       };
 
-      (global as any).__TEST_ERROR_SERVICE__ = mockErrorService;
+      (global as unknown).__TEST_ERROR_SERVICE__ = mockErrorService;
 
       const service = createErrorTrackingService();
       await service.initialize(config);
@@ -359,7 +357,7 @@ describe('Error Tracking Service', () => {
             password: '[REDACTED]',
             normalData: 'safe',
           },
-        })
+        }),
       );
     });
 
@@ -380,7 +378,7 @@ describe('Error Tracking Service', () => {
         captureException: jest.fn().mockRejectedValue(new Error('Service unavailable')),
       };
 
-      (global as any).__TEST_ERROR_SERVICE__ = failingService;
+      (global as unknown).__TEST_ERROR_SERVICE__ = failingService;
 
       const service = createErrorTrackingService();
       await service.initialize(config);
@@ -414,7 +412,7 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: 100,
       };
 
-      (global as any).__TEST_ERROR_SERVICE__ = mockErrorService;
+      (global as unknown).__TEST_ERROR_SERVICE__ = mockErrorService;
 
       const service = createErrorTrackingService();
       await service.initialize(config);
@@ -436,7 +434,7 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: 100,
       };
 
-      (global as any).__TEST_ERROR_SERVICE__ = mockErrorService;
+      (global as unknown).__TEST_ERROR_SERVICE__ = mockErrorService;
 
       const service = createErrorTrackingService();
       await service.initialize(config);
@@ -470,7 +468,7 @@ describe('Error Tracking Service', () => {
         maxBreadcrumbs: 100,
       };
 
-      (global as any).__TEST_ERROR_SERVICE__ = mockErrorService;
+      (global as unknown).__TEST_ERROR_SERVICE__ = mockErrorService;
 
       const service = createErrorTrackingService();
       await service.initialize(config);
@@ -491,7 +489,7 @@ describe('Error Tracking Service', () => {
 
       // Send same error multiple times rapidly
       for (let i = 0; i < 10; i++) {
-        await service.captureError({ ...errorEvent, id: \`test-id-\${i}\` });
+        await service.captureError({ ...errorEvent, id: `test-id-${i}` });
       }
 
       // Should be rate limited after initial calls

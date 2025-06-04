@@ -24,9 +24,9 @@ export function isIntersectionObserverSupported(): boolean {
  * Polyfill for smooth scroll behavior using requestAnimationFrame
  */
 export function smoothScrollPolyfill(
-  element: HTMLElement, 
-  targetY: number, 
-  duration: number = 500
+  element: HTMLElement,
+  targetY: number,
+  duration: number = 500,
 ): Promise<void> {
   return new Promise((resolve) => {
     const startY = window.scrollY;
@@ -36,12 +36,12 @@ export function smoothScrollPolyfill(
     function animation(currentTime: number): void {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Easing function (ease-out)
       const easeOut = 1 - Math.pow(1 - progress, 3);
-      
+
       window.scrollTo(0, startY + distance * easeOut);
-      
+
       if (progress < 1) {
         requestAnimationFrame(animation);
       } else {
@@ -66,15 +66,15 @@ export function getElementTopPosition(element: HTMLElement): number {
  */
 export function calculateScrollPosition(
   element: HTMLElement,
-  block: 'start' | 'center' | 'end' = 'start'
+  block: 'start' | 'center' | 'end' = 'start',
 ): number {
   const elementTop = getElementTopPosition(element);
   const elementHeight = element.offsetHeight;
   const windowHeight = window.innerHeight;
-  
+
   switch (block) {
     case 'center':
-      return elementTop - (windowHeight / 2) + (elementHeight / 2);
+      return elementTop - windowHeight / 2 + elementHeight / 2;
     case 'end':
       return elementTop - windowHeight + elementHeight;
     case 'start':
@@ -86,12 +86,12 @@ export function calculateScrollPosition(
 /**
  * Debounce function for performance optimization
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => func(...args), delay);
@@ -101,12 +101,12 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function for scroll event handling
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);

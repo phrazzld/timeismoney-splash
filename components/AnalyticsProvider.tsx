@@ -21,7 +21,7 @@ function AnalyticsTracker(): null {
 
     // Track page view whenever pathname or search params change
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-    
+
     // Log page view with structured logging
     const pageViewEntry = {
       type: 'pageview' as const,
@@ -101,24 +101,26 @@ function AnalyticsTracker(): null {
       });
 
       // Track performance in analytics
-      import('@/lib/analytics').then(({ analytics }) => {
-        analytics.track('Performance Metric', {
-          metricName: metric.name,
-          value: metric.value,
-          rating: metric.rating,
-          url: metric.url,
-          correlationId: metric.correlationId,
+      import('@/lib/analytics')
+        .then(({ analytics }) => {
+          analytics.track('Performance Metric', {
+            metricName: metric.name,
+            value: metric.value,
+            rating: metric.rating,
+            url: metric.url,
+            correlationId: metric.correlationId,
+          });
+        })
+        .catch(() => {
+          // Analytics not available, continue silently
         });
-      }).catch(() => {
-        // Analytics not available, continue silently
-      });
     });
 
     // Start monitoring
     performanceMonitor.start();
 
     // Cleanup on unmount or route change
-    return () => {
+    return (): void => {
       unsubscribe();
       performanceMonitor.stop();
     };

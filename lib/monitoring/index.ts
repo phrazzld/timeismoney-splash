@@ -1,22 +1,22 @@
 /**
  * Monitoring and observability system
- * 
+ *
  * Provides comprehensive monitoring capabilities including:
  * - Remote error tracking and reporting
  * - Performance alerting for Core Web Vitals
  * - Remote logging with structured data transmission
  * - Configuration management for monitoring services
- * 
+ *
  * @example
  * ```ts
  * import { initializeMonitoring, errorTrackingService, performanceAlerter } from '@/lib/monitoring';
- * 
+ *
  * // Initialize all monitoring services
  * await initializeMonitoring();
- * 
+ *
  * // Capture errors
  * await errorTrackingService.captureError(errorEvent);
- * 
+ *
  * // Process performance metrics
  * await performanceAlerter.processMetric(metric);
  * ```
@@ -92,7 +92,7 @@ interface MonitoringStatus {
 /**
  * Global monitoring state
  */
-let monitoringStatus: MonitoringStatus = {
+const monitoringStatus: MonitoringStatus = {
   errorTracking: { initialized: false, enabled: false },
   performanceAlerts: { initialized: false, enabled: false },
   remoteLogging: { initialized: false, enabled: false },
@@ -103,11 +103,13 @@ let monitoringStatus: MonitoringStatus = {
  * Initialize all monitoring services
  */
 export async function initializeMonitoring(
-  configOverrides?: Partial<MonitoringConfig>
+  configOverrides?: Partial<MonitoringConfig>,
 ): Promise<void> {
   try {
     // Get configuration
-    const { getMonitoringConfigWithOverrides, validateEnvironmentConfig } = await import('./config');
+    const { getMonitoringConfigWithOverrides, validateEnvironmentConfig } = await import(
+      './config'
+    );
     const { errorTrackingService } = await import('./error-tracking');
     const { performanceAlerter } = await import('./performance-alerts');
     const { remoteLogger } = await import('./remote-logging');
@@ -135,42 +137,45 @@ export async function initializeMonitoring(
     // Initialize error tracking
     if (config.errorTracking.enabled) {
       initPromises.push(
-        errorTrackingService.initialize(config.errorTracking)
+        errorTrackingService
+          .initialize(config.errorTracking)
           .then(() => {
             monitoringStatus.errorTracking = { initialized: true, enabled: true };
           })
-          .catch(error => {
+          .catch((error) => {
             console.error('Failed to initialize error tracking:', error);
             monitoringStatus.errorTracking = { initialized: false, enabled: false };
-          })
+          }),
       );
     }
 
     // Initialize performance alerts
     if (config.performanceAlerts.enabled) {
       initPromises.push(
-        performanceAlerter.initialize(config.performanceAlerts)
+        performanceAlerter
+          .initialize(config.performanceAlerts)
           .then(() => {
             monitoringStatus.performanceAlerts = { initialized: true, enabled: true };
           })
-          .catch(error => {
+          .catch((error) => {
             console.error('Failed to initialize performance alerts:', error);
             monitoringStatus.performanceAlerts = { initialized: false, enabled: false };
-          })
+          }),
       );
     }
 
     // Initialize remote logging
     if (config.remoteLogging.enabled) {
       initPromises.push(
-        remoteLogger.initialize(config.remoteLogging)
+        remoteLogger
+          .initialize(config.remoteLogging)
           .then(() => {
             monitoringStatus.remoteLogging = { initialized: true, enabled: true };
           })
-          .catch(error => {
+          .catch((error) => {
             console.error('Failed to initialize remote logging:', error);
             monitoringStatus.remoteLogging = { initialized: false, enabled: false };
-          })
+          }),
       );
     }
 
@@ -202,9 +207,11 @@ export function getMonitoringStatus(): MonitoringStatus {
  * Check if monitoring is fully initialized
  */
 export function isMonitoringInitialized(): boolean {
-  return monitoringStatus.errorTracking.initialized ||
-         monitoringStatus.performanceAlerts.initialized ||
-         monitoringStatus.remoteLogging.initialized;
+  return (
+    monitoringStatus.errorTracking.initialized ||
+    monitoringStatus.performanceAlerts.initialized ||
+    monitoringStatus.remoteLogging.initialized
+  );
 }
 
 /**
@@ -243,7 +250,7 @@ export async function captureError(
     user?: { id?: string; segment?: string };
     tags?: Record<string, string>;
     extra?: Record<string, unknown>;
-  }
+  },
 ): Promise<void> {
   try {
     if (!monitoringStatus.errorTracking.initialized) {
@@ -255,7 +262,8 @@ export async function captureError(
     const errorEvent = createErrorEvent(error, {
       level: context?.level || 'error',
       url: context?.url || (typeof window !== 'undefined' ? window.location.href : 'unknown'),
-      userAgent: context?.userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'),
+      userAgent:
+        context?.userAgent || (typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'),
       context: context?.extra,
       user: context?.user,
       tags: context?.tags,
@@ -271,7 +279,7 @@ export async function captureError(
  * Convenience function to process a performance metric for alerting
  */
 export async function processPerformanceMetric(
-  metric: import('@/lib/performance/types').EnhancedMetric
+  metric: import('@/lib/performance/types').EnhancedMetric,
 ): Promise<void> {
   try {
     if (!monitoringStatus.performanceAlerts.initialized) {
@@ -289,7 +297,7 @@ export async function processPerformanceMetric(
  * Convenience function to send a log entry to remote logging
  */
 export async function sendLogEntry(
-  logEntry: import('@/lib/logging/types').LogEntry
+  logEntry: import('@/lib/logging/types').LogEntry,
 ): Promise<void> {
   try {
     if (!monitoringStatus.remoteLogging.initialized) {

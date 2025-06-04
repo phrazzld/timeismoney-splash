@@ -7,12 +7,15 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { AnalyticsProvider } from '@/components/AnalyticsProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { createPerformanceMonitor } from '@/lib/performance';
-import { logger, generateCorrelationId, setCorrelationId, clearCorrelationId } from '@/lib/logging';
+import { generateCorrelationId, setCorrelationId, clearCorrelationId } from '@/lib/logging';
+import * as analytics from '@/lib/analytics';
+import * as logging from '@/lib/logging';
+import * as webVitals from 'web-vitals';
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
-  usePathname: () => '/test-page',
-  useSearchParams: () => new URLSearchParams(''),
+  usePathname: (): string => '/test-page',
+  useSearchParams: (): URLSearchParams => new URLSearchParams(''),
 }));
 
 // Mock analytics
@@ -59,15 +62,15 @@ describe('Performance Monitoring Integration (T018)', () => {
 
   beforeEach(() => {
     // Mock analytics
-    const analytics = require('@/lib/analytics');
-    mockAnalyticsTrack = analytics.analytics.track.mockClear();
-    mockTrackPageview = analytics.trackPageview.mockClear();
+    mockAnalyticsTrack = (analytics.analytics.track as jest.Mock).mockClear();
+    mockTrackPageview = (analytics.trackPageview as jest.Mock).mockClear();
 
     // Mock logger
-    const logging = require('@/lib/logging');
-    mockLoggerError = logging.logger.error.mockClear();
-    mockLoggerLogPerformance = logging.logger.logPerformance.mockClear();
-    mockLoggerLogPageView = logging.logger.logPageView.mockClear();
+    mockLoggerError = ((logging as unknown).logger.error as jest.Mock).mockClear();
+    mockLoggerLogPerformance = (
+      (logging as unknown).logger.logPerformance as jest.Mock
+    ).mockClear();
+    mockLoggerLogPageView = ((logging as unknown).logger.logPageView as jest.Mock).mockClear();
 
     // Mock console.error
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
@@ -117,7 +120,7 @@ describe('Performance Monitoring Integration (T018)', () => {
       <div>
         <h1>Test Application</h1>
         <p>Count: {count}</p>
-        <button onClick={() => setCount(c => c + 1)}>Increment</button>
+        <button onClick={() => setCount((c) => c + 1)}>Increment</button>
       </div>
     );
   };
@@ -132,7 +135,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Wait for analytics provider to initialize
@@ -161,9 +164,8 @@ describe('Performance Monitoring Integration (T018)', () => {
 
     it('should handle performance metrics end-to-end', async () => {
       // Mock web-vitals callbacks
-      const webVitals = require('web-vitals');
-      let lcpCallback: Function;
-      webVitals.onLCP.mockImplementation((callback: Function) => {
+      let lcpCallback: (metric: unknown) => void;
+      (webVitals.onLCP as jest.Mock).mockImplementation((callback: (metric: unknown) => void) => {
         lcpCallback = callback;
       });
 
@@ -172,7 +174,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Wait for performance monitor setup
@@ -228,7 +230,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp shouldError />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Wait for initial render
@@ -249,7 +251,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           expect.objectContaining({
             correlationId,
             errorId: expect.any(String),
-          })
+          }),
         );
       });
 
@@ -297,7 +299,7 @@ describe('Performance Monitoring Integration (T018)', () => {
 
     it('should flush metrics correctly', async () => {
       const monitor = createPerformanceMonitor();
-      
+
       monitor.start();
       await expect(monitor.flush()).resolves.not.toThrow();
       monitor.stop();
@@ -305,33 +307,37 @@ describe('Performance Monitoring Integration (T018)', () => {
 
     it('should handle configuration validation', () => {
       // Should not throw with valid config
-      expect(() => createPerformanceMonitor({
-        sampleRate: 0.5,
-        bufferSize: 100,
-        flushInterval: 5000,
-      })).not.toThrow();
+      expect(() =>
+        createPerformanceMonitor({
+          sampleRate: 0.5,
+          bufferSize: 100,
+          flushInterval: 5000,
+        }),
+      ).not.toThrow();
 
       // Should handle invalid config gracefully
-      expect(() => createPerformanceMonitor({
-        sampleRate: 2.0, // Invalid
-        bufferSize: -1, // Invalid
-        flushInterval: 0, // Invalid
-      })).not.toThrow();
+      expect(() =>
+        createPerformanceMonitor({
+          sampleRate: 2.0, // Invalid
+          bufferSize: -1, // Invalid
+          flushInterval: 0, // Invalid
+        }),
+      ).not.toThrow();
     });
   });
 
   describe('Error Boundary and Performance Integration', () => {
     it('should maintain performance monitoring during error recovery', async () => {
       let shouldError = true;
-      
-      const TestComponent = () => <TestApp shouldError={shouldError} />;
+
+      const TestComponent = (): React.ReactElement => <TestApp shouldError={shouldError} />;
 
       render(
         <ErrorBoundary enableRetry>
           <AnalyticsProvider>
             <TestComponent />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Trigger error
@@ -358,13 +364,11 @@ describe('Performance Monitoring Integration (T018)', () => {
 
     it('should handle performance monitoring errors gracefully', async () => {
       // Mock performance monitor to throw error
-      const originalCreateMonitor = require('@/lib/performance').createPerformanceMonitor;
       const mockCreateMonitor = jest.fn(() => {
         throw new Error('Performance monitor error');
       });
-      
+
       jest.doMock('@/lib/performance', () => ({
-        ...require('@/lib/performance'),
         createPerformanceMonitor: mockCreateMonitor,
       }));
 
@@ -375,7 +379,7 @@ describe('Performance Monitoring Integration (T018)', () => {
             <AnalyticsProvider>
               <TestApp />
             </AnalyticsProvider>
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
       }).not.toThrow();
 
@@ -394,7 +398,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Wait for page view tracking
@@ -407,7 +411,7 @@ describe('Performance Monitoring Integration (T018)', () => {
       expect(pageViewCall).toEqual(
         expect.objectContaining({
           type: 'pageview',
-        })
+        }),
       );
 
       // All logs should use the same correlation ID context
@@ -420,7 +424,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       await waitFor(() => {
@@ -433,7 +437,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       await waitFor(() => {
@@ -452,7 +456,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Wait for initialization
@@ -470,7 +474,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Rapid re-renders
@@ -480,7 +484,7 @@ describe('Performance Monitoring Integration (T018)', () => {
             <AnalyticsProvider>
               <TestApp />
             </AnalyticsProvider>
-          </ErrorBoundary>
+          </ErrorBoundary>,
         );
       }
 
@@ -501,7 +505,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp shouldError />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Trigger error
@@ -519,7 +523,7 @@ describe('Performance Monitoring Integration (T018)', () => {
           <AnalyticsProvider>
             <TestApp shouldError />
           </AnalyticsProvider>
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should not show error details in production
