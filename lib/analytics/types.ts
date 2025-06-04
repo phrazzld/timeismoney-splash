@@ -19,7 +19,9 @@ export type CoreEvent =
   | 'cta_click'
   | 'feature_demo_used'
   | 'faq_expanded'
-  | 'contact_form_submit';
+  | 'contact_form_submit'
+  | 'performance_metric'
+  | 'component_error';
 
 /**
  * Properties that can be attached to analytics events

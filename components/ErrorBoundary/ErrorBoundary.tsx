@@ -122,7 +122,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         stack: error?.stack,
       },
       errorInfo: {
-        componentStack: errorInfo.componentStack,
+        componentStack: errorInfo.componentStack || 'Unknown',
       },
       timestamp: new Date().toISOString(),
       url: typeof window !== 'undefined' ? window.location.href : 'unknown',
@@ -156,12 +156,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     try {
       // Try to import analytics dynamically
       import('@/lib/analytics')
-        .then(({ analytics }) => {
-          analytics.track('Component Error', {
+        .then(({ trackEvent }) => {
+          trackEvent('component_error', {
             errorId: errorReport.errorId,
             errorName: errorReport.error.name,
             errorMessage: errorReport.error.message,
-            componentStack: errorInfo.componentStack,
+            componentStack: errorInfo.componentStack || 'Unknown',
             url: errorReport.url,
             correlationId: errorReport.correlationId,
             retryCount: this.retryCount,
@@ -188,7 +188,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       const enhancedError = new Error(error.message);
       enhancedError.name = error.name;
       enhancedError.stack = error.stack;
-      (enhancedError as unknown).componentStack = errorInfo.componentStack;
+      // ALLOWANCE: Adding componentStack to Error object for better debugging
+      (enhancedError as Error & { componentStack?: string }).componentStack =
+        errorInfo.componentStack || 'Unknown';
 
       // Capture error with enhanced context
       captureError(enhancedError, {
@@ -264,7 +266,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       if (typeof fallback === 'function' && error && errorInfo) {
         return fallback(error, errorInfo);
       }
-      return fallback;
+      if (typeof fallback !== 'function') {
+        return fallback;
+      }
     }
 
     // Render default error UI

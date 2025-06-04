@@ -52,12 +52,7 @@ const SENSITIVE_PATTERNS = [
 /**
  * Sanitizes error objects for safe logging
  */
-export function sanitizeError(error: unknown): {
-  name: string;
-  message: string;
-  stack?: string;
-  componentStack?: string;
-} {
+export function sanitizeError(error: unknown): Record<string, unknown> {
   if (error === null) {
     return { name: 'Unknown', message: 'null' };
   }
@@ -67,7 +62,7 @@ export function sanitizeError(error: unknown): {
   }
 
   if (error instanceof Error) {
-    const result: unknown = {
+    const result: Record<string, unknown> = {
       name: error.name,
       message: error.message,
     };

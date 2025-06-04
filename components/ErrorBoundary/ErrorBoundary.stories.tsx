@@ -20,7 +20,7 @@ const ThrowError: React.FC<{ message?: string; shouldThrow?: boolean }> = ({
 };
 
 // Component with async error
-const AsyncError: React.FC = () => {
+const AsyncErrorStoryStory: React.FC = () => {
   const [shouldThrow, setShouldThrow] = React.useState(false);
 
   React.useEffect(() => {
@@ -306,7 +306,7 @@ export const AsyncError: Story = {
         <p className="text-yellow-600">This component will throw an error after 2 seconds.</p>
       </div>
       <ErrorBoundary {...args}>
-        <AsyncError />
+        <AsyncErrorStoryStory />
       </ErrorBoundary>
     </div>
   ),

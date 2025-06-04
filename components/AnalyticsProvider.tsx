@@ -3,7 +3,7 @@
 import { useEffect, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { trackPageview } from '@/lib/analytics';
-import { createPerformanceMonitor } from '@/lib/performance';
+import { createPerformanceMonitor, type WebVitalMetric } from '@/lib/performance';
 import { logger, generateCorrelationId, setCorrelationId } from '@/lib/logging';
 import { processPerformanceMetric, sendLogEntry } from '@/lib/monitoring';
 
@@ -68,7 +68,7 @@ function AnalyticsTracker(): null {
     });
 
     // Subscribe to performance metrics
-    const unsubscribe = performanceMonitor.onMetric((metric) => {
+    const unsubscribe = performanceMonitor.onMetric((metric: WebVitalMetric) => {
       // Log performance metric with structured logging
       const logEntry = {
         type: 'performance' as const,
@@ -102,8 +102,8 @@ function AnalyticsTracker(): null {
 
       // Track performance in analytics
       import('@/lib/analytics')
-        .then(({ analytics }) => {
-          analytics.track('Performance Metric', {
+        .then(({ trackEvent }) => {
+          trackEvent('performance_metric', {
             metricName: metric.name,
             value: metric.value,
             rating: metric.rating,

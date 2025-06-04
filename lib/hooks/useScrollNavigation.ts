@@ -129,29 +129,29 @@ export function useScrollNavigation(
 
   // Intersection observer callback
   const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
-    let bestEntry: IntersectionObserverEntry | null = null;
-    let highestRatio = 0;
+    const intersectingEntries = entries.filter((entry) => entry.isIntersecting);
+
+    if (intersectingEntries.length === 0) {
+      setActiveSection(null);
+      return;
+    }
 
     // Find the section with the highest intersection ratio
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && entry.intersectionRatio > highestRatio) {
+    let bestEntry = intersectingEntries[0];
+    let highestRatio = bestEntry.intersectionRatio;
+
+    intersectingEntries.forEach((entry) => {
+      if (entry.intersectionRatio > highestRatio) {
         highestRatio = entry.intersectionRatio;
         bestEntry = entry;
       }
     });
 
     // Update active section
-    if (bestEntry) {
-      const sectionId = sectionsMapRef.current.get(bestEntry.target as HTMLElement);
-      if (sectionId) {
-        setActiveSection(sectionId);
-      }
-    } else {
-      // No sections intersecting above threshold
-      const anyIntersecting = entries.some((entry) => entry.isIntersecting);
-      if (!anyIntersecting) {
-        setActiveSection(null);
-      }
+    const target = bestEntry.target as HTMLElement;
+    const sectionId = sectionsMapRef.current.get(target);
+    if (sectionId) {
+      setActiveSection(sectionId);
     }
   }, []);
 
@@ -183,13 +183,13 @@ export function useScrollNavigation(
 
   // Set up scroll listener
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll);
 
     // Initial scroll position
     handleScroll();
 
     return (): void => {
-      window.removeEventListener('scroll', handleScroll, { passive: true } as unknown);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
 
