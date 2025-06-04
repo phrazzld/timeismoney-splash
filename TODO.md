@@ -13,7 +13,7 @@
 
 - [x] Clean up unused imports in infrastructure files
 - [x] Add proper type definitions for mock objects
-- [ ] Standardize test file patterns
+- [x] Standardize test file patterns
 
 ### Files needing attention:
 
