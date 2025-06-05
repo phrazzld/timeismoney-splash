@@ -4,7 +4,7 @@
 
 ### Immediate Priority (BLOCKING ALL CI)
 
-- [ ] **Fix ErrorBoundary event handler serialization issue in layout.tsx**
+- [x] **Fix ErrorBoundary event handler serialization issue in layout.tsx**
 
   - **Root Cause**: Custom fallback prop in ErrorBoundary contains onClick handler that can't be serialized during static generation
   - **Location**: `app/layout.tsx` lines 125-140 - button with `onClick={() => window.location.reload()}`
@@ -12,11 +12,20 @@
   - **Impact**: Fixes build failure affecting all CI jobs (Build, Vercel, Lighthouse, Accessibility)
   - **Test**: Run `pnpm build` locally to verify static generation succeeds
 
-- [ ] **Verify static page generation completes successfully**
+- [x] **Fix useScrollNavigation hook SSR compatibility**
+
+  - **Root Cause**: Hook accessing `document.getElementById()` during server-side rendering
+  - **Location**: `lib/hooks/useScrollNavigation.ts` lines 94-109 and scroll handlers
+  - **Solution**: Added `typeof window === 'undefined'` checks to prevent DOM access during SSR
+  - **Impact**: Resolves "ReferenceError: document is not defined" during static generation
+  - **Test**: Verified with `pnpm build` - all 7 pages generate successfully
+
+- [x] **Verify static page generation completes successfully**
 
   - **Goal**: Ensure all 7 pages generate without event handler serialization errors
   - **Command**: `pnpm build` should complete "Generating static pages (7/7)"
   - **Validation**: No "Event handlers cannot be passed to Client Component props" errors
+  - **Status**: ✅ All 7 pages now generate successfully
 
 - [ ] **Test ErrorBoundary functionality after fix**
 

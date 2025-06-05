@@ -92,6 +92,11 @@ export function useScrollNavigation(
 
   // Memoized sections array with DOM elements
   const sections = useMemo(() => {
+    // Only access DOM on client side after hydration
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
     const result: ScrollTarget[] = [];
 
     sectionConfigs.forEach((config) => {
@@ -121,6 +126,10 @@ export function useScrollNavigation(
   const handleScroll = useMemo(
     () =>
       debounce(() => {
+        // Only handle scroll on client side
+        if (typeof window === 'undefined') {
+          return;
+        }
         const position = getScrollPosition();
         setScrollProgress(position.percentage);
       }, debounceMs),
@@ -183,6 +192,11 @@ export function useScrollNavigation(
 
   // Set up scroll listener
   useEffect(() => {
+    // Only set up scroll listener on client side
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     window.addEventListener('scroll', handleScroll);
 
     // Initial scroll position
