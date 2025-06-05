@@ -55,7 +55,7 @@
   --foreground: oklch(0.1 0 0); /* From brandColors.neutral.900 */
 
   /* Brand colors */
-  --primary: oklch(0.7 0.2 145); /* From brandColors.primary.DEFAULT */
+  --primary: oklch(0.5 0.2 145); /* From brandColors.primary.dark - WCAG AA compliant */
   --primary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */
   --secondary: oklch(0.6 0.15 130); /* From brandColors.secondary.DEFAULT */
   --secondary-foreground: oklch(0.98 0 0); /* From brandColors.neutral.50 */

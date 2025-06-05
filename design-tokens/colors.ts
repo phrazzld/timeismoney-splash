@@ -7,12 +7,13 @@
  */
 
 export const brandColors = {
-  // Primary colors - from logo
+  // Primary colors - from logo (WCAG AA compliant)
   primary: {
-    DEFAULT: 'oklch(0.7 0.2 145)', // Vibrant green (#5CB85C approx)
-    hover: 'oklch(0.65 0.2 145)', // Slightly darker for hover states
-    light: 'oklch(0.85 0.15 145)', // Lighter variant
-    dark: 'oklch(0.5 0.2 145)', // Darker variant
+    DEFAULT: 'oklch(0.5 0.2 145)', // Accessible dark green for buttons
+    hover: 'oklch(0.45 0.2 145)', // Darker for hover states
+    light: 'oklch(0.7 0.2 145)', // Original vibrant green for accents
+    lighter: 'oklch(0.85 0.15 145)', // Very light variant
+    dark: 'oklch(0.4 0.2 145)', // Even darker variant
   },
 
   // Secondary colors - complementary
@@ -47,9 +48,10 @@ export const brandColors = {
 
   // Semantic colors
   success: {
-    DEFAULT: 'oklch(0.7 0.2 145)', // Same as primary for consistency
-    light: 'oklch(0.85 0.15 145)',
-    dark: 'oklch(0.5 0.2 145)',
+    DEFAULT: 'oklch(0.5 0.2 145)', // Same as primary for consistency
+    light: 'oklch(0.7 0.2 145)', // Lighter success variant
+    lighter: 'oklch(0.85 0.15 145)', // Very light variant
+    dark: 'oklch(0.4 0.2 145)', // Darker variant
   },
 
   warning: {
@@ -76,10 +78,11 @@ export const brandColors = {
 // Alternative hex values for reference and fallback
 export const hexColors = {
   primary: {
-    DEFAULT: '#5CB85C', // Extracted from logo
-    hover: '#4CAE4C',
-    light: '#A5D6A5',
-    dark: '#388E3C',
+    DEFAULT: '#388E3C', // WCAG AA compliant dark green
+    hover: '#2E7D32', // Darker for hover states
+    light: '#5CB85C', // Original vibrant green for accents
+    lighter: '#A5D6A5', // Very light variant
+    dark: '#1B5E20', // Even darker variant
   },
   secondary: {
     DEFAULT: '#26A69A',

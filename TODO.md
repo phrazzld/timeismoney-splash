@@ -124,7 +124,7 @@ All critical issues have been resolved:
   - **Impact**: Lighthouse CI job failing with exit code 1
   - **Test**: Run `npx @lhci/cli autorun` locally to verify configuration
 
-- [ ] **Fix color contrast violations in CTA button**
+- [x] **Fix color contrast violations in CTA button**
 
   - **Root Cause**: "Get Chrome Extension" button contrast 2.01:1 (needs 4.5:1 for WCAG AA)
   - **Current Colors**: Foreground `oklch(0.98 0 0)` on background `oklch(0.7 0.2 145)`
