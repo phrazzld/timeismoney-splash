@@ -21,6 +21,7 @@ export const CTAButton: React.FC = () => {
 
   return (
     <button
+      id="hero-cta-button"
       type="button"
       onClick={handleClick}
       onKeyDown={handleKeyDown}

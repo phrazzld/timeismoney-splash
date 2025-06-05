@@ -95,12 +95,17 @@ export async function testKeyboardNavigation(
       const el = document.activeElement;
       if (!el || el === document.body) return null;
 
+      const text = (el as HTMLElement).innerText?.substring(0, 50) || '';
+      const baseSelector = el.id
+        ? `#${el.id}`
+        : `${el.tagName.toLowerCase()}.${el.className.split(' ')[0]}`;
+
       return {
         tagName: el.tagName.toLowerCase(),
         id: el.id,
         className: el.className,
-        text: (el as HTMLElement).innerText?.substring(0, 50) || '',
-        selector: el.id ? `#${el.id}` : `${el.tagName.toLowerCase()}.${el.className.split(' ')[0]}`,
+        text,
+        selector: text ? `${baseSelector}:has-text("${text}")` : baseSelector,
       };
     });
 
@@ -131,7 +136,11 @@ export async function testKeyboardNavigation(
   const unreachableElements: string[] = [];
   for (const element of allFocusableElements) {
     const elementSelector = await element.evaluate((el) => {
-      return el.id ? `#${el.id}` : `${el.tagName.toLowerCase()}.${el.className.split(' ')[0]}`;
+      const text = (el as HTMLElement).innerText?.substring(0, 50) || '';
+      const baseSelector = el.id
+        ? `#${el.id}`
+        : `${el.tagName.toLowerCase()}.${el.className.split(' ')[0]}`;
+      return text ? `${baseSelector}:has-text("${text}")` : baseSelector;
     });
 
     if (!focusOrder.includes(elementSelector)) {

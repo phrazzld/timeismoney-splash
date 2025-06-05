@@ -46,7 +46,10 @@ test.describe('Accessibility Compliance - WCAG 2.1 AA (T020) @accessibility', ()
 
       // The CTA button should be one of the first focusable elements
       const ctaIndex = result.focusOrder.findIndex(
-        (selector) => selector.includes('button') || selector.includes('Get Chrome Extension'),
+        (selector) =>
+          selector.includes('hero-cta-button') ||
+          selector.includes('button') ||
+          selector.includes('Get Chrome Extension'),
       );
       expect(ctaIndex).toBeGreaterThanOrEqual(0);
       expect(ctaIndex).toBeLessThan(5); // Should be in the first 5 tab stops
