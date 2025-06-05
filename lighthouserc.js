@@ -17,8 +17,8 @@ module.exports = {
         // Chrome flags for CI environments
         chromeFlags: '--no-sandbox --disable-dev-shm-usage --headless',
 
-        // Use mobile preset for primary testing (mobile-first approach)
-        preset: 'mobile',
+        // Use performance preset (mobile-first approach maintained via throttling)
+        preset: 'perf',
 
         // Throttling settings (mobile 3G by default)
         throttling: {
