@@ -1,5 +1,42 @@
 # TODO: Post-Implementation Cleanup
 
+## 🚨 CRITICAL: CI Build Failure Resolution
+
+### Immediate Priority (BLOCKING ALL CI)
+
+- [ ] **Fix ErrorBoundary event handler serialization issue in layout.tsx**
+
+  - **Root Cause**: Custom fallback prop in ErrorBoundary contains onClick handler that can't be serialized during static generation
+  - **Location**: `app/layout.tsx` lines 125-140 - button with `onClick={() => window.location.reload()}`
+  - **Solution**: Remove custom fallback prop and use ErrorBoundary's default client-side UI
+  - **Impact**: Fixes build failure affecting all CI jobs (Build, Vercel, Lighthouse, Accessibility)
+  - **Test**: Run `pnpm build` locally to verify static generation succeeds
+
+- [ ] **Verify static page generation completes successfully**
+
+  - **Goal**: Ensure all 7 pages generate without event handler serialization errors
+  - **Command**: `pnpm build` should complete "Generating static pages (7/7)"
+  - **Validation**: No "Event handlers cannot be passed to Client Component props" errors
+
+- [ ] **Test ErrorBoundary functionality after fix**
+
+  - **Purpose**: Ensure error handling still works correctly without custom fallback
+  - **Method**: ErrorBoundary's default UI has proper client-side retry functionality
+  - **Verify**: Default error UI renders correctly and retry button works
+
+- [ ] **Validate CI pipeline recovery**
+
+  - **Push changes** and monitor CI build process
+  - **Verify**: Build and Test job passes
+  - **Verify**: Vercel deployment succeeds
+  - **Verify**: Lighthouse performance tests pass
+  - **Verify**: All Accessibility Compliance jobs pass
+
+- [ ] **Accept Chromatic UI baseline changes**
+  - **Status**: 33 changes pending acceptance as baselines
+  - **Action**: Review and accept legitimate UI changes in Chromatic dashboard
+  - **URL**: https://www.chromatic.com/build?appId=683772c812b3fe73ddafffe4&number=12
+
 ## ESLint/TypeScript Issues to Fix
 
 ### High Priority
