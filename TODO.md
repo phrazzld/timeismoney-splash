@@ -150,12 +150,12 @@ All critical issues have been resolved:
 
 ### Secondary Priority
 
-- [ ] **Fix secondary button contrast violation**
+- [x] **Fix secondary button contrast violation**
 
   - **Root Cause**: "UI Component Border" button contrast 1.68:1 (needs 3:1 minimum)
-  - **Colors**: Foreground `oklch(0.9 0 0)` on background `oklch(0.7 0.2 145)`
-  - **Solution**: Update design tokens for UI component contrast requirements
-  - **Impact**: Secondary accessibility compliance issue
+  - **Previous Colors**: Foreground `oklch(0.9 0 0)` on background `oklch(0.7 0.2 145)`
+  - **Solution**: Updated `--input` color from `oklch(0.9 0 0)` to `oklch(0.4 0 0)` for 3:1+ contrast
+  - **Impact**: Fixed secondary accessibility compliance issue for outline button borders
 
 - [ ] **Add automated color contrast validation**
 

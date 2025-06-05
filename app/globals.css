@@ -71,7 +71,7 @@
   --muted-foreground: oklch(0.5 0 0); /* From brandColors.neutral.500 */
   --destructive: oklch(0.6 0.2 25); /* From brandColors.error.DEFAULT */
   --border: oklch(0.9 0 0); /* From brandColors.neutral.200 */
-  --input: oklch(0.9 0 0); /* From brandColors.neutral.200 */
+  --input: oklch(0.4 0 0); /* Darker for 3:1 contrast against UI components */
   --ring: oklch(0.7 0.2 145); /* From brandColors.primary.DEFAULT */
 
   /* Chart colors */
@@ -114,7 +114,7 @@
   --muted-foreground: oklch(0.7 0 0); /* From brandColors.neutral.300 */
   --destructive: oklch(0.4 0.2 25); /* From brandColors.error.dark */
   --border: oklch(0.98 0 0 / 15%); /* From brandColors.neutral.50 with transparency */
-  --input: oklch(0.98 0 0 / 15%); /* From brandColors.neutral.50 with transparency */
+  --input: oklch(0.6 0 0); /* Darker for 3:1 contrast in dark mode */
   --ring: oklch(0.5 0.2 145); /* From brandColors.primary.dark */
 
   /* Chart colors - dark mode */
