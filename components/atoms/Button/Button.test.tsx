@@ -133,4 +133,51 @@ describe('Button', () => {
       expect(button).toHaveAttribute('aria-label', 'Submit form');
     });
   });
+
+  describe('Keyboard Accessibility', () => {
+    it('should be focusable and keyboard accessible', () => {
+      const handleClick = jest.fn();
+      render(
+        <Button onClick={handleClick} data-testid="keyboard-test-button">
+          Keyboard Test
+        </Button>,
+      );
+
+      const button = screen.getByTestId('keyboard-test-button');
+
+      // Button should be focusable
+      button.focus();
+      expect(button).toHaveFocus();
+
+      // Button should respond to Enter key
+      fireEvent.keyDown(button, { key: 'Enter', code: 'Enter' });
+      expect(handleClick).toHaveBeenCalledTimes(1);
+
+      // Button should respond to Space key
+      fireEvent.keyDown(button, { key: ' ', code: 'Space' });
+      expect(handleClick).toHaveBeenCalledTimes(2);
+    });
+
+    it('should have proper tabIndex when specified', () => {
+      render(
+        <Button tabIndex={0} data-testid="tab-index-button">
+          Tab Index Test
+        </Button>,
+      );
+
+      const button = screen.getByTestId('tab-index-button');
+      expect(button).toHaveAttribute('tabIndex', '0');
+    });
+
+    it('should maintain focus indicator styles', () => {
+      render(<Button data-testid="focus-indicator-button">Focus Test</Button>);
+
+      const button = screen.getByTestId('focus-indicator-button');
+
+      // Should have focus-visible classes for accessibility
+      expect(button).toHaveClass('focus-visible:outline-none');
+      expect(button).toHaveClass('focus-visible:ring-2');
+      expect(button).toHaveClass('focus-visible:ring-offset-2');
+    });
+  });
 });
