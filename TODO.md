@@ -210,4 +210,142 @@ All critical issues have been resolved:
   - ✅ **Tools**: Documented tools and procedures for accessibility validation
   - ✅ **Training**: Established team training requirements and WCAG 2.1 AA standards
 
-**Current State**: Critical accessibility and configuration issues blocking deployment. All fixes required before merge to master.
+**Current State**: Infrastructure complete. Ready for rapid splash page prototyping.
+
+## 🚀 NEW PRIORITY: Rapid Splash Page Prototyping (2025-06-06)
+
+### Strategic Objective
+
+Transform minimal placeholder page into compelling conversion-focused landing page that showcases the "Time is Money" Chrome extension's core value proposition: **"See What Your Purchases Really Cost"**
+
+### Content Strategy Foundation
+
+- **Primary Value Prop**: Convert any price to work hours instantly
+- **Target Audience**: Online shoppers who want spending awareness
+- **Core Message**: See the true cost of purchases in time/work
+- **Proof Points**: 5,000+ users, 3.8★ rating (93 reviews), Chrome Web Store featured
+
+### Rapid Prototyping Plan (2 hours total)
+
+#### Phase 1: Enhanced Hero Section (30 minutes)
+
+- [x] **Enhance Hero content with compelling copy**
+
+  - ✅ **Current**: Basic "Convert Prices to Work Hours" headline
+  - ✅ **Target**: "See What Your Purchases Really Cost" with emotional impact
+  - ✅ **Subheadline**: "Convert any price to work hours instantly - See the true cost of your spending"
+  - ✅ **Location**: Updated `app/page.tsx` with new heading, subheading, and page metadata
+
+- [ ] **Add animated price conversion demo**
+
+  - **Concept**: Visual showing "$99 → 6 hours 15 minutes" with smooth animation
+  - **Implementation**: Create new `PriceConverter` component with CSS animations
+  - **Integration**: Replace or enhance existing hero visual elements
+  - **Examples**: "$25 → 1h 34m", "$199 → 12h 30m", "$500 → 31h 15m"
+
+- [ ] **Enhance CTA button styling and copy**
+  - **Current**: Generic "Get Chrome Extension"
+  - **Target**: "Get Free Extension" with urgency/benefit focus
+  - **Styling**: Improve visual prominence and hover states
+  - **Location**: Update `components/molecules/CTAButton/CTAButton.tsx`
+
+#### Phase 2: Core Content Sections (60 minutes)
+
+- [ ] **Create HowItWorks organism**
+
+  - **Content**: 3-step process with icons and visuals
+    1. "Browse any website" (shopping icon)
+    2. "See prices convert automatically" (clock icon)
+    3. "Make informed decisions" (brain/lightbulb icon)
+  - **Implementation**: New `components/organisms/HowItWorks/` following atomic design
+  - **Layout**: Horizontal cards on desktop, vertical stack on mobile
+
+- [ ] **Add SocialProof component with real stats**
+
+  - **Content**: "Join 5,000+ users", "3.8★ (93 reviews)", "Featured on Chrome Web Store"
+  - **Implementation**: New `components/molecules/SocialProof/`
+  - **Design**: Clean stats layout with trust indicators
+  - **Data**: Pull from actual Chrome Web Store metrics
+
+- [ ] **Build Features grid**
+  - **Content**: 3-4 key benefits with icons
+    - "Instant Price Conversion" - No setup required
+    - "Works Everywhere" - Any website with prices
+    - "Privacy First" - No data collection
+    - "Completely Free" - No subscriptions or limits
+  - **Implementation**: New `components/organisms/Features/`
+  - **Layout**: 2x2 grid on desktop, single column on mobile
+
+#### Phase 3: Polish and Optimization (30 minutes)
+
+- [ ] **Add micro-interactions and animations**
+
+  - **Price converter**: Smooth number transitions
+  - **CTA button**: Hover and focus effects
+  - **Feature cards**: Subtle hover states
+  - **Implementation**: CSS animations and transitions following design tokens
+
+- [ ] **Optimize for mobile experience**
+
+  - **Layout**: Ensure all components are responsive using Tailwind breakpoints
+  - **Touch targets**: Verify button sizes meet 44px minimum
+  - **Typography**: Scale appropriately across breakpoints
+  - **Test**: Verify on mobile viewport and touch devices
+
+- [ ] **Accessibility validation**
+  - **Automated**: Run `pnpm test:a11y` to verify WCAG compliance
+  - **Manual**: Keyboard navigation testing for all new components
+  - **Color contrast**: Verify all new colors meet 4.5:1 ratio
+  - **Screen reader**: Test with VoiceOver/NVDA for content flow
+
+### Implementation Strategy
+
+#### Technical Approach
+
+- **Leverage existing**: Use current Hero, Button, Typography atoms
+- **Atomic design**: Create new molecules/organisms following established patterns
+- **Design tokens**: Use existing color, spacing, typography systems
+- **Accessibility**: Maintain WCAG 2.1 AA compliance throughout
+
+#### Component Architecture
+
+```
+organisms/
+├── Hero/ (existing - enhance)
+├── HowItWorks/ (new)
+├── SocialProof/ (new)
+└── Features/ (new)
+
+molecules/
+├── HeroContent/ (existing - enhance)
+├── CTAButton/ (existing - enhance)
+├── PriceConverter/ (new)
+├── FeatureCard/ (new)
+└── StatCard/ (new)
+```
+
+#### Content Hierarchy
+
+1. **Hero**: Grab attention with value proposition + demo
+2. **HowItWorks**: Explain the simple 3-step process
+3. **SocialProof**: Build trust with user count and ratings
+4. **Features**: Detail key benefits and differentiators
+5. **CTA**: Secondary conversion opportunity
+
+### Success Metrics
+
+- [ ] **Visual Impact**: Hero section clearly communicates value proposition
+- [ ] **User Journey**: Clear path from problem → solution → action
+- [ ] **Technical Quality**: Maintains accessibility and performance standards
+- [ ] **Mobile Experience**: Excellent experience across all devices
+- [ ] **Conversion Focus**: Strong CTAs and social proof elements
+
+### Next Steps After Completion
+
+1. User testing with target audience
+2. Analytics integration for conversion tracking
+3. A/B testing different headlines and CTAs
+4. SEO optimization and meta tags
+5. Performance optimization and Core Web Vitals
+
+**Priority**: High - This transforms the minimal placeholder into a proper marketing site that can drive extension adoption and showcase the product's value.

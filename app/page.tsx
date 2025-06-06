@@ -6,9 +6,9 @@ import { mergePageMetadata, toNextMetadata } from '@/lib/seo';
 
 // Generate comprehensive page metadata
 const pageMetadata = mergePageMetadata({
-  title: 'Convert Prices to Work Hours',
+  title: 'See What Your Purchases Really Cost',
   description:
-    'Transform online prices into hours of work with the Time is Money Chrome extension. See the true cost of purchases in the time it takes to earn them.',
+    'Convert any price to work hours instantly. See the true cost of your spending with the Time is Money Chrome extension - discover what your purchases really cost in time.',
   canonical: '/',
 });
 
@@ -17,9 +17,8 @@ export const metadata: Metadata = toNextMetadata(pageMetadata);
 
 export default function Home(): React.ReactNode {
   const heroProps: HeroProps = {
-    heading: 'Convert Prices to Work Hours',
-    subheading:
-      'Transform online prices into hours of work with the Time is Money Chrome extension. See the true cost of purchases in the time it takes to earn them.',
+    heading: 'See What Your Purchases Really Cost',
+    subheading: 'Convert any price to work hours instantly - See the true cost of your spending',
     backgroundVariant: 'gradient',
     variant: 'centered',
     cta: <CTAButton />,
