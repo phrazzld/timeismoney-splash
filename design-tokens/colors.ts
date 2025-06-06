@@ -9,11 +9,11 @@
 export const brandColors = {
   // Primary colors - from logo (WCAG AA compliant)
   primary: {
-    DEFAULT: 'oklch(0.5 0.2 145)', // Accessible dark green for buttons
-    hover: 'oklch(0.45 0.2 145)', // Darker for hover states
+    DEFAULT: 'oklch(0.4 0.2 145)', // Accessible dark green for buttons (4.5:1+ contrast)
+    hover: 'oklch(0.35 0.2 145)', // Darker for hover states
     light: 'oklch(0.7 0.2 145)', // Original vibrant green for accents
     lighter: 'oklch(0.85 0.15 145)', // Very light variant
-    dark: 'oklch(0.4 0.2 145)', // Even darker variant
+    dark: 'oklch(0.3 0.2 145)', // Even darker variant
   },
 
   // Secondary colors - complementary

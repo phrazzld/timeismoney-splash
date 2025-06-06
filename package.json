@@ -23,6 +23,7 @@
     "test:e2e:accessibility": "playwright test --grep @accessibility",
     "test:a11y": "pnpm test:e2e:accessibility",
     "test:a11y:report": "playwright test --grep @accessibility --reporter=html",
+    "validate:contrast": "tsx scripts/validate-contrast.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --build-script-name=build-storybook",
@@ -38,6 +39,12 @@
     ],
     "*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,md,mdx,html,yaml,yml}": [
       "prettier --ignore-unknown --write"
+    ],
+    "design-tokens/**/*.ts": [
+      "pnpm validate:contrast"
+    ],
+    "tailwind.config.ts": [
+      "pnpm validate:contrast"
     ]
   },
   "dependencies": {

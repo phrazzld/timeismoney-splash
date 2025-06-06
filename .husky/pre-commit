@@ -23,3 +23,11 @@ if ! pnpm doctor; then
   echo "💡 Tip: Run 'pnpm doctor' to see detailed diagnostics."
   exit 1
 fi
+
+# Run color contrast validation
+echo "🎨 Validating color contrast compliance..."
+if ! pnpm validate:contrast; then
+  echo "❌ Color contrast validation failed. Please fix contrast issues before committing."
+  echo "💡 Tip: Run 'pnpm validate:contrast' to see detailed issues."
+  exit 1
+fi

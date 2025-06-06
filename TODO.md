@@ -163,12 +163,15 @@ All critical issues have been resolved:
   - **Solution**: Updated `--input` color from `oklch(0.9 0 0)` to `oklch(0.4 0 0)` for 3:1+ contrast
   - **Impact**: Fixed secondary accessibility compliance issue for outline button borders
 
-- [ ] **Add automated color contrast validation**
+- [x] **Add automated color contrast validation**
 
   - **Purpose**: Prevent future contrast violations
-  - **Solution**: Integrate contrast checking into CI pipeline
-  - **Implementation**: Add color contrast validation to pre-commit hooks
-  - **Test**: Verify all interactive elements meet WCAG standards
+  - ✅ **Solution**: Integrated contrast checking into CI pipeline and pre-commit hooks
+  - ✅ **Implementation**: Added standalone validation script and lint-staged integration
+  - ✅ **Test**: Validates design tokens and detects known violations
+  - **Script**: `scripts/validate-contrast.ts` validates WCAG AA compliance
+  - **Integration**: Runs on design token changes and every commit
+  - **Documentation**: `docs/automated-contrast-validation.md`
 
 - [ ] **Enhance keyboard accessibility test coverage**
   - **Purpose**: Comprehensive keyboard navigation validation
