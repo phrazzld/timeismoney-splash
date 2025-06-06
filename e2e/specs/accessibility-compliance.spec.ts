@@ -8,6 +8,10 @@ import {
   assertAllInteractiveElementsAccessible,
 } from '../utils/keyboard-navigation';
 import {
+  testEnhancedKeyboardAccessibility,
+  assertEnhancedKeyboardAccessibility,
+} from '../utils/enhanced-keyboard-testing';
+import {
   validateColorContrast,
   validateUIComponentContrast,
   formatContrastReport,
@@ -111,6 +115,128 @@ test.describe('Accessibility Compliance - WCAG 2.1 AA (T020) @accessibility', ()
       // Page should still be functional
       const title = await page.title();
       expect(title).toBeTruthy();
+    });
+  });
+
+  test.describe('Enhanced Keyboard Accessibility', () => {
+    test('comprehensive component keyboard behavior validation', async ({ page }) => {
+      // Test all interactive components for proper keyboard behavior
+      await assertEnhancedKeyboardAccessibility(page, {
+        testKeyboardShortcuts: true,
+        testAriaCompliance: true,
+      });
+    });
+
+    test('button components handle Enter and Space keys correctly', async ({ page }) => {
+      const result = await testEnhancedKeyboardAccessibility(page);
+
+      const buttonTests = result.componentTests.filter((test) =>
+        test.component.startsWith('Button'),
+      );
+
+      expect(buttonTests.length).toBeGreaterThan(0);
+
+      for (const buttonTest of buttonTests) {
+        expect(
+          buttonTest.tests.enterKey,
+          `${buttonTest.component} should respond to Enter key`,
+        ).toBe(true);
+
+        expect(
+          buttonTest.tests.spaceKey,
+          `${buttonTest.component} should respond to Space key`,
+        ).toBe(true);
+
+        expect(
+          buttonTest.tests.focusIndicator,
+          `${buttonTest.component} should have visible focus indicator`,
+        ).toBe(true);
+      }
+    });
+
+    test('all interactive elements have proper ARIA attributes', async ({ page }) => {
+      const result = await testEnhancedKeyboardAccessibility(page, {
+        testAriaCompliance: true,
+      });
+
+      const ariaFailures = result.ariaCompliance.filter((test) => !test.passes);
+
+      if (ariaFailures.length > 0) {
+        const errorDetails = ariaFailures
+          .map((failure) => `${failure.element}: Missing ${failure.missingAttributes.join(', ')}`)
+          .join('\n');
+
+        throw new Error(`ARIA compliance failures:\n${errorDetails}`);
+      }
+
+      expect(ariaFailures).toHaveLength(0);
+    });
+
+    test('keyboard shortcuts work as expected', async ({ page }) => {
+      const result = await testEnhancedKeyboardAccessibility(page, {
+        testKeyboardShortcuts: true,
+      });
+
+      const shortcutFailures = result.keyboardShortcuts.filter((test) => !test.passes);
+
+      if (shortcutFailures.length > 0) {
+        const errorDetails = shortcutFailures
+          .map(
+            (failure) =>
+              `${failure.shortcut}: Expected "${failure.expectedBehavior}", got "${failure.actualBehavior}"`,
+          )
+          .join('\n');
+
+        throw new Error(`Keyboard shortcut failures:\n${errorDetails}`);
+      }
+
+      expect(shortcutFailures).toHaveLength(0);
+    });
+
+    test('focus indicators are consistent across components', async ({ page }) => {
+      const result = await testEnhancedKeyboardAccessibility(page);
+
+      const componentsWithoutFocusIndicators = result.componentTests.filter(
+        (test) => !test.tests.focusIndicator,
+      );
+
+      if (componentsWithoutFocusIndicators.length > 0) {
+        const componentNames = componentsWithoutFocusIndicators.map((test) => test.component);
+        throw new Error(`Components missing focus indicators: ${componentNames.join(', ')}`);
+      }
+
+      expect(componentsWithoutFocusIndicators).toHaveLength(0);
+    });
+
+    test('tab navigation reaches main CTA efficiently', async ({ page }) => {
+      const result = await testEnhancedKeyboardAccessibility(page, {
+        testKeyboardShortcuts: true,
+      });
+
+      const tabNavigationTest = result.keyboardShortcuts.find(
+        (test) => test.shortcut === 'Tab Navigation',
+      );
+
+      expect(tabNavigationTest).toBeTruthy();
+      expect(
+        tabNavigationTest?.passes,
+        `Tab navigation should reach CTA efficiently: ${tabNavigationTest?.actualBehavior}`,
+      ).toBe(true);
+    });
+
+    test('all components are accessible via keyboard only', async ({ page }) => {
+      const result = await testEnhancedKeyboardAccessibility(page);
+
+      const inaccessibleComponents = result.componentTests.filter(
+        (test) => !test.tests.tabAccessible,
+      );
+
+      if (inaccessibleComponents.length > 0) {
+        const componentNames = inaccessibleComponents.map((test) => test.component);
+        throw new Error(`Components not accessible via keyboard: ${componentNames.join(', ')}`);
+      }
+
+      expect(inaccessibleComponents).toHaveLength(0);
     });
   });
 
