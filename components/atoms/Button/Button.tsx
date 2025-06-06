@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Slot } from '@radix-ui/react-slot';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link';
 export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon';
@@ -15,10 +14,6 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    */
   size?: ButtonSize;
   /**
-   * Whether to render the button as a child component (using Radix UI Slot)
-   */
-  asChild?: boolean;
-  /**
    * Button contents
    */
   children: React.ReactNode;
@@ -30,6 +25,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    * Whether the button is in a loading state
    */
   isLoading?: boolean;
+  /**
+   * Tab index for keyboard navigation (defaults to 0 for accessibility)
+   */
+  tabIndex?: number;
 }
 
 /**
@@ -41,15 +40,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     className,
     variant = 'primary',
     size = 'default',
-    asChild = false,
     isLoading = false,
     disabled,
+    tabIndex = 0,
     children,
     ...props
   },
   ref,
 ) {
-  const Comp = asChild ? Slot : 'button';
   const isDisabled = disabled || isLoading;
 
   // Map variants to appropriate Tailwind classes
@@ -89,8 +87,25 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     </svg>
   );
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>): void => {
+    // Handle keyboard activation for Enter and Space keys
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (!isDisabled && props.onClick) {
+        // Convert keyboard event to mouse event for onClick compatibility
+        const syntheticMouseEvent = event as unknown as React.MouseEvent<HTMLButtonElement>;
+        props.onClick(syntheticMouseEvent);
+      }
+    }
+
+    // Call any existing onKeyDown handler
+    if (props.onKeyDown) {
+      props.onKeyDown(event);
+    }
+  };
+
   return (
-    <Comp
+    <button
       className={cn(
         'inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
@@ -102,10 +117,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       ref={ref}
       disabled={isDisabled}
       aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : tabIndex}
+      onKeyDown={handleKeyDown}
       {...props}
     >
       {isLoading && <LoadingSpinner />}
       {children}
-    </Comp>
+    </button>
   );
 });

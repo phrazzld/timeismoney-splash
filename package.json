@@ -20,9 +20,19 @@
     "test:e2e:prod": "playwright test --config=playwright.config.production.ts",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
+    "test:e2e:accessibility": "playwright test --grep @accessibility",
+    "test:a11y": "pnpm test:e2e:accessibility",
+    "test:a11y:report": "playwright test --grep @accessibility --reporter=html",
+    "validate:contrast": "tsx scripts/validate-contrast.ts",
+    "validate:lighthouse": "tsx scripts/validate-lighthouse-config.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "chromatic --build-script-name=build-storybook"
+    "chromatic": "chromatic --build-script-name=build-storybook",
+    "lighthouse": "lhci autorun",
+    "lighthouse:collect": "lhci collect",
+    "lighthouse:assert": "lhci assert",
+    "performance:audit": "pnpm build && pnpm start & sleep 10 && pnpm lighthouse && kill %1",
+    "performance:baseline": "lhci collect --url=http://localhost:3000"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs}": [
@@ -30,18 +40,27 @@
     ],
     "*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,md,mdx,html,yaml,yml}": [
       "prettier --ignore-unknown --write"
+    ],
+    "design-tokens/**/*.ts": [
+      "pnpm validate:contrast"
+    ],
+    "tailwind.config.ts": [
+      "pnpm validate:contrast"
     ]
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.1",
+    "dompurify": "3.2.6",
     "lucide-react": "^0.510.0",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.10.1",
     "@eslint/eslintrc": "^3",
+    "@lhci/cli": "^0.14.0",
     "@playwright/test": "^1.52.0",
     "@storybook/addon-a11y": "^8.0.0",
     "@storybook/addon-essentials": "^8.0.0",
@@ -51,24 +70,25 @@
     "@storybook/nextjs": "^8.0.0",
     "@storybook/react": "^8.0.0",
     "@storybook/test": "^8.0.0",
-    "@tailwindcss/postcss": "^4.1.7",
+    "@tailwindcss/postcss": "^4.1.8",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
     "@types/jest": "^29.5.14",
     "@types/jest-axe": "3.5.9",
+    "@types/jsdom": "21.1.7",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
     "@types/supertest": "^6.0.3",
     "@types/xml2js": "^0.4.14",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.1",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/parser": "^8.33.1",
     "autoprefixer": "10.4.21",
     "chromatic": "^10.0.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.5.0",
-    "eslint": "^9",
+    "eslint": "^9.28.0",
     "eslint-config-next": "15.3.2",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-storybook": "^0.12.0",
@@ -77,17 +97,21 @@
     "jest-axe": "10.0.0",
     "jest-environment-jsdom": "29.7.0",
     "jest-environment-node": "^29.7.0",
-    "lint-staged": "^16.0.0",
-    "postcss": "^8.4.32",
+    "jsdom": "26.1.0",
+    "lint-staged": "^16.1.0",
+    "playwright-core": "^1.52.0",
+    "postcss": "^8.5.4",
     "prettier": "^3.5.3",
     "storybook": "^8.0.0",
     "supertest": "^7.1.1",
     "tailwind-merge": "^3.3.0",
-    "tailwindcss": "^4",
+    "tailwindcss": "^4.1.8",
     "ts-jest": "^29.3.4",
     "tsx": "^4.19.4",
-    "tw-animate-css": "^1.2.9",
+    "tw-animate-css": "^1.3.4",
     "typescript": "^5",
+    "wait-on": "^8.0.1",
+    "web-vitals": "5.0.2",
     "webpack": "^5.0.0",
     "xml2js": "^0.6.2"
   },
@@ -97,5 +121,5 @@
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
   },
-  "packageManager": "pnpm@8.15.6"
+  "packageManager": "pnpm@8.15.9"
 }

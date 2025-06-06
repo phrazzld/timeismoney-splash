@@ -1,19 +1,30 @@
 /**
+ * Tests for Google Analytics integration
+ *
+ * Covers event tracking, configuration, environment handling, and gtag initialization
  * @jest-environment jsdom
  */
 
-// Test for Google Analytics module
+// Import functions for testing (will be imported dynamically in tests)
+// import { trackEvent, trackPageView, initializeGA } from './google-analytics';
 
-describe('Analytics: google-analytics', () => {
+// Mock console methods
+const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
+
+describe('Google Analytics', () => {
   const originalEnv = process.env.NODE_ENV;
   const originalGA = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   beforeEach(() => {
+    // Clear all mocks
     jest.clearAllMocks();
-    // Reset environment
+    mockConsoleLog.mockClear();
+
+    // Reset environment variables
     process.env.NODE_ENV = originalEnv;
     process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = originalGA;
-    // Reset window
+
+    // Reset global window objects
     if (typeof window !== 'undefined') {
       const globalWindow = window as unknown as { gtag?: unknown; dataLayer?: unknown };
       delete globalWindow.gtag;
@@ -22,11 +33,12 @@ describe('Analytics: google-analytics', () => {
   });
 
   afterEach(() => {
+    // Restore environment variables
     process.env.NODE_ENV = originalEnv;
     process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = originalGA;
   });
 
-  describe('development mode', () => {
+  describe('Development Environment', () => {
     it('should log events in development', async () => {
       process.env.NODE_ENV = 'development';
 

@@ -19,7 +19,9 @@ export type CoreEvent =
   | 'cta_click'
   | 'feature_demo_used'
   | 'faq_expanded'
-  | 'contact_form_submit';
+  | 'contact_form_submit'
+  | 'performance_metric'
+  | 'component_error';
 
 /**
  * Properties that can be attached to analytics events
@@ -46,10 +48,10 @@ export interface EventProps {
  * Global gtag function interface
  */
 export interface GtagFunction {
-  (command: 'config', targetId: string, config?: Record<string, unknown>): void;
-  (command: 'event', eventName: string, parameters?: EventProps): void;
-  (command: 'js', date: Date): void;
-  (command: string, ...args: unknown[]): void;
+  (_command: 'config', _targetId: string, _config?: Record<string, unknown>): void;
+  (_command: 'event', _eventName: string, _parameters?: EventProps): void;
+  (_command: 'js', _date: Date): void;
+  (_command: string, ..._args: unknown[]): void;
 }
 
 declare global {

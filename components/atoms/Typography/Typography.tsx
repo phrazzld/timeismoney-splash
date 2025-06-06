@@ -51,39 +51,49 @@ export const variantElementMap: Record<keyof typeof typographyPresets, React.Ele
 };
 
 /**
- * Mapping of typography variants to their corresponding Tailwind classes
+ * Mapping of typography variants to their corresponding responsive Tailwind classes
+ * Following mobile-first approach with progressive enhancement
  */
 export const variantClassMap: Record<keyof typeof typographyPresets, string> = {
-  h1: 'text-5xl font-bold leading-tight tracking-tight',
-  h2: 'text-4xl font-bold leading-tight tracking-tight',
-  h3: 'text-3xl font-semibold leading-snug',
-  h4: 'text-2xl font-semibold leading-snug',
-  h5: 'text-xl font-semibold leading-normal',
-  h6: 'text-lg font-semibold leading-normal',
-  bodyLarge: 'text-lg font-normal leading-relaxed',
-  body: 'text-base font-normal leading-normal',
-  bodySmall: 'text-sm font-normal leading-normal',
-  caption: 'text-xs font-normal leading-normal',
-  overline: 'text-xs font-medium leading-normal tracking-wider uppercase',
-  label: 'text-sm font-medium leading-normal',
-  code: 'text-sm font-normal leading-normal font-mono',
-  codeBlock: 'text-sm font-normal leading-relaxed font-mono',
+  h1: 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight',
+  h2: 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight',
+  h3: 'text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold leading-snug',
+  h4: 'text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold leading-snug',
+  h5: 'text-base sm:text-lg md:text-xl lg:text-2xl font-semibold leading-normal',
+  h6: 'text-sm sm:text-base md:text-lg lg:text-xl font-semibold leading-normal',
+  bodyLarge: 'text-base sm:text-lg md:text-xl font-normal leading-relaxed',
+  body: 'text-sm sm:text-base md:text-lg font-normal leading-normal',
+  bodySmall: 'text-xs sm:text-sm md:text-base font-normal leading-normal',
+  caption: 'text-xs sm:text-xs md:text-sm font-normal leading-normal',
+  overline: 'text-xs sm:text-xs md:text-sm font-medium leading-normal tracking-wider uppercase',
+  label: 'text-xs sm:text-sm md:text-base font-medium leading-normal',
+  code: 'text-xs sm:text-sm md:text-base font-normal leading-normal font-mono',
+  codeBlock: 'text-xs sm:text-sm md:text-base font-normal leading-relaxed font-mono',
 };
 
 /**
  * Typography component for consistent text styling across the application.
  * It provides a set of predefined typography variants that map to appropriate HTML elements
- * and Tailwind CSS classes.
+ * and responsive Tailwind CSS classes.
+ *
+ * Responsive behavior follows mobile-first approach:
+ * - Base: 320px+ (mobile)
+ * - sm: 640px+ (small tablets)
+ * - md: 768px+ (tablets)
+ * - lg: 1024px+ (desktop)
+ * - xl: 1280px+ (large desktop)
+ *
+ * Typography scales progressively larger at each breakpoint for optimal readability.
  *
  * @example
  * ```tsx
- * <Typography variant="h1">Heading 1</Typography>
- * <Typography variant="body">Regular paragraph text</Typography>
- * <Typography variant="h2" as="h3">Heading 2 styled as h3 element</Typography>
+ * <Typography variant="h1">Responsive Heading 1</Typography>
+ * <Typography variant="body">Responsive paragraph text</Typography>
+ * <Typography variant="h2" as="h3">Responsive heading with custom element</Typography>
  * ```
  *
  * @param {TypographyProps} props - Component props
- * @returns {React.ReactElement} Rendered element with appropriate styling
+ * @returns {React.ReactElement} Rendered element with responsive styling
  */
 export const Typography: React.FC<TypographyProps> = ({
   variant,

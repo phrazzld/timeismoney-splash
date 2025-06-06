@@ -4,11 +4,10 @@
  * Test script to verify pnpm enforcement is working correctly
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-unused-vars */
-const { execSync } = require('child_process');
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
-/* eslint-enable @typescript-eslint/no-require-imports, @typescript-eslint/no-unused-vars */
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 console.log('Testing pnpm enforcement mechanisms...\n');
 
