@@ -193,11 +193,17 @@ All critical issues have been resolved:
 
 ### Configuration & Infrastructure
 
-- [ ] **Update Lighthouse CI configuration for version compatibility**
+- [x] **Update Lighthouse CI configuration for version compatibility**
 
-  - **Action**: Review and update all Lighthouse settings for current version
-  - **Documentation**: Document configuration upgrade procedures
-  - **Validation**: Add configuration validation to prevent future drift
+  - ✅ **Action**: Reviewed and updated all Lighthouse settings for v12+ compatibility
+  - ✅ **Chrome Flags**: Updated for better CI stability (`--headless=new`, additional stability flags)
+  - ✅ **Performance Thresholds**: Balanced error/warning levels for development workflow
+  - ✅ **Deprecated Options**: Removed `max-potential-fid`, consolidated duplicate assertions
+  - ✅ **Enhanced Settings**: Added `onlyCategories`, `emulatedFormFactor`, updated throttling
+  - ✅ **Testing**: Verified configuration works with local development server
+  - ✅ **Documentation**: Created comprehensive configuration guide (`docs/lighthouse-configuration.md`)
+  - ✅ **Validation**: Added automated config validation script (`scripts/validate-lighthouse-config.ts`)
+  - ✅ **Integration**: Added `pnpm validate:lighthouse` script for configuration checking
 
 - [ ] **Establish accessibility testing standards**
   - **Documentation**: Create accessibility testing guidelines
