@@ -1,33 +1,23 @@
-import Image from "next/image";
+import { Github } from "lucide-react";
 
 export function Footer() {
   return (
     <footer className="border-t bg-muted/50">
-      <div className="container px-4 py-8">
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <div className="flex items-center gap-3">
-            <Image 
-              src="/icon_640.png" 
-              alt="Time is Money Logo" 
-              width={24} 
-              height={24}
-              className="rounded"
-            />
-            <div className="text-center md:text-left">
-              <div className="text-lg font-semibold">Time is Money</div>
-              <p className="text-sm text-muted-foreground">
-                Make smarter purchasing decisions
-              </p>
-            </div>
-          </div>
+      <div className="container px-4 py-6">
+        <div className="flex flex-col items-center justify-between gap-3 md:flex-row">
+          <span className="text-sm font-medium text-muted-foreground">Time is Money</span>
           
-          <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground md:items-end">
-            <p>© 2024 Time is Money. All rights reserved.</p>
-            <div className="flex gap-4">
-              <a href="#" className="hover:text-foreground">Privacy</a>
-              <a href="#" className="hover:text-foreground">Terms</a>
-              <a href="#" className="hover:text-foreground">Support</a>
-            </div>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <a 
+              href="https://github.com/phrazzld/timeismoney" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+              aria-label="View source code on GitHub"
+            >
+              <Github className="h-4 w-4" />
+            </a>
+            <span>© 2014</span>
           </div>
         </div>
       </div>
