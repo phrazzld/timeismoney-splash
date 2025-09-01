@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/ui/footer";
-import { ArrowRight, Clock, Download, Globe, Eye, Zap } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 
 const DRAMATIC_EXAMPLES = [
   { price: "$299", time: "18 hours", item: "AirPods Pro" },
@@ -135,7 +135,7 @@ export default function Home() {
                   <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-600 text-sm">
                     <div className="flex items-center gap-2">
                       <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                      10,000+ active users
+                      5,000 active users
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
@@ -157,102 +157,287 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How It Works */}
-        <section className="px-6 py-24 bg-white relative z-20 border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-          <div className="mx-auto max-w-4xl">
-            <div className="mb-16 text-center">
-              <h2 className="mb-6 text-2xl font-bold">
-                How It Works
-              </h2>
-              <p className="text-muted-foreground">
-                Three simple steps to smarter spending
-              </p>
+        {/* Press Section */}
+        <section className="relative px-6 py-16 bg-gray-50 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-50/50 to-white pointer-events-none"></div>
+          <div className="relative mx-auto max-w-5xl text-center">
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-6">As Featured In</p>
+            <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 mb-8">
+              <a 
+                href="https://finance.yahoo.com/news/time-is-money-chrome-extension-tells-you-how-many-102539694524.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+              >
+                Yahoo Finance
+              </a>
+              <span className="text-gray-300 hidden md:inline">•</span>
+              <a 
+                href="https://www.fastcompany.com/3038475/by-turning-minutes-into-moolah-this-chrome-extension-helps-you-save"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+              >
+                Fast Company
+              </a>
+              <span className="text-gray-300 hidden md:inline">•</span>
+              <a 
+                href="https://lifehacker.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+              >
+                Lifehacker
+              </a>
+              <span className="text-gray-300 hidden md:inline">•</span>
+              <a 
+                href="https://www.freetech4teachers.com/2014/11/time-is-money-chrome-extension-that.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+              >
+                Edtech
+              </a>
             </div>
+            <blockquote className="relative max-w-3xl mx-auto">
+              <div className="text-lg md:text-xl text-gray-700 italic font-light leading-relaxed">
+                &ldquo;It&apos;s easier to think in terms of not wasting time rather than money.&rdquo;
+              </div>
+              <cite className="block mt-3 text-sm font-medium not-italic text-gray-500">— Fast Company</cite>
+            </blockquote>
+          </div>
+        </section>
 
-            <div className="grid gap-12 md:grid-cols-3">
-              {[
-                {
-                  icon: Download,
-                  title: "Install Extension",
-                  description: "One-click install from the Chrome Web Store. No account needed.",
-                },
-                {
-                  icon: Globe,
-                  title: "Browse Any Website", 
-                  description: "Shop normally on Amazon, eBay, or any site with prices.",
-                },
-                {
-                  icon: Eye,
-                  title: "See Work Hours",
-                  description: "Prices automatically show as hours of work alongside dollars.",
-                },
-              ].map((step) => {
-                const Icon = step.icon;
-                return (
-                  <div key={step.title} className="text-center">
-                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="mb-3 text-lg font-semibold">{step.title}</h3>
-                    <p className="text-muted-foreground text-sm">{step.description}</p>
+        {/* The Math of Mindless Spending */}
+        <section className="px-6 py-32 bg-white relative">
+          <div className="mx-auto max-w-5xl">
+            <div className="text-center mb-20">
+              <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
+                Every purchase<br className="hidden md:block"/>is a trade.
+              </h2>
+              <p className="text-2xl text-gray-600 font-light">You&apos;re trading hours of your life.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8 mb-20">
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative text-center p-8 rounded-3xl border-2 border-gray-200 bg-white group-hover:border-orange-300 transition-all duration-300">
+                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">☕</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-2">Daily coffee</div>
+                  <div className="text-3xl font-black text-orange-600">$5</div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="text-sm text-gray-500 uppercase tracking-wide mb-1">Time cost</div>
+                    <div className="text-xl font-bold text-gray-900">20 minutes</div>
                   </div>
-                );
-              })}
+                </div>
+              </div>
+              
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative text-center p-8 rounded-3xl border-2 border-gray-200 bg-white group-hover:border-indigo-300 transition-all duration-300">
+                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">📱</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-2">New iPhone</div>
+                  <div className="text-3xl font-black text-indigo-600">$999</div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="text-sm text-gray-500 uppercase tracking-wide mb-1">Time cost</div>
+                    <div className="text-xl font-bold text-gray-900">54 hours</div>
+                    <div className="text-sm text-gray-500">(1+ week)</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative text-center p-8 rounded-3xl border-2 border-gray-200 bg-white group-hover:border-pink-300 transition-all duration-300">
+                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">🛍️</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-2">Shopping spree</div>
+                  <div className="text-3xl font-black text-pink-600">$500</div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="text-sm text-gray-500 uppercase tracking-wide mb-1">Time cost</div>
+                    <div className="text-xl font-bold text-gray-900">30 hours</div>
+                    <div className="text-sm text-gray-500">(almost a week)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl"></div>
+              <div className="relative text-center p-10 rounded-3xl text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+                <p className="text-2xl mb-4 font-light relative z-10">Most people never do the math.</p>
+                <p className="text-4xl font-black relative z-10">This extension does it for you.</p>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Features - Bento Grid */}
-        <section className="px-6 py-24 bg-slate-50">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="mb-16 text-center text-3xl font-bold">
-              Why Choose Time is Money?
+        {/* How It Works */}
+        <section className="px-6 py-32 bg-gray-50 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-gray-50 opacity-50"></div>
+          <div className="relative mx-auto max-w-5xl">
+            <div className="mb-20 text-center">
+              <h2 className="text-5xl font-black text-gray-900 mb-4">
+                Three Simple Steps
+              </h2>
+              <p className="text-xl text-gray-600">Start saving time in under 30 seconds</p>
+            </div>
+
+            <div className="relative">
+              {/* Connection line */}
+              <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300"></div>
+              
+              <div className="grid gap-12 md:grid-cols-3 relative">
+                <div className="text-center group">
+                  <div className="relative mb-8">
+                    <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-white border-4 border-gray-200 group-hover:border-gray-400 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                      <span className="text-6xl">🌐</span>
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                  </div>
+                  <h3 className="mb-3 text-2xl font-bold text-gray-900">Add Extension</h3>
+                  <p className="text-lg text-gray-600 max-w-xs mx-auto">One-click install from Chrome Web Store</p>
+                </div>
+                
+                <div className="text-center group">
+                  <div className="relative mb-8">
+                    <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-white border-4 border-gray-200 group-hover:border-green-400 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                      <span className="text-6xl">💰</span>
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                  </div>
+                  <h3 className="mb-3 text-2xl font-bold text-gray-900">Set Your Wage</h3>
+                  <p className="text-lg text-gray-600 max-w-xs mx-auto">Enter hourly rate or annual salary</p>
+                </div>
+                
+                <div className="text-center group">
+                  <div className="relative mb-8">
+                    <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-white border-4 border-gray-200 group-hover:border-blue-400 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                      <span className="text-6xl">✨</span>
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                  </div>
+                  <h3 className="mb-3 text-2xl font-bold text-gray-900">Shop Smarter</h3>
+                  <p className="text-lg text-gray-600 max-w-xs mx-auto">See every price as hours of your life</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="px-6 py-28 bg-white">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-20 text-center text-5xl font-bold text-gray-900">
+              What Users Are Saying
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 h-auto">
-              {/* Large Hero Feature */}
-              <div className="md:col-span-2 lg:col-span-3 md:row-span-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-8 text-white relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-                <div className="relative">
-                  <Zap className="h-12 w-12 mb-4 text-white/90" />
-                  <h3 className="text-2xl font-bold mb-4">Works Instantly</h3>
-                  <p className="text-white/90 text-lg">No setup required. Start seeing time-based prices immediately after install. Transform any shopping experience with a single click.</p>
-                  <div className="mt-6 flex items-center gap-2 text-white/80 text-sm">
-                    <span className="inline-block w-2 h-2 bg-green-300 rounded-full"></span>
-                    Zero configuration
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
+                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+                  Awesome plugin! Really helps in making you more conscious about the value of your time.
+                </p>
+                <p className="text-sm text-gray-900 font-bold mt-6">— Rik</p>
+              </div>
+              
+              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
+                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+                  Well made and great for getting your impulse buys in check!
+                </p>
+                <p className="text-sm text-gray-900 font-bold mt-6">— Eden</p>
+              </div>
+              
+              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
+                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+                  Converts salaries on job boards, so you can see how long it would take to earn that much.
+                </p>
+                <p className="text-sm text-gray-900 font-bold mt-6">— Jordan</p>
+              </div>
+              
+              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
+                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+                  Love the simplicity! Enter your per hour income and see online prices in their true value.
+                </p>
+                <p className="text-sm text-gray-900 font-bold mt-6">— Anne</p>
+              </div>
+              
+              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
+                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+                  Put in how much you make an hour and it shows up on any site. Great way to think about purchases.
+                </p>
+                <p className="text-sm text-gray-900 font-bold mt-6">— Sean</p>
+              </div>
+              
+              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
+                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+                  Time to start saving money! Works great for USD.
+                </p>
+                <p className="text-sm text-gray-900 font-bold mt-6">— Jason</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="px-6 py-28 bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="mb-20 text-center text-5xl font-bold text-gray-900">
+              Frequently Asked Questions
+            </h2>
+
+            <div className="space-y-6">
+              <div className="group bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+                <div className="grid grid-cols-[auto,1fr] gap-3">
+                  <span className="text-2xl text-gray-400 font-bold">Q:</span>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Does it work on all websites?</h3>
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                  Works best on major sites like Amazon US and eBay. Some international sites and currencies may have limited support. We&apos;re constantly improving compatibility.
+                    </p>
                   </div>
                 </div>
               </div>
-
-              {/* Medium Features */}
-              <div className="md:col-span-2 lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 hover:border-emerald-200 hover:shadow-lg transition-all duration-300 group">
-                <Globe className="h-8 w-8 mb-3 text-emerald-600 group-hover:scale-110 transition-transform" />
-                <h3 className="text-lg font-semibold mb-2">Universal Compatibility</h3>
-                <p className="text-gray-600 text-sm">Works on any website that displays prices - Amazon, eBay, shopping sites, and more.</p>
-              </div>
-
-              <div className="md:col-span-2 lg:col-span-1 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white relative overflow-hidden hover:scale-[1.05] transition-transform duration-300">
-                <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/20 rounded-full blur-xl"></div>
-                <div className="relative">
-                  <div className="text-3xl font-bold">10K+</div>
-                  <div className="text-white/90 text-sm">Active Users</div>
-                </div>
-              </div>
-
-              <div className="md:col-span-2 lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200 hover:border-purple-200 hover:shadow-lg transition-all duration-300 group">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-8 w-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <span className="text-purple-600 font-bold">🛡️</span>
+              
+              <div className="group bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+                <div className="grid grid-cols-[auto,1fr] gap-3">
+                  <span className="text-2xl text-gray-400 font-bold">Q:</span>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Is it really free?</h3>
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                  Yes, completely free. No premium version, no ads, no data collection. It&apos;s a simple tool designed to help people make better spending decisions.
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold">Privacy First</h3>
                 </div>
-                <p className="text-gray-600 text-sm">No data collection, tracking, or personal information required. Your privacy is guaranteed.</p>
               </div>
-
-              <div className="md:col-span-2 lg:col-span-1 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-6 text-white text-center hover:scale-[1.05] transition-transform duration-300">
-                <div className="text-2xl font-bold">100%</div>
-                <div className="text-white/90 text-sm">Free Forever</div>
-                <div className="text-white/70 text-xs mt-1">No hidden fees</div>
+              
+              <div className="group bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+                <div className="grid grid-cols-[auto,1fr] gap-3">
+                  <span className="text-2xl text-gray-400 font-bold">Q:</span>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Why should I trust this?</h3>
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                  Open source on GitHub since 2014. Used by 5,000+ people. Featured in major publications. We never collect or track any personal data - your privacy is guaranteed.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="group bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+                <div className="grid grid-cols-[auto,1fr] gap-3">
+                  <span className="text-2xl text-gray-400 font-bold">Q:</span>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">How do I set my hourly wage?</h3>
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                  After installing, click the extension icon and enter either your hourly wage or annual salary. The extension automatically calculates and displays prices in hours of work.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
