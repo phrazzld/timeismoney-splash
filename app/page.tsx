@@ -2,9 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { ChromeInstallButton } from "@/components/ui/chrome-install-button";
 import { Footer } from "@/components/ui/footer";
-import { ArrowRight, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 
 const DRAMATIC_EXAMPLES = [
   { price: "$299", time: "18 hours", item: "AirPods Pro" },
@@ -260,14 +260,7 @@ export default function Home() {
                 </p>
 
                 <div className="space-y-6">
-                  <Button 
-                    size="lg"
-                    className="group bg-gray-900 text-white hover:bg-black shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 font-semibold text-xl px-12 py-5 cursor-pointer"
-                    onClick={() => window.open('https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en', '_blank', 'rel=noopener noreferrer')}
-                  >
-                    Add to Chrome - It&apos;s Free
-                    <ArrowRight className="h-6 w-6 ml-3 transition-transform duration-300 group-hover:translate-x-0.5" />
-                  </Button>
+                  <ChromeInstallButton size="large" variant="dark" showArrow />
                   
                   {/* Trust Indicators */}
                   <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-600 text-sm">
@@ -364,125 +357,73 @@ export default function Home() {
               <p className="text-lg text-gray-600 mb-6">
                 See every hidden cost before it steals your time
               </p>
-              <Button 
-                size="lg"
-                className="bg-gray-900 text-white hover:bg-black shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 font-semibold text-lg px-8 py-4"
-                onClick={() => window.open('https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en', '_blank', 'rel=noopener noreferrer')}
-              >
-                Add to Chrome - It&apos;s Free
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works */}
-        <section className="px-6 py-32 bg-gray-50 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-gray-50 opacity-50"></div>
-          <div className="relative mx-auto max-w-5xl">
-            <div className="mb-20 text-center">
-              <h2 className="text-5xl font-black text-gray-900 mb-4">
-                Three Simple Steps
-              </h2>
-              <p className="text-xl text-gray-600">Start saving time in under 30 seconds</p>
-            </div>
-
-            <div className="relative">
-              {/* Connection line */}
-              <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300"></div>
-              
-              <div className="grid gap-12 md:grid-cols-3 relative">
-                <div className="text-center group">
-                  <div className="relative mb-8">
-                    <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-white border-4 border-gray-200 group-hover:border-gray-400 transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                      <span className="text-6xl">🌐</span>
-                    </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gray-900 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
-                  </div>
-                  <h3 className="mb-3 text-2xl font-bold text-gray-900">Add Extension</h3>
-                  <p className="text-lg text-gray-600 max-w-xs mx-auto">One-click install from Chrome Web Store</p>
-                </div>
-                
-                <div className="text-center group">
-                  <div className="relative mb-8">
-                    <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-white border-4 border-gray-200 group-hover:border-green-400 transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                      <span className="text-6xl">💰</span>
-                    </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
-                  </div>
-                  <h3 className="mb-3 text-2xl font-bold text-gray-900">Set Your Wage</h3>
-                  <p className="text-lg text-gray-600 max-w-xs mx-auto">Enter hourly rate or annual salary</p>
-                </div>
-                
-                <div className="text-center group">
-                  <div className="relative mb-8">
-                    <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-white border-4 border-gray-200 group-hover:border-blue-400 transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                      <span className="text-6xl">✨</span>
-                    </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
-                  </div>
-                  <h3 className="mb-3 text-2xl font-bold text-gray-900">Shop Smarter</h3>
-                  <p className="text-lg text-gray-600 max-w-xs mx-auto">See every price as hours of your life</p>
-                </div>
-              </div>
+              <ChromeInstallButton size="medium" variant="dark" showArrow />
             </div>
           </div>
         </section>
 
         {/* Testimonials */}
-        <section className="px-6 py-28 bg-white">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-20 text-center text-5xl font-bold text-gray-900">
+        <section className="relative px-6 py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+          {/* Subtle background texture */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 1px)`,
+              backgroundSize: '50px 50px'
+            }}></div>
+          </div>
+          
+          <div className="relative mx-auto max-w-5xl">
+            <h2 className="mb-20 text-center text-5xl font-bold text-white">
               What Users Are Saying
             </h2>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
-                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
+                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
+                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
                   Awesome plugin! Really helps in making you more conscious about the value of your time.
                 </p>
-                <p className="text-sm text-gray-900 font-bold mt-6">— Rik</p>
+                <p className="text-sm text-white font-bold mt-6 relative z-10">— Rik</p>
               </div>
               
-              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
-                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
+                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
+                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
                   Well made and great for getting your impulse buys in check!
                 </p>
-                <p className="text-sm text-gray-900 font-bold mt-6">— Eden</p>
+                <p className="text-sm text-white font-bold mt-6 relative z-10">— Eden</p>
               </div>
               
-              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
-                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
+                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
+                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
                   Converts salaries on job boards, so you can see how long it would take to earn that much.
                 </p>
-                <p className="text-sm text-gray-900 font-bold mt-6">— Jordan</p>
+                <p className="text-sm text-white font-bold mt-6 relative z-10">— Jordan</p>
               </div>
               
-              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
-                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
+                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
+                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
                   Love the simplicity! Enter your per hour income and see online prices in their true value.
                 </p>
-                <p className="text-sm text-gray-900 font-bold mt-6">— Anne</p>
+                <p className="text-sm text-white font-bold mt-6 relative z-10">— Anne</p>
               </div>
               
-              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
-                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
+                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
+                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
                   Put in how much you make an hour and it shows up on any site. Great way to think about purchases.
                 </p>
-                <p className="text-sm text-gray-900 font-bold mt-6">— Sean</p>
+                <p className="text-sm text-white font-bold mt-6 relative z-10">— Sean</p>
               </div>
               
-              <div className="relative bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div className="absolute -top-2 -left-2 text-4xl text-gray-300 font-serif">&ldquo;</div>
-                <p className="text-gray-700 italic leading-relaxed relative z-10 flex-grow">
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
+                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
+                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
                   Time to start saving money! Works great for USD.
                 </p>
-                <p className="text-sm text-gray-900 font-bold mt-6">— Jason</p>
+                <p className="text-sm text-white font-bold mt-6 relative z-10">— Jason</p>
               </div>
             </div>
           </div>
@@ -541,6 +482,47 @@ export default function Home() {
                   After installing, click the extension icon and enter either your hourly wage or annual salary. The extension automatically calculates and displays prices in hours of work.
                     </p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="relative px-6 py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+          {/* Dotted background pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 1px)`,
+              backgroundSize: '40px 40px'
+            }}></div>
+          </div>
+          
+          <div className="relative mx-auto max-w-4xl text-center">
+            <div className="mb-12">
+              <h2 className="text-5xl md:text-7xl font-black text-white mb-6">
+                Stop Trading Time<br />
+                <span className="text-gray-300">For Things You Don&apos;t Need</span>
+              </h2>
+              <p className="text-2xl text-gray-300 font-light max-w-2xl mx-auto">
+                Every purchase is a choice. Make yours count.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <ChromeInstallButton size="large" variant="light" showArrow>
+                Add to Chrome Now
+              </ChromeInstallButton>
+              
+              <div className="flex items-center justify-center gap-6 text-gray-400">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  <span>30-second install</span>
+                </div>
+                <span className="text-gray-500">•</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-400">✓</span>
+                  <span>Free forever</span>
                 </div>
               </div>
             </div>
