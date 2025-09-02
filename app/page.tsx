@@ -15,6 +15,144 @@ const DRAMATIC_EXAMPLES = [
   { price: "$2,500", time: "152 hours", item: "vacation" },
 ];
 
+const TIME_THIEVES = [
+  { 
+    name: "Streaming services",
+    desc: "Netflix, Spotify, Disney+, etc.",
+    monthly: 50,
+    hours: 2,
+    yearly: 24,
+    icon: "📺"
+  },
+  {
+    name: "Daily coffee",
+    desc: "That $5 morning ritual",
+    monthly: 150,
+    hours: 6,
+    yearly: 72,
+    icon: "☕"
+  },
+  {
+    name: "Food delivery fees",
+    desc: "Convenience charges add up",
+    monthly: 80,
+    hours: 3.2,
+    yearly: 38.4,
+    icon: "🚗"
+  },
+  {
+    name: "Unused gym membership",
+    desc: "Haven't gone in months",
+    monthly: 40,
+    hours: 1.6,
+    yearly: 19.2,
+    icon: "💪"
+  },
+  {
+    name: "Impulse shopping",
+    desc: "Those \"small\" purchases",
+    monthly: 200,
+    hours: 8,
+    yearly: 96,
+    icon: "🛍️"
+  },
+  {
+    name: "Subscription boxes",
+    desc: "Monthly surprises you forget about",
+    monthly: 35,
+    hours: 1.4,
+    yearly: 16.8,
+    icon: "📦"
+  }
+];
+
+function HiddenTimeThieves() {
+  const [showYearly, setShowYearly] = React.useState(false);
+  const [totalHours, setTotalHours] = React.useState(0);
+  
+  React.useEffect(() => {
+    const total = TIME_THIEVES.reduce((sum, item) => sum + (showYearly ? item.yearly : item.hours), 0);
+    const interval = setInterval(() => {
+      setTotalHours(prev => {
+        if (prev < total) {
+          return Math.min(prev + total / 20, total);
+        }
+        return total;
+      });
+    }, 50);
+    
+    return () => clearInterval(interval);
+  }, [showYearly]);
+  
+  return (
+    <div className="space-y-8">
+      <div className="flex justify-center gap-4 mb-8">
+        <button
+          onClick={() => setShowYearly(false)}
+          className={`px-6 py-2 rounded-full font-semibold transition-all ${
+            !showYearly 
+              ? 'bg-gray-900 text-white' 
+              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+          }`}
+        >
+          Monthly
+        </button>
+        <button
+          onClick={() => setShowYearly(true)}
+          className={`px-6 py-2 rounded-full font-semibold transition-all ${
+            showYearly 
+              ? 'bg-gray-900 text-white' 
+              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+          }`}
+        >
+          Yearly
+        </button>
+      </div>
+      
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {TIME_THIEVES.map((thief, index) => (
+          <div 
+            key={index}
+            className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-gray-400 hover:shadow-xl transition-all duration-300"
+          >
+            <div className="flex items-start gap-4">
+              <span className="text-3xl">{thief.icon}</span>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 mb-1">{thief.name}</h3>
+                <p className="text-sm text-gray-600 mb-3">{thief.desc}</p>
+                <div className="space-y-2">
+                  <div className="text-2xl font-black text-gray-900">
+                    {showYearly ? thief.yearly : thief.hours} hours
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    ${thief.monthly}{showYearly ? '/mo' : ' per month'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="bg-gray-900 rounded-3xl p-8 text-center text-white">
+        <p className="text-lg mb-2 text-gray-300">Total time cost:</p>
+        <div className="text-5xl md:text-6xl font-black mb-4">
+          {Math.round(totalHours)} hours
+        </div>
+        <p className="text-xl text-gray-300">
+          {showYearly 
+            ? `That's ${Math.round(totalHours / 40)} full work weeks per year`
+            : `Every single month`
+          }
+        </p>
+        <p className="text-sm mt-4 text-gray-400">
+          For things you barely think about.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function DemoCard() {
   const [currentIndex, setCurrentIndex] = React.useState(0);
 
@@ -158,116 +296,82 @@ export default function Home() {
         </section>
 
         {/* Press Section */}
-        <section className="relative px-6 py-16 bg-gray-50 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-50/50 to-white pointer-events-none"></div>
+        <section className="relative px-6 py-12 bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 via-transparent to-gray-900/50 pointer-events-none"></div>
           <div className="relative mx-auto max-w-5xl text-center">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-6">As Featured In</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">As Featured In</p>
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 mb-8">
               <a 
                 href="https://finance.yahoo.com/news/time-is-money-chrome-extension-tells-you-how-many-102539694524.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+                className="text-xl font-bold text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 Yahoo Finance
               </a>
-              <span className="text-gray-300 hidden md:inline">•</span>
+              <span className="text-gray-600 hidden md:inline">•</span>
               <a 
                 href="https://www.fastcompany.com/3038475/by-turning-minutes-into-moolah-this-chrome-extension-helps-you-save"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+                className="text-xl font-bold text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 Fast Company
               </a>
-              <span className="text-gray-300 hidden md:inline">•</span>
+              <span className="text-gray-600 hidden md:inline">•</span>
               <a 
                 href="https://lifehacker.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+                className="text-xl font-bold text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 Lifehacker
               </a>
-              <span className="text-gray-300 hidden md:inline">•</span>
+              <span className="text-gray-600 hidden md:inline">•</span>
               <a 
                 href="https://www.freetech4teachers.com/2014/11/time-is-money-chrome-extension-that.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl font-bold text-gray-400 hover:text-gray-900 transition-all duration-300 hover:scale-105"
+                className="text-xl font-bold text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
               >
                 Edtech
               </a>
             </div>
             <blockquote className="relative max-w-3xl mx-auto">
-              <div className="text-lg md:text-xl text-gray-700 italic font-light leading-relaxed">
+              <div className="text-lg md:text-xl text-gray-200 italic font-light leading-relaxed">
                 &ldquo;It&apos;s easier to think in terms of not wasting time rather than money.&rdquo;
               </div>
-              <cite className="block mt-3 text-sm font-medium not-italic text-gray-500">— Fast Company</cite>
+              <cite className="block mt-3 text-sm font-medium not-italic text-gray-400">— Fast Company</cite>
             </blockquote>
           </div>
         </section>
 
-        {/* The Math of Mindless Spending */}
+        {/* Hidden Costs */}
         <section className="px-6 py-32 bg-white relative">
-          <div className="mx-auto max-w-5xl">
-            <div className="text-center mb-20">
-              <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
-                Every purchase<br className="hidden md:block"/>is a trade.
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                The costs you never calculate
               </h2>
-              <p className="text-2xl text-gray-600 font-light">You&apos;re trading hours of your life.</p>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                These recurring expenses silently steal hours from your life every month
+              </p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8 mb-20">
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative text-center p-8 rounded-3xl border-2 border-gray-200 bg-white group-hover:border-orange-300 transition-all duration-300">
-                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">☕</div>
-                  <div className="text-2xl font-bold text-gray-900 mb-2">Daily coffee</div>
-                  <div className="text-3xl font-black text-orange-600">$5</div>
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="text-sm text-gray-500 uppercase tracking-wide mb-1">Time cost</div>
-                    <div className="text-xl font-bold text-gray-900">20 minutes</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative text-center p-8 rounded-3xl border-2 border-gray-200 bg-white group-hover:border-indigo-300 transition-all duration-300">
-                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">📱</div>
-                  <div className="text-2xl font-bold text-gray-900 mb-2">New iPhone</div>
-                  <div className="text-3xl font-black text-indigo-600">$999</div>
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="text-sm text-gray-500 uppercase tracking-wide mb-1">Time cost</div>
-                    <div className="text-xl font-bold text-gray-900">54 hours</div>
-                    <div className="text-sm text-gray-500">(1+ week)</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative text-center p-8 rounded-3xl border-2 border-gray-200 bg-white group-hover:border-pink-300 transition-all duration-300">
-                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">🛍️</div>
-                  <div className="text-2xl font-bold text-gray-900 mb-2">Shopping spree</div>
-                  <div className="text-3xl font-black text-pink-600">$500</div>
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="text-sm text-gray-500 uppercase tracking-wide mb-1">Time cost</div>
-                    <div className="text-xl font-bold text-gray-900">30 hours</div>
-                    <div className="text-sm text-gray-500">(almost a week)</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <HiddenTimeThieves />
             
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl"></div>
-              <div className="relative text-center p-10 rounded-3xl text-white overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-                <p className="text-2xl mb-4 font-light relative z-10">Most people never do the math.</p>
-                <p className="text-4xl font-black relative z-10">This extension does it for you.</p>
-              </div>
+            <div className="text-center mt-16">
+              <p className="text-lg text-gray-600 mb-6">
+                See every hidden cost before it steals your time
+              </p>
+              <Button 
+                size="lg"
+                className="bg-gray-900 text-white hover:bg-black shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 font-semibold text-lg px-8 py-4"
+                onClick={() => window.open('https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en', '_blank', 'rel=noopener noreferrer')}
+              >
+                Add to Chrome - It&apos;s Free
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
             </div>
           </div>
         </section>
