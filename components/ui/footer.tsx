@@ -1,24 +1,40 @@
-import { Github } from "lucide-react";
-
 export function Footer() {
   return (
-    <footer className="border-t bg-muted/50">
-      <div className="container px-4 py-6">
-        <div className="flex flex-col items-center justify-between gap-3 md:flex-row">
-          <span className="text-sm font-medium text-muted-foreground">Time is Money</span>
+    <footer className="border-t border-gray-200 bg-white">
+      <div className="container px-6 py-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+          <span className="font-bold text-gray-900">Time is Money</span>
           
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3">
             <a 
               href="https://github.com/phrazzld/timeismoney" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-              aria-label="View source code on GitHub"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
             >
-              <Github className="h-4 w-4" />
+              GitHub
             </a>
-            <span>© 2014</span>
+            <span className="text-gray-400">·</span>
+            <a 
+              href="https://github.com/phrazzld/timeismoney/blob/master/PRIVACY.md" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Privacy
+            </a>
+            <span className="text-gray-400">·</span>
+            <a 
+              href="https://github.com/phrazzld/timeismoney/issues" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Support
+            </a>
           </div>
+          
+          <span className="text-xs text-gray-500">© 2025</span>
         </div>
       </div>
     </footer>

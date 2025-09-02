@@ -1,29 +1,19 @@
-"use client";
-
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm backdrop-blur-sm">
+      <div className="container flex h-16 items-center px-6">
         <div className="flex items-center space-x-3">
           <Image 
             src="/icon_640.png" 
             alt="Time is Money Logo" 
             width={32} 
             height={32}
-            className="rounded-lg"
+            className="rounded-md"
           />
-          <div className="text-xl font-bold">Time is Money</div>
+          <div className="text-lg font-semibold text-gray-900">Time is Money</div>
         </div>
-        
-        <Button 
-          size="sm"
-          onClick={() => window.open('https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en', '_blank')}
-        >
-          Download Now
-        </Button>
       </div>
     </header>
   );
