@@ -313,21 +313,12 @@ export default function Home() {
               </a>
               <span className="text-gray-600 hidden md:inline">•</span>
               <a 
-                href="https://lifehacker.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xl font-bold text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
-              >
-                Lifehacker
-              </a>
-              <span className="text-gray-600 hidden md:inline">•</span>
-              <a 
                 href="https://www.freetech4teachers.com/2014/11/time-is-money-chrome-extension-that.html"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xl font-bold text-gray-300 hover:text-white transition-all duration-300 hover:scale-105"
               >
-                Edtech
+                Free Tech 4 Teachers
               </a>
             </div>
             <blockquote className="relative max-w-3xl mx-auto">

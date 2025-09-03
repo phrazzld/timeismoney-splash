@@ -23,7 +23,14 @@ export function ChromeInstallButton({
   children
 }: ChromeInstallButtonProps) {
   const handleClick = () => {
-    window.open(CHROME_STORE_URL, "_blank", "rel=noopener noreferrer");
+    // Create a temporary anchor element to properly handle security attributes
+    const link = document.createElement('a');
+    link.href = CHROME_STORE_URL;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const sizeClasses = {
