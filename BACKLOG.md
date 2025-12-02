@@ -1,195 +1,215 @@
 # BACKLOG
 
-This backlog was generated through comprehensive expert analysis combining security, quality, simplification, developer experience, innovation, and philosophy alignment perspectives.
-
-## Critical Priority (CRITICAL)
-
-### Security & Build Failures
-- [x] **[CRITICAL] [SECURITY]** ~~Fix insecure window.open() calls~~ **COMPLETED 2025-09-02** - Fixed ChromeInstallButton security vulnerability by implementing proper anchor element approach with rel="noopener noreferrer" | **Files: components/ui/chrome-install-button.tsx**
-
-- [ ] **[CRITICAL] [QUALITY]** Fix build-blocking ESLint violation - remove unused 'DollarSign' import from app/page.tsx:8 | **Effort: S** | **Quality: 0/10** | **Target: Zero build errors**
-
-- [ ] **[CRITICAL] [DX]** Update npm dependencies to resolve security vulnerabilities in @eslint/plugin-kit, brace-expansion, and Next.js | **Effort: S** | **Impact: 9/10** | **ROI: Prevents DoS and SSRF attacks**
-
-### Testing Infrastructure 
-- [ ] **[CRITICAL] [QUALITY]** Implement comprehensive testing infrastructure with Vitest, React Testing Library, and Playwright E2E | **Effort: L** | **Quality: 2/10** | **Target: >80% test coverage**
-
-- [ ] **[CRITICAL] [INNOVATION]** Set up automated quality gates with visual regression testing using Playwright + Percy/Chromatic | **Effort: L** | **Quality: 9/10** | **Innovation: Prevents UI regressions automatically**
-
-## High Priority (HIGH)
-
-### Code Architecture & Health
-- [ ] **[HIGH] [ARCHITECTURE]** Split monolithic 298-line page.tsx into modular components: HeroSection, DemoCard, HowItWorksSection, BenefitsSection, FinalCTASection | **Effort: M** | **Quality: 4/10** | **Target: <50 lines per component**
-
-- [ ] **[HIGH] [TYPESCRIPT]** Define TypeScript interfaces for all data structures (DRAMATIC_EXAMPLES, step objects, benefit objects) and component props | **Effort: M** | **Quality: 6/10** | **Target: 100% typed props and data**
-
-- [ ] **[HIGH] [REFACTOR]** Extract DemoCard animation logic into custom hook and create reusable CTA button component (eliminates 3x duplication of Chrome Web Store URL) | **Effort: S** | **Quality: 5/10** | **Principle: DRY and Single Responsibility**
-
-- [ ] **[HIGH] [CONFIG]** Replace magic numbers (3500ms animation interval) and hardcoded URLs with named constants in separate config file | **Effort: S** | **Quality: 5/10** | **Principle: Explicitness over Magic**
-
-### Security & Production Readiness
-- [ ] **[HIGH] [SECURITY]** Implement Content Security Policy (CSP) and security headers (X-Frame-Options, HSTS, X-Content-Type-Options) via Next.js middleware | **Effort: M** | **Impact: 8/10** | **Target: A+ security rating**
-
-- [ ] **[HIGH] [PERFORMANCE]** Implement proper image optimization for /icon_640.png with Next.js Image component size variants | **Effort: S** | **Quality: 6/10** | **Target: <1s page load time**
-
-### Developer Experience
-- [ ] **[HIGH] [CI/CD]** Implement GitHub Actions pipeline with automated testing, linting, security scanning, and Vercel deployment | **Effort: M** | **Impact: 9/10** | **ROI: Eliminates manual deployments, saves 1-2 hours/week**
-
-- [ ] **[HIGH] [DX]** Add pre-commit hooks with ESLint, Prettier, and TypeScript checking to prevent build failures | **Effort: S** | **Impact: 9/10** | **ROI: Prevents broken deployments**
-
-### Innovation Features
-- [ ] **[HIGH] [FEATURE]** Build Interactive Extension Simulator that lets users experience price-to-time conversion on sandbox e-commerce sites | **Effort: M** | **Quality: 8/10** | **Innovation: Hands-on experience vs static demo**
-
-- [ ] **[HIGH] [ANALYTICS]** Add Real-time Extension Analytics Dashboard showing live usage stats ("X people saved $Y this week") with privacy-first tracking | **Effort: L** | **Quality: 8/10** | **Innovation: Social proof with clean analytics architecture**
-
-## Medium Priority (MEDIUM)
-
-### Documentation & SEO
-- [ ] **[MEDIUM] [DOCS]** Replace generic README.md with comprehensive project documentation including setup, architecture, and deployment guides | **Effort: M** | **Quality: 2/10** | **Target: Complete developer onboarding docs**
-
-- [ ] **[MEDIUM] [SEO]** Enhance metadata with Open Graph tags, Twitter Cards, structured data, and comprehensive SEO optimization | **Effort: M** | **Quality: 5/10** | **Target: 95+ Lighthouse SEO score**
-
-### Error Handling & Resilience
-- [ ] **[MEDIUM] [ERROR-HANDLING]** Implement error boundaries and graceful fallbacks for external links, image loading, and animation failures | **Effort: M** | **Quality: 4/10** | **Target: Zero unhandled errors in production**
-
-- [ ] **[MEDIUM] [RESILIENCE]** Add retry logic and fallback behavior for window.open failures and external navigation | **Effort: S** | **Quality: 5/10** | **Principle: Graceful degradation**
-
-### Performance Optimizations
-- [ ] **[MEDIUM] [PERFORMANCE]** Implement React.memo for static sections and useMemo for expensive map operations to prevent unnecessary re-renders | **Effort: S** | **Quality: 6/10** | **Principle: Performance efficiency**
-
-- [ ] **[MEDIUM] [BUNDLE]** Add bundle analyzer and optimize dependency tree to reduce 864MB node_modules size by 30-50% | **Effort: L** | **Impact: 7/10** | **ROI: Faster installs and builds**
-
-### Innovation & UX
-- [ ] **[MEDIUM] [FEATURE]** Smart Geographic Price Localization - auto-detect user location and adjust price examples to local currency/cost of living | **Effort: M** | **Quality: 7/10** | **Innovation: Personalized relevance**
-
-- [ ] **[MEDIUM] [PWA]** Convert to Progressive Web App with offline-capable demo using service workers | **Effort: S** | **Quality: 6/10** | **Innovation: Works without internet**
-
-## Low Priority (LOW)
-
-### Code Simplification (Consider for Future)
-- [ ] **[LOW] [SIMPLIFY]** Evaluate replacing shadcn/ui components with native HTML/CSS for 60% dependency reduction | **Effort: M** | **Reduction: ~150KB bundle** | **Benefit: Simpler architecture**
-
-- [ ] **[LOW] [SIMPLIFY]** Consider eliminating custom font loading (Geist fonts) in favor of system fonts | **Effort: S** | **Reduction: 30% faster load** | **Benefit: Instant font rendering**
-
-- [ ] **[LOW] [ICONS]** Replace individual Lucide icon imports with dynamic imports or simple SVG sprites/Unicode symbols | **Effort: M** | **Reduction: 40KB+** | **Benefit: Smaller bundle**
-
-- [ ] **[LOW] [CSS]** Clean up unused CSS custom properties (chart colors, popover styles not used in application) | **Effort: S** | **Reduction: 40% CSS size** | **Benefit: Smaller stylesheet**
-
-### Development Tools
-- [ ] **[LOW] [DX]** Add VS Code workspace settings with recommended extensions and debugging configuration | **Effort: S** | **Impact: 6/10** | **ROI: 15-30 min saved per new developer**
-
-- [ ] **[LOW] [COMPONENT]** Implement component testing with Storybook for isolated UI development workflow | **Effort: L** | **Impact: 6/10** | **ROI: Faster component iteration**
-
-- [ ] **[LOW] [SECURITY]** Add security.txt file in public folder for responsible vulnerability disclosure | **Effort: S** | **Impact: 3/10** | **Benefit: Proper security reporting channel**
-
-## Quality Gates & Automation
-
-### Testing Requirements
-- [ ] **Unit Tests**: >80% coverage for all components and utilities
-- [ ] **E2E Tests**: 95% of critical user paths (page load, CTA clicks, external navigation)
-- [ ] **Visual Regression**: Automated screenshot comparison on all major UI components
-- [ ] **Performance**: Lighthouse CI with >90 scores across all categories
-
-### Code Quality Gates
-- [ ] **ESLint**: Zero violations in CI pipeline
-- [ ] **TypeScript**: Strict mode enabled with zero any types
-- [ ] **Bundle Analysis**: Monitor and alert on >10% bundle size increases
-- [ ] **Security**: Automated dependency vulnerability scanning
-
-### Deployment Pipeline
-- [ ] **Branch Protection**: Require PR reviews and passing CI checks
-- [ ] **Preview Deployments**: Automatic Vercel preview for all PRs
-- [ ] **Production Deployment**: Automatic deployment on main branch merge
-- [ ] **Rollback**: One-click rollback capability for production issues
-
-## Documentation & Knowledge
-
-### Technical Documentation
-- [ ] **API Documentation**: JSDoc comments for all public interfaces
-- [ ] **Architecture Decision Records**: Document major technical choices
-- [ ] **Deployment Guide**: Step-by-step production deployment instructions
-- [ ] **Troubleshooting Guide**: Common issues and solutions
-
-### Inline Documentation
-- [ ] **Component Documentation**: PropTypes and usage examples
-- [ ] **Complex Logic**: Explain algorithms and business rules
-- [ ] **Configuration**: Document all environment variables and settings
-- [ ] **External Dependencies**: Document why each dependency is needed
-
-## PR Review Feedback Integration (Added 2025-09-02)
-
-### Issues Addressed from PR #27 Reviews
-- [x] **[CRITICAL] [SECURITY]** Fixed ChromeInstallButton security vulnerability - window.open() incorrectly used third parameter for rel attribute
-- [x] **[CRITICAL] [QUALITY]** Fixed broken Lifehacker link - replaced with specific Free Tech 4 Teachers article URL
-- [x] **[CRITICAL] [VALIDATION]** Verified Clock import usage - confirmed used in 2 locations (reviewer feedback was incorrect)
-
-### High Priority Items from PR Reviews
-- [ ] **[HIGH] [ACCESSIBILITY]** Add aria-label attributes to CTA buttons for screen readers | **Effort: S** | **Impact: 8/10** | **Target: WCAG 2.1 AA compliance**
-- [ ] **[HIGH] [ERROR-HANDLING]** Add error boundaries around animation components (DemoCard, HiddenTimeThieves) | **Effort: M** | **Impact: 7/10** | **Target: No unhandled animation failures**
-- [ ] **[HIGH] [PERFORMANCE]** Extract hard-coded animation timings (3500ms, 50ms) as constants | **Effort: S** | **Impact: 6/10** | **Files: app/page.tsx DemoCard and HiddenTimeThieves**
-- [ ] **[HIGH] [ACCESSIBILITY]** Implement proper focus management for keyboard navigation | **Effort: M** | **Impact: 8/10** | **Target: Full keyboard accessibility**
-
-### Medium Priority Items from PR Reviews  
-- [ ] **[MEDIUM] [PERFORMANCE]** Replace setInterval with requestAnimationFrame for smoother animations | **Effort: M** | **Impact: 7/10** | **Benefits: Better performance and battery life**
-- [ ] **[MEDIUM] [ARCHITECTURE]** Extract large data arrays (DRAMATIC_EXAMPLES, TIME_THIEVES) to separate constants files | **Effort: S** | **Impact: 6/10** | **Benefits: Better separation of concerns**
-- [ ] **[MEDIUM] [PERFORMANCE]** Extract inline background pattern styles to CSS classes | **Effort: S** | **Impact: 5/10** | **Benefits: Better CSS organization**
-- [ ] **[MEDIUM] [SEO]** Add meta descriptions and OpenGraph tags for social sharing | **Effort: M** | **Impact: 8/10** | **Target: Improved social media presence**
-- [ ] **[MEDIUM] [ACCESSIBILITY]** Add reduced motion support for users with motion sensitivity | **Effort: S** | **Impact: 7/10** | **Target: Respect prefers-reduced-motion**
-
-### Future Considerations from PR Reviews
-- [ ] **[LOW] [PERFORMANCE]** Consider lazy loading for below-the-fold sections | **Effort: M** | **Impact: 6/10** | **Benefits: Faster initial page load**
-- [ ] **[LOW] [SECURITY]** Add Content Security Policy headers for enhanced security | **Effort: M** | **Impact: 5/10** | **Benefits: Additional XSS protection**
-- [ ] **[LOW] [PERFORMANCE]** Implement intersection observer for scroll-triggered animations | **Effort: L** | **Impact: 5/10** | **Benefits: Better performance on long pages**
-- [ ] **[LOW] [DOCS]** Add CONTRIBUTING.md with development setup instructions | **Effort: M** | **Impact: 4/10** | **Benefits: Better developer onboarding**
-
-## Completed
-
-### 2025-09-02 - PR #27 Critical Fixes
-- [x] **[CRITICAL] [SECURITY]** Fixed ChromeInstallButton security vulnerability - properly implemented rel="noopener noreferrer" using anchor element approach
-- [x] **[CRITICAL] [QUALITY]** Fixed broken Lifehacker link - replaced with working Free Tech 4 Teachers article URL  
-- [x] **[CRITICAL] [VALIDATION]** Verified Clock import is actively used (lines 195, 519 in page.tsx) - reviewer feedback was incorrect
-
-*Additional items will be moved here as they are completed during development*
+Last groomed: 2025-12-01
+Analyzed by: 15 expert perspectives (8 specialists + 7 master personas)
 
 ---
 
-## Grooming Summary - 2025-08-30
+## Now (Sprint-Ready, <2 weeks)
 
-### Items Added by Category
-- **12 security improvements** (3 critical, including window.open fixes and CSP implementation)
-- **8 code quality improvements** (testing infrastructure, TypeScript interfaces, component extraction)
-- **6 developer experience enhancements** (CI/CD pipeline, pre-commit hooks, bundle optimization)
-- **4 simplification opportunities** (dependency reduction, bundle optimization)
-- **6 documentation improvements** (README, JSDoc, architecture docs)
-- **5 performance optimizations** (image optimization, React.memo, bundle analysis)
-- **4 innovative features** (Extension Simulator, Analytics Dashboard, Geographic Localization, PWA)
+### [INFRASTRUCTURE] Add Vitest Testing Framework
+**File**: New: vitest.config.ts, lib/*.test.ts
+**Perspectives**: architecture-guardian, maintainability-maven, beck, fowler, carmack (5 agents)
+**Impact**: Zero test coverage blocks safe deploys - flying blind on regressions
+**Fix**:
+```bash
+npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom @vitejs/plugin-react
+```
+Start with pure functions: time calculations, carousel index, cn() utility
+**Effort**: 4h (setup + critical tests) | **Risk**: CRITICAL
+**Acceptance**: vitest runs, coverage report generated, CI blocks on test failure
 
-### Quality Focus Metrics
-- **Coverage targets**: 0% current → 80% target (critical gap)
-- **Bundle optimization**: 864MB node_modules → 30-50% reduction target
-- **Security rating**: No CSP/headers → A+ security target
-- **Performance**: No optimization → <1s load time target
-- **Component complexity**: 298-line monolith → <50 lines per component
+### [INFRASTRUCTURE] Add Lefthook Pre-commit Hooks
+**File**: New: lefthook.yml
+**Perspectives**: architecture-guardian, maintainability-maven
+**Impact**: Broken code can reach main branch - no quality gates
+**Fix**:
+```yaml
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{ts,tsx}"
+      run: npm run lint
+    typecheck:
+      run: npx tsc --noEmit
+```
+**Effort**: 1h | **Risk**: HIGH
+**Acceptance**: Commits blocked if lint/typecheck fails
 
-### Key Themes Discovered
-- **Security vulnerabilities**: Critical window.open() security flaw and missing CSP/security headers
-- **Zero test coverage**: Major quality gap requiring immediate comprehensive testing infrastructure
-- **Monolithic architecture**: Large components need modular breakdown for maintainability
-- **Missing CI/CD pipeline**: No automation for quality gates, testing, or deployment
-- **Bundle inefficiencies**: Large dependency tree with optimization opportunities
+### [SECURITY] Add Security Headers via next.config.ts
+**File**: next.config.ts:1-7
+**Perspectives**: security-sentinel
+**Impact**: Missing CSP, X-Frame-Options enables clickjacking, future XSS
+**Fix**: Add headers() function with CSP, X-Frame-Options: DENY, X-Content-Type-Options, Referrer-Policy, HSTS
+**Effort**: 30m | **Risk**: HIGH
+**Acceptance**: curl -I returns all security headers, securityheaders.com grade A
 
-### Recommended Immediate Focus
-1. **[CRITICAL]** Fix insecure window.open() calls (security vulnerability)
-2. **[CRITICAL]** Fix build-blocking ESLint errors
-3. **[CRITICAL]** Implement testing infrastructure with quality gates
+### [SECURITY] Update Next.js to 15.5.6+
+**File**: package.json:15
+**Perspectives**: security-sentinel
+**Impact**: GHSA-4342-x723-ch2f (SSRF), GHSA-g5qg-72qw-gw5v (cache confusion), GHSA-xv57-4mr9-wg8v (content injection)
+**Fix**: `npm update next@latest`
+**Effort**: 15m + regression test | **Risk**: MODERATE
+**Acceptance**: npm audit shows no Next.js vulnerabilities
 
-### Quality Enforcement Added
-- Automated testing pipeline with visual regression testing
-- Pre-commit hooks preventing build failures
-- Bundle analysis monitoring for performance regressions
-- Security vulnerability scanning in CI/CD
-- TypeScript strict mode enforcement
+### [DEAD CODE] Delete Unused Card Component
+**File**: components/ui/card.tsx (79 lines)
+**Perspectives**: grug, carmack, torvalds, jobs, ousterhout (5 agents - STRONG CONSENSUS)
+**Impact**: Dead code adds maintenance burden, confuses developers
+**Fix**: `rm components/ui/card.tsx`
+**Effort**: 2m | **Risk**: LOW
+**Acceptance**: Build passes, no import errors
 
-**Total Items Generated**: 31 prioritized improvements
-**Expert Agents Consulted**: 6 (Security, Quality, Simplification, DX, Innovation, Philosophy)
-**Estimated Implementation Value**: 15+ hours/week saved through automation and quality improvements
+### [DEAD CODE] Delete Unused Navbar Component
+**File**: components/ui/navbar.tsx (20 lines)
+**Perspectives**: carmack, torvalds
+**Impact**: Component exists but never imported/used
+**Fix**: `rm components/ui/navbar.tsx`
+**Effort**: 2m | **Risk**: LOW
+**Acceptance**: Build passes
+
+### [PERFORMANCE] Fix setInterval Memory Leak
+**File**: app/page.tsx:75-82
+**Perspectives**: performance-pathfinder
+**Impact**: Interval fires every 50ms indefinitely after animation completes - wasteful CPU/battery
+**Fix**: Clear interval when `prev >= total` inside callback
+**Effort**: 10m | **Risk**: LOW
+**Acceptance**: Animation stops cleanly, no continuous re-renders
+
+### [CLEANUP] Remove Unused Assets
+**File**: public/*.png (2MB total)
+**Perspectives**: performance-pathfinder
+**Impact**: b3485a7e... (821KB) and df14989... (1.2MB) not referenced anywhere
+**Fix**: `rm public/b3485a7e*.png public/df14989*.png`
+**Effort**: 2m | **Risk**: LOW
+**Acceptance**: Verify no broken images, -2MB deployment size
+
+---
+
+## Next (This Quarter, <3 months)
+
+### [ARCHITECTURE] Extract page.tsx into Section Components
+**File**: app/page.tsx:226-527 (302 lines)
+**Perspectives**: complexity-archaeologist, architecture-guardian, fowler, ousterhout, jobs (5 agents)
+**Why**: 527-line god object - 64% of entire codebase in one file
+**Approach**: Extract to components/sections/: HeroSection, PressSection, HiddenCostsSection, TestimonialsSection, FAQSection, CTASection. Move data to lib/data/
+**Effort**: 4h | **Impact**: Enables parallel development, testing, component reuse
+**Result**: page.tsx becomes ~100-line composition of section components
+
+### [SIMPLIFICATION] Simplify ChromeInstallButton
+**File**: components/ui/chrome-install-button.tsx:25-34, 36-51
+**Perspectives**: grug, carmack, torvalds, fowler (4 agents)
+**Why**: DOM manipulation theater (createElement/appendChild/click/removeChild) when simple `<a>` tag works. Three separate config objects when CVA pattern already exists in button.tsx
+**Approach**: Replace with plain `<a>` tag with href, target="_blank", rel="noopener noreferrer". Use CVA for variants like button.tsx
+**Effort**: 45m | **Impact**: -40 lines, clearer intent, no DOM manipulation
+
+### [DESIGN] Replace Geist Font (Generic AI Aesthetic)
+**File**: app/layout.tsx:2, 5, 10
+**Perspectives**: design-systems-architect, jobs
+**Why**: Geist = Vercel's house font, extremely common in Next.js templates. Screams "generic developer aesthetic"
+**Approach**: Switch to Space Grotesk (distinctive, fintech-appropriate) or system fonts (zero network request)
+**Effort**: 1h | **Impact**: Immediate brand differentiation
+
+### [DESIGN] Migrate to Tailwind v4 @theme + OKLCH Colors
+**File**: tailwind.config.ts, app/globals.css
+**Perspectives**: design-systems-architect
+**Why**: Using Tailwind v3 config pattern in v4 project. Hardcoded gray-* classes (60+ instances) prevent dark mode, brand-tinting
+**Approach**: Define @theme in globals.css with OKLCH brand-tinted neutrals, semantic tokens (--color-surface, --color-foreground, etc.)
+**Effort**: 3h | **Impact**: Dark mode ready, themeable, modern Tailwind patterns
+
+### [INFRASTRUCTURE] Add Sentry Error Tracking
+**File**: New: sentry.client.config.ts, sentry.server.config.ts
+**Perspectives**: architecture-guardian
+**Why**: Production errors invisible until user reports - flying blind
+**Approach**: `npm install @sentry/nextjs`, configure client/server/edge
+**Effort**: 2h | **Impact**: Catch production errors before users complain
+
+### [ACCESSIBILITY] Add ARIA Attributes to Interactive Elements
+**File**: app/page.tsx:90-110, 208-218
+**Perspectives**: user-experience-advocate
+**Why**: Toggle buttons lack aria-pressed, carousel indicators lack aria-label, no pause control for auto-rotating content (WCAG 2.2.2 violation)
+**Approach**: Add aria-pressed to toggle buttons, aria-label to carousel, pause/play control
+**Effort**: 2h | **Impact**: WCAG AA compliance, keyboard navigation
+
+### [MAINTAINABILITY] Extract Magic Numbers as Constants
+**File**: app/page.tsx:75, 161
+**Perspectives**: maintainability-maven, fowler, beck
+**Why**: 50ms, 3500ms, /20 animation timing scattered with no explanation
+**Approach**: Create ANIMATION_CONFIG object with documented values
+**Effort**: 30m | **Impact**: Self-documenting code, easy to tune animations
+
+### [REFACTOR] Extract Duplicated Patterns
+**File**: app/page.tsx:372-419 (testimonials), 431-477 (FAQ), 298-322 (press links)
+**Perspectives**: fowler, beck
+**Why**: 6 identical testimonial cards, 4 identical FAQ cards, 3 identical press links - same structure repeated
+**Approach**: Extract TestimonialCard, FAQItem, PressLink components + data arrays
+**Effort**: 2h | **Impact**: DRY principle, easier to add/modify items
+
+---
+
+## Soon (Exploring, 3-6 months)
+
+- **[PRODUCT] Email Capture / Lead Generation** - Exit intent popup, newsletter footer. Currently 98% of traffic leaves with no capture. ConvertKit/Buttondown integration (product-visionary)
+- **[PRODUCT] Analytics Tracking** - Plausible or Vercel Analytics. Can't measure conversion, traffic sources, or A/B test without data (product-visionary, architecture-guardian)
+- **[INFRASTRUCTURE] Structured Logging (Pino)** - Replace console.log, add correlation IDs, log levels (architecture-guardian)
+- **[PRODUCT] Social Proof Enhancement** - Real-time install counter, recent user activity feed (product-visionary, user-experience-advocate)
+- **[DESIGN] Dark Mode Implementation** - Leverage @theme foundation once migrated (design-systems-architect)
+- **[ACCESSIBILITY] Reduced Motion Support** - Respect prefers-reduced-motion for animations (user-experience-advocate)
+- **[INFRASTRUCTURE] Changelog Automation** - Changesets or semantic-release (architecture-guardian)
+
+---
+
+## Later (Someday/Maybe, 6+ months)
+
+- **[PRODUCT] Premium Tier / Monetization** - Savings dashboard, advanced analytics ($5/mo freemium)
+- **[PLATFORM] Multi-Browser Support** - Firefox, Safari, Edge extensions (+60% TAM)
+- **[PLATFORM] Mobile PWA** - Barcode scanner, calculator mode (60% of e-commerce is mobile)
+- **[PRODUCT] AI Spending Coach** - Pattern analysis, smart notifications (differentiation play)
+- **[PRODUCT] Interactive Demo Calculator** - Let users type price, see time conversion before install
+
+---
+
+## Learnings
+
+**From 2025-12-01 grooming session (15-agent analysis):**
+- **Strong consensus (5+ agents)**: Zero test coverage and 527-line page.tsx god object are the primary technical debt. Card component is dead code - delete it.
+- **Persona alignment**: Grug + Carmack + Jobs + Torvalds all say "delete unused abstractions, simplify ChromeInstallButton" - strong signal.
+- **Security gap**: Missing CSP headers + outdated Next.js (known SSRF vulnerability) are real risks, not theoretical.
+- **Design discovery**: Geist font = generic AI aesthetic. Space Grotesk or system fonts would differentiate brand.
+- **Product insight**: Landing page has zero lead capture - 98% of traffic wasted. Analytics + email capture high ROI.
+
+**Key metrics discovered:**
+- Codebase: 825 LOC across 8 files
+- Largest file: page.tsx at 527 LOC (64% of codebase)
+- Test coverage: 0%
+- Dead code: ~100 lines (Card, Navbar, unused assets)
+- Security headers: 0/6 critical headers present
+
+---
+
+## Quality Gates (Target State)
+
+### Testing
+- [ ] Unit tests: >80% coverage for lib/, components/
+- [ ] E2E tests: Critical paths (page load, CTA clicks)
+- [ ] Visual regression: Screenshot comparison on PRs
+
+### Code Quality
+- [ ] Pre-commit hooks: lint + typecheck blocking
+- [ ] TypeScript strict mode: Zero `any` types
+- [ ] ESLint: Zero violations
+
+### Security
+- [ ] CSP + security headers: A+ rating
+- [ ] Dependencies: Zero known vulnerabilities
+- [ ] Next.js: Current stable version
+
+### Performance
+- [ ] Lighthouse: >90 all categories
+- [ ] Bundle size: Monitor for >10% increases
+- [ ] Page load: <2s on 3G
+
+---
+
+*Next groom: After Phase 1 (Now items) complete*

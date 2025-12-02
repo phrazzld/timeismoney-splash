@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -22,15 +22,22 @@ export function ChromeInstallButton({
   className,
   children
 }: ChromeInstallButtonProps) {
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const handleClick = () => {
-    // Create a temporary anchor element to properly handle security attributes
-    const link = document.createElement('a');
-    link.href = CHROME_STORE_URL;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setIsLoading(true);
+    // Brief loading state for feedback
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.href = CHROME_STORE_URL;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      // Reset after opening
+      setTimeout(() => setIsLoading(false), 500);
+    }, 150);
   };
 
   const sizeClasses = {
@@ -40,8 +47,8 @@ export function ChromeInstallButton({
   };
 
   const variantClasses = {
-    dark: "bg-gray-900 text-white hover:bg-black shadow-xl hover:shadow-2xl",
-    light: "bg-white text-gray-900 hover:bg-gray-100 shadow-2xl hover:shadow-3xl"
+    dark: "bg-black text-white hover:bg-gray-900 shadow-lg hover:shadow-xl border-2 border-black",
+    light: "bg-white text-black hover:bg-gray-50 shadow-lg hover:shadow-xl border-2 border-gray-200"
   };
 
   const arrowSize = {
@@ -54,22 +61,33 @@ export function ChromeInstallButton({
     <Button
       size="lg"
       onClick={handleClick}
+      disabled={isLoading}
       className={cn(
-        "group font-semibold transition-all duration-300 cursor-pointer",
+        "group font-semibold transition-all duration-200 cursor-pointer rounded-xl",
         "hover:scale-[1.02] active:scale-[0.98]",
         sizeClasses[size],
         variantClasses[variant],
+        isLoading && "opacity-90",
         className
       )}
     >
-      {children || "Add to Chrome - It's Free"}
-      {showArrow && (
-        <ArrowRight 
-          className={cn(
-            "transition-transform duration-300 group-hover:translate-x-0.5",
-            arrowSize[size]
-          )} 
-        />
+      {isLoading ? (
+        <>
+          <Loader2 className={cn("animate-spin", arrowSize[size])} />
+          <span className="ml-2">Opening...</span>
+        </>
+      ) : (
+        <>
+          {children || "Add to Chrome - It's Free"}
+          {showArrow && (
+            <ArrowRight
+              className={cn(
+                "transition-transform duration-200 group-hover:translate-x-1",
+                arrowSize[size]
+              )}
+            />
+          )}
+        </>
       )}
     </Button>
   );

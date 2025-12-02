@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { ChromeInstallButton } from "@/components/ui/chrome-install-button";
 import { Footer } from "@/components/ui/footer";
-import { Clock } from "lucide-react";
+import { Hourglass } from "lucide-react";
 
 const DRAMATIC_EXAMPLES = [
   { price: "$299", time: "18 hours", item: "AirPods Pro" },
@@ -121,7 +121,7 @@ function HiddenTimeThieves() {
                 <h3 className="font-bold text-gray-900 mb-1">{thief.name}</h3>
                 <p className="text-sm text-gray-600 mb-3">{thief.desc}</p>
                 <div className="space-y-2">
-                  <div className="text-2xl font-black text-gray-900">
+                  <div className="font-clash text-2xl font-bold text-black">
                     {showYearly ? thief.yearly : thief.hours} hours
                   </div>
                   <div className="text-xs text-gray-500">
@@ -134,18 +134,18 @@ function HiddenTimeThieves() {
         ))}
       </div>
       
-      <div className="bg-gray-900 rounded-3xl p-8 text-center text-white">
-        <p className="text-lg mb-2 text-gray-300">Total time cost:</p>
-        <div className="text-5xl md:text-6xl font-black mb-4">
+      <div className="bg-black rounded-2xl p-8 text-center text-white">
+        <p className="text-lg mb-2 text-gray-400">Total time cost:</p>
+        <div className="font-clash text-5xl md:text-6xl font-bold mb-4">
           {Math.round(totalHours)} hours
         </div>
         <p className="text-xl text-gray-300">
-          {showYearly 
+          {showYearly
             ? `That's ${Math.round(totalHours / 40)} full work weeks per year`
             : `Every single month`
           }
         </p>
-        <p className="text-sm mt-4 text-gray-400">
+        <p className="text-sm mt-4 text-gray-500">
           For things you barely think about.
         </p>
       </div>
@@ -155,65 +155,86 @@ function HiddenTimeThieves() {
 
 function DemoCard() {
   const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [isPaused, setIsPaused] = React.useState(false);
 
   React.useEffect(() => {
+    if (isPaused) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % DRAMATIC_EXAMPLES.length);
     }, 3500);
-
     return () => clearInterval(interval);
+  }, [isPaused]);
+
+  // Keyboard navigation
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        setCurrentIndex((prev) => (prev - 1 + DRAMATIC_EXAMPLES.length) % DRAMATIC_EXAMPLES.length);
+      } else if (e.key === "ArrowRight") {
+        setCurrentIndex((prev) => (prev + 1) % DRAMATIC_EXAMPLES.length);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const current = DRAMATIC_EXAMPLES[currentIndex];
 
   return (
-    <div className="w-full max-w-lg">
-      <div className="bg-white rounded-3xl shadow-3xl shadow-gray-900/30 border border-gray-300 overflow-hidden transform hover:scale-[1.02] hover:shadow-4xl hover:shadow-gray-900/40 transition-all duration-500 animate-float">
+    <div
+      className="w-full max-w-lg"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="bg-white rounded-2xl shadow-3xl border-2 border-gray-200 overflow-hidden transform hover:shadow-4xl transition-all duration-300">
         {/* Card Header */}
-        <div className="px-6 py-4 bg-gray-900 border-b border-gray-700 flex items-center gap-3">
-          <Image 
-            src="/icon_640.png" 
-            alt="Time is Money" 
-            width={20} 
+        <div className="px-6 py-4 bg-black flex items-center gap-3">
+          <Image
+            src="/icon_640.png"
+            alt="Time is Money"
+            width={20}
             height={20}
-            className="rounded-md"
+            className="rounded"
           />
-          <span className="text-sm font-semibold text-white">Time is Money Extension</span>
+          <span className="text-sm font-semibold text-white">Time is Money</span>
         </div>
-        
+
         <div className="p-8">
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold capitalize text-gray-900">
+            <h3 className="font-clash text-2xl font-bold capitalize text-black">
               {current.item}
             </h3>
-            
+
             <div className="space-y-5">
-              <div className="text-4xl font-black text-gray-900">{current.price}</div>
-              
-              <div className="bg-gray-100 rounded-2xl p-5 border-2 border-gray-300">
+              <div className="font-clash text-5xl font-bold text-black">{current.price}</div>
+
+              <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
                 <div className="flex items-center gap-3 mb-3">
-                  <Clock className="h-6 w-6 text-gray-700" />
-                  <span className="text-base font-semibold text-gray-900">Time Cost:</span>
+                  <Hourglass className="h-6 w-6 text-black" />
+                  <span className="font-clash text-base font-semibold text-black">Time Cost:</span>
                 </div>
-                <div className="text-3xl font-black text-gray-900 mb-2">
+                <div className="font-clash text-4xl font-bold text-black mb-2">
                   {current.time}
                 </div>
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm text-gray-500">
                   of work based on your rate
                 </p>
               </div>
             </div>
           </div>
-          
-          <div className="mt-8 flex justify-center gap-3">
+
+          {/* Interactive navigation dots */}
+          <div className="mt-8 flex justify-center gap-2">
             {DRAMATIC_EXAMPLES.map((_, index) => (
-              <div
+              <button
                 key={index}
-                className={`h-2 transition-all duration-500 rounded-full ${
-                  index === currentIndex 
-                    ? 'w-8 bg-gray-900 shadow-lg shadow-gray-900/30' 
-                    : 'w-2 bg-gray-400'
+                onClick={() => setCurrentIndex(index)}
+                className={`h-2 transition-all duration-300 rounded-full cursor-pointer hover:bg-gray-600 ${
+                  index === currentIndex
+                    ? "w-8 bg-black"
+                    : "w-2 bg-gray-300"
                 }`}
+                aria-label={`View example ${index + 1}`}
               />
             ))}
           </div>
@@ -228,54 +249,31 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative px-6 py-12 min-h-[85vh] flex items-center justify-center bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dot-pattern overflow-hidden">
-          {/* Subtle background elements */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-20 left-10 w-64 h-64 bg-gray-200 rounded-full mix-blend-multiply filter blur-xl"></div>
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-gray-300 rounded-full mix-blend-multiply filter blur-2xl"></div>
-          </div>
+        <section className="relative px-6 py-16 min-h-[85vh] flex items-center justify-center bg-white overflow-hidden">
           <div className="relative z-10 mx-auto max-w-6xl">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
-              <div className="text-center lg:text-left text-gray-900 space-y-8">
-                <div className="flex items-center gap-3 justify-center lg:justify-start mb-6">
-                  <Image 
-                    src="/icon_640.png" 
-                    alt="Time is Money" 
-                    width={40} 
-                    height={40}
-                    className="rounded-md"
-                  />
-                  <div className="text-xl font-semibold text-gray-900">Time is Money</div>
-                </div>
-                
-                <h1 className="text-6xl md:text-7xl font-bold tracking-tight leading-tight text-gray-900">
+              <div className="text-center lg:text-left space-y-8">
+                <h1 className="font-clash text-6xl md:text-7xl font-bold tracking-tight leading-[0.95] text-black">
                   The Real Cost
                   <br />
-                  <span className="text-gray-900">of Everything</span>
+                  of Everything
                 </h1>
-                
-                <p className="text-2xl font-medium leading-relaxed text-gray-700">
-                  That $299 gadget costs <strong className="text-gray-900">18 hours of your life.</strong> See the real cost before you buy.
+
+                <p className="text-xl md:text-2xl leading-relaxed text-gray-600">
+                  That $299 gadget costs <strong className="text-black font-clash font-bold">18 hours of your life.</strong> See the real cost before you buy.
                 </p>
 
                 <div className="space-y-6">
                   <ChromeInstallButton size="large" variant="dark" showArrow />
-                  
+
                   {/* Trust Indicators */}
-                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-600 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                      5,000 active users
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                      30-second install
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                      No signup required
-                    </div>
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-500 text-sm">
+                    <span>5,000+ active users</span>
+                    <span className="text-gray-300">•</span>
+                    <span>30-second install</span>
+                    <span className="text-gray-300">•</span>
+                    <span>No signup required</span>
                   </div>
                 </div>
               </div>
@@ -331,10 +329,10 @@ export default function Home() {
         </section>
 
         {/* Hidden Costs */}
-        <section className="px-6 py-32 bg-white relative">
+        <section className="px-6 py-24 bg-gray-50 relative">
           <div className="mx-auto max-w-6xl">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              <h2 className="font-clash text-4xl md:text-5xl font-bold text-black mb-6">
                 The costs you never calculate
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -354,76 +352,62 @@ export default function Home() {
         </section>
 
         {/* Testimonials */}
-        <section className="relative px-6 py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
-          {/* Subtle background texture */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 1px)`,
-              backgroundSize: '50px 50px'
-            }}></div>
-          </div>
-          
+        <section className="relative px-6 py-24 bg-black overflow-hidden">
           <div className="relative mx-auto max-w-5xl">
-            <h2 className="mb-20 text-center text-5xl font-bold text-white">
+            <h2 className="font-clash mb-16 text-center text-4xl md:text-5xl font-bold text-white">
               What Users Are Saying
             </h2>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
-                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
-                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
-                  Awesome plugin! Really helps in making you more conscious about the value of your time.
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                <p className="text-gray-300 leading-relaxed flex-grow">
+                  &ldquo;Awesome plugin! Really helps in making you more conscious about the value of your time.&rdquo;
                 </p>
-                <p className="text-sm text-white font-bold mt-6 relative z-10">— Rik</p>
+                <p className="text-sm text-white font-bold mt-6">— Rik</p>
               </div>
-              
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
-                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
-                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
-                  Well made and great for getting your impulse buys in check!
+
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                <p className="text-gray-300 leading-relaxed flex-grow">
+                  &ldquo;Well made and great for getting your impulse buys in check!&rdquo;
                 </p>
-                <p className="text-sm text-white font-bold mt-6 relative z-10">— Eden</p>
+                <p className="text-sm text-white font-bold mt-6">— Eden</p>
               </div>
-              
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
-                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
-                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
-                  Converts salaries on job boards, so you can see how long it would take to earn that much.
+
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                <p className="text-gray-300 leading-relaxed flex-grow">
+                  &ldquo;Converts salaries on job boards, so you can see how long it would take to earn that much.&rdquo;
                 </p>
-                <p className="text-sm text-white font-bold mt-6 relative z-10">— Jordan</p>
+                <p className="text-sm text-white font-bold mt-6">— Jordan</p>
               </div>
-              
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
-                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
-                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
-                  Love the simplicity! Enter your per hour income and see online prices in their true value.
+
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                <p className="text-gray-300 leading-relaxed flex-grow">
+                  &ldquo;Love the simplicity! Enter your per hour income and see online prices in their true value.&rdquo;
                 </p>
-                <p className="text-sm text-white font-bold mt-6 relative z-10">— Anne</p>
+                <p className="text-sm text-white font-bold mt-6">— Anne</p>
               </div>
-              
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
-                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
-                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
-                  Put in how much you make an hour and it shows up on any site. Great way to think about purchases.
+
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                <p className="text-gray-300 leading-relaxed flex-grow">
+                  &ldquo;Put in how much you make an hour and it shows up on any site. Great way to think about purchases.&rdquo;
                 </p>
-                <p className="text-sm text-white font-bold mt-6 relative z-10">— Sean</p>
+                <p className="text-sm text-white font-bold mt-6">— Sean</p>
               </div>
-              
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 flex flex-col overflow-hidden">
-                <div className="absolute top-0 left-2 text-8xl text-white/5 font-serif select-none">&ldquo;</div>
-                <p className="text-gray-200 italic leading-relaxed relative z-10 flex-grow">
-                  Time to start saving money! Works great for USD.
+
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 flex flex-col">
+                <p className="text-gray-300 leading-relaxed flex-grow">
+                  &ldquo;Time to start saving money! Works great for USD.&rdquo;
                 </p>
-                <p className="text-sm text-white font-bold mt-6 relative z-10">— Jason</p>
+                <p className="text-sm text-white font-bold mt-6">— Jason</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="px-6 py-28 bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
+        <section className="px-6 py-24 bg-white">
           <div className="mx-auto max-w-4xl">
-            <h2 className="mb-20 text-center text-5xl font-bold text-gray-900">
+            <h2 className="font-clash mb-16 text-center text-4xl md:text-5xl font-bold text-black">
               Frequently Asked Questions
             </h2>
 
@@ -480,22 +464,14 @@ export default function Home() {
         </section>
 
         {/* Final CTA */}
-        <section className="relative px-6 py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
-          {/* Dotted background pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 1px)`,
-              backgroundSize: '40px 40px'
-            }}></div>
-          </div>
-          
+        <section className="relative px-6 py-24 bg-black overflow-hidden">
           <div className="relative mx-auto max-w-4xl text-center">
             <div className="mb-12">
-              <h2 className="text-5xl md:text-7xl font-black text-white mb-6">
+              <h2 className="font-clash text-5xl md:text-7xl font-bold text-white mb-6">
                 Stop Trading Time<br />
-                <span className="text-gray-300">For Things You Don&apos;t Need</span>
+                <span className="text-gray-400">For Things You Don&apos;t Need</span>
               </h2>
-              <p className="text-2xl text-gray-300 font-light max-w-2xl mx-auto">
+              <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto">
                 Every purchase is a choice. Make yours count.
               </p>
             </div>
@@ -504,15 +480,15 @@ export default function Home() {
               <ChromeInstallButton size="large" variant="light" showArrow>
                 Add to Chrome Now
               </ChromeInstallButton>
-              
-              <div className="flex items-center justify-center gap-6 text-gray-400">
+
+              <div className="flex items-center justify-center gap-6 text-gray-500 text-sm">
                 <div className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
+                  <Hourglass className="h-4 w-4" />
                   <span>30-second install</span>
                 </div>
-                <span className="text-gray-500">•</span>
+                <span className="text-gray-600">•</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-400">✓</span>
+                  <span className="text-success">✓</span>
                   <span>Free forever</span>
                 </div>
               </div>

@@ -3,26 +3,6 @@
 @layer base {
   body {
     background-color: white;
-    color: #1f2937;
-  }
-}
-
-@layer utilities {
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-8px);
-    }
-  }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  .dot-pattern {
-    background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
-    background-size: 20px 20px;
+    color: theme('colors.gray.800');
   }
 }
