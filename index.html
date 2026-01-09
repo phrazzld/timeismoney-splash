@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time is Money - Chrome Extension</title>
+  <meta name="description" content="See what things really cost in hours of work, not just dollars. Make smarter purchasing decisions with our free Chrome extension.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.ico">
+</head>
+<body>
+  <div class="min-h-screen flex flex-col">
+    <main class="flex-1">
+
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-grid">
+            <!-- Left Content -->
+            <div class="hero-text">
+              <h1 class="hero-title">
+                The Real Cost<br>of Everything
+              </h1>
+
+              <p class="hero-subtitle">
+                That $299 gadget costs <strong>18 hours of your life.</strong> See the real cost before you buy.
+              </p>
+
+              <div class="space-y-6" style="margin-top: 2rem;">
+                <button class="btn btn-dark btn-lg" data-chrome-btn>
+                  <span data-text>Add to Chrome - It's Free</span>
+                  <svg class="icon-md arrow" data-arrow viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                  <svg class="icon-md animate-spin" data-spinner style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                  </svg>
+                </button>
+
+                <!-- Trust Indicators -->
+                <div class="trust-indicators">
+                  <span>5,000+ active users</span>
+                  <span class="trust-separator">•</span>
+                  <span>30-second install</span>
+                  <span class="trust-separator">•</span>
+                  <span>No signup required</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Content - Demo Card -->
+            <div class="flex justify-center">
+              <div class="w-full max-w-lg" id="demo-card">
+                <div class="demo-card">
+                  <!-- Card Header -->
+                  <div class="demo-card-header">
+                    <img src="images/icon_640.png" alt="Time is Money" width="20" height="20">
+                    <span>Time is Money</span>
+                  </div>
+
+                  <div class="demo-card-body">
+                    <div class="space-y-6">
+                      <h3 class="font-clash capitalize" style="font-size: 1.5rem; font-weight: 700; color: var(--black);" data-item>AirPods Pro</h3>
+
+                      <div class="space-y-5">
+                        <div class="font-clash" style="font-size: 3rem; font-weight: 700; color: var(--black);" data-price>$299</div>
+
+                        <div class="time-cost-box">
+                          <div class="flex items-center gap-3 mb-3">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 00-.586-1.414L12 12l-4.414 4.414A2 2 0 007 17.828V22M7 2v4.172a2 2 0 00.586 1.414L12 12l4.414-4.414A2 2 0 0017 6.172V2"/>
+                            </svg>
+                            <span class="font-clash font-semibold" style="color: var(--black);">Time Cost:</span>
+                          </div>
+                          <div class="font-clash mb-2" style="font-size: 2.25rem; font-weight: 700; color: var(--black);" data-time>18 hours</div>
+                          <p style="font-size: 0.875rem; color: var(--gray-500);">of work based on your rate</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Navigation dots -->
+                    <div class="demo-dots" data-dots></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Press Section -->
+      <section class="press-section">
+        <div class="press-overlay"></div>
+        <div class="press-content">
+          <p class="press-label">As Featured In</p>
+          <div class="press-links">
+            <a href="https://finance.yahoo.com/news/time-is-money-chrome-extension-tells-you-how-many-102539694524.html" target="_blank" rel="noopener noreferrer" class="press-link">Yahoo Finance</a>
+            <span class="press-separator">•</span>
+            <a href="https://www.fastcompany.com/3038475/by-turning-minutes-into-moolah-this-chrome-extension-helps-you-save" target="_blank" rel="noopener noreferrer" class="press-link">Fast Company</a>
+            <span class="press-separator">•</span>
+            <a href="https://www.freetech4teachers.com/2014/11/time-is-money-chrome-extension-that.html" target="_blank" rel="noopener noreferrer" class="press-link">Free Tech 4 Teachers</a>
+          </div>
+          <blockquote class="press-quote">
+            "It's easier to think in terms of not wasting time rather than money."
+            <cite class="press-cite">— Fast Company</cite>
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- Hidden Time Thieves Section -->
+      <section class="time-thieves-section" id="time-thieves">
+        <div class="max-w-6xl mx-auto">
+          <div class="time-thieves-header">
+            <h2 class="time-thieves-title">The costs you never calculate</h2>
+            <p class="time-thieves-subtitle">These recurring expenses silently steal hours from your life every month</p>
+          </div>
+
+          <div class="space-y-8">
+            <div class="time-thieves-toggle">
+              <button class="toggle-btn active" data-period="monthly">Monthly</button>
+              <button class="toggle-btn" data-period="yearly">Yearly</button>
+            </div>
+
+            <div class="time-thieves-grid">
+              <!-- Streaming services -->
+              <div class="thief-card" data-thief>
+                <div class="flex items-start gap-4">
+                  <span class="thief-icon">📺</span>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-gray-900 mb-1">Streaming services</h3>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">Netflix, Spotify, Disney+, etc.</p>
+                    <div class="space-y-2">
+                      <div class="font-clash" style="font-size: 1.5rem; font-weight: 700; color: var(--black);" data-hours>2 hours</div>
+                      <div style="font-size: 0.75rem; color: var(--gray-500);" data-cost>$50 per month</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Daily coffee -->
+              <div class="thief-card" data-thief>
+                <div class="flex items-start gap-4">
+                  <span class="thief-icon">☕</span>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-gray-900 mb-1">Daily coffee</h3>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">That $5 morning ritual</p>
+                    <div class="space-y-2">
+                      <div class="font-clash" style="font-size: 1.5rem; font-weight: 700; color: var(--black);" data-hours>6 hours</div>
+                      <div style="font-size: 0.75rem; color: var(--gray-500);" data-cost>$150 per month</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Food delivery fees -->
+              <div class="thief-card" data-thief>
+                <div class="flex items-start gap-4">
+                  <span class="thief-icon">🚗</span>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-gray-900 mb-1">Food delivery fees</h3>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">Convenience charges add up</p>
+                    <div class="space-y-2">
+                      <div class="font-clash" style="font-size: 1.5rem; font-weight: 700; color: var(--black);" data-hours>3.2 hours</div>
+                      <div style="font-size: 0.75rem; color: var(--gray-500);" data-cost>$80 per month</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unused gym membership -->
+              <div class="thief-card" data-thief>
+                <div class="flex items-start gap-4">
+                  <span class="thief-icon">💪</span>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-gray-900 mb-1">Unused gym membership</h3>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">Haven't gone in months</p>
+                    <div class="space-y-2">
+                      <div class="font-clash" style="font-size: 1.5rem; font-weight: 700; color: var(--black);" data-hours>1.6 hours</div>
+                      <div style="font-size: 0.75rem; color: var(--gray-500);" data-cost>$40 per month</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Impulse shopping -->
+              <div class="thief-card" data-thief>
+                <div class="flex items-start gap-4">
+                  <span class="thief-icon">🛍️</span>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-gray-900 mb-1">Impulse shopping</h3>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">Those "small" purchases</p>
+                    <div class="space-y-2">
+                      <div class="font-clash" style="font-size: 1.5rem; font-weight: 700; color: var(--black);" data-hours>8 hours</div>
+                      <div style="font-size: 0.75rem; color: var(--gray-500);" data-cost>$200 per month</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Subscription boxes -->
+              <div class="thief-card" data-thief>
+                <div class="flex items-start gap-4">
+                  <span class="thief-icon">📦</span>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-gray-900 mb-1">Subscription boxes</h3>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">Monthly surprises you forget about</p>
+                    <div class="space-y-2">
+                      <div class="font-clash" style="font-size: 1.5rem; font-weight: 700; color: var(--black);" data-hours>1.4 hours</div>
+                      <div style="font-size: 0.75rem; color: var(--gray-500);" data-cost>$35 per month</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="thief-total">
+              <p style="font-size: 1.125rem; margin-bottom: 0.5rem; color: var(--gray-400);">Total time cost:</p>
+              <div class="font-clash thief-total-hours" style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;"><span data-total>22</span> hours</div>
+              <p style="font-size: 1.25rem; color: var(--gray-300);" data-subtitle>Every single month</p>
+              <p style="font-size: 0.875rem; margin-top: 1rem; color: var(--gray-500);">For things you barely think about.</p>
+            </div>
+          </div>
+
+          <div class="time-thieves-cta">
+            <p>See every hidden cost before it steals your time</p>
+            <button class="btn btn-dark btn-md" data-chrome-btn>
+              <span data-text>Add to Chrome - It's Free</span>
+              <svg class="icon-md arrow" data-arrow viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+              <svg class="icon-md animate-spin" data-spinner style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section class="testimonials-section">
+        <div class="max-w-5xl mx-auto">
+          <h2 class="testimonials-title">What Users Are Saying</h2>
+
+          <div class="testimonials-grid">
+            <div class="testimonial-card">
+              <p class="testimonial-text">"Awesome plugin! Really helps in making you more conscious about the value of your time."</p>
+              <p class="testimonial-author">— Rik</p>
+            </div>
+
+            <div class="testimonial-card">
+              <p class="testimonial-text">"Well made and great for getting your impulse buys in check!"</p>
+              <p class="testimonial-author">— Eden</p>
+            </div>
+
+            <div class="testimonial-card">
+              <p class="testimonial-text">"Converts salaries on job boards, so you can see how long it would take to earn that much."</p>
+              <p class="testimonial-author">— Jordan</p>
+            </div>
+
+            <div class="testimonial-card">
+              <p class="testimonial-text">"Love the simplicity! Enter your per hour income and see online prices in their true value."</p>
+              <p class="testimonial-author">— Anne</p>
+            </div>
+
+            <div class="testimonial-card">
+              <p class="testimonial-text">"Put in how much you make an hour and it shows up on any site. Great way to think about purchases."</p>
+              <p class="testimonial-author">— Sean</p>
+            </div>
+
+            <div class="testimonial-card">
+              <p class="testimonial-text">"Time to start saving money! Works great for USD."</p>
+              <p class="testimonial-author">— Jason</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="faq-section">
+        <div class="faq-list">
+          <h2 class="faq-title">Frequently Asked Questions</h2>
+
+          <div class="faq-item">
+            <div class="faq-grid">
+              <span class="faq-q">Q:</span>
+              <div>
+                <h3 class="faq-question">Does it work on all websites?</h3>
+                <p class="faq-answer">Works best on major sites like Amazon US and eBay. Some international sites and currencies may have limited support. We're constantly improving compatibility.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-grid">
+              <span class="faq-q">Q:</span>
+              <div>
+                <h3 class="faq-question">Is it really free?</h3>
+                <p class="faq-answer">Yes, completely free. No premium version, no ads, no data collection. It's a simple tool designed to help people make better spending decisions.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-grid">
+              <span class="faq-q">Q:</span>
+              <div>
+                <h3 class="faq-question">Why should I trust this?</h3>
+                <p class="faq-answer">Open source on GitHub since 2014. Used by 5,000+ people. Featured in major publications. We never collect or track any personal data - your privacy is guaranteed.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-grid">
+              <span class="faq-q">Q:</span>
+              <div>
+                <h3 class="faq-question">How do I set my hourly wage?</h3>
+                <p class="faq-answer">After installing, click the extension icon and enter either your hourly wage or annual salary. The extension automatically calculates and displays prices in hours of work.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA Section -->
+      <section class="cta-section">
+        <div class="cta-content">
+          <div class="mb-12">
+            <h2 class="cta-title">
+              Stop Trading Time<br>
+              <span class="cta-title-gray">For Things You Don't Need</span>
+            </h2>
+            <p class="cta-subtitle">Every purchase is a choice. Make yours count.</p>
+          </div>
+
+          <div class="cta-buttons">
+            <button class="btn btn-light btn-lg" data-chrome-btn>
+              <span data-text>Add to Chrome Now</span>
+              <svg class="icon-md arrow" data-arrow viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+              <svg class="icon-md animate-spin" data-spinner style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+              </svg>
+            </button>
+
+            <div class="cta-trust">
+              <div class="cta-trust-item">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 00-.586-1.414L12 12l-4.414 4.414A2 2 0 007 17.828V22M7 2v4.172a2 2 0 00.586 1.414L12 12l4.414-4.414A2 2 0 0017 6.172V2"/>
+                </svg>
+                <span>30-second install</span>
+              </div>
+              <span style="color: var(--gray-600);">•</span>
+              <div class="cta-trust-item">
+                <span class="text-success">✓</span>
+                <span>Free forever</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <span class="footer-brand">Time is Money</span>
+
+        <div class="footer-links">
+          <a href="https://github.com/phrazzld/timeismoney" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+          <span class="footer-separator">·</span>
+          <a href="https://github.com/phrazzld/timeismoney/blob/master/PRIVACY.md" target="_blank" rel="noopener noreferrer" class="footer-link">Privacy</a>
+          <span class="footer-separator">·</span>
+          <a href="https://github.com/phrazzld/timeismoney/issues" target="_blank" rel="noopener noreferrer" class="footer-link">Support</a>
+        </div>
+
+        <span class="footer-copyright">© 2025</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
