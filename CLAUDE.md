@@ -4,60 +4,59 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Time is Money landing page - A Next.js 15 marketing site for a Chrome extension that converts prices to hours of work. Built with TypeScript, Tailwind CSS v4, and shadcn/ui components.
+Time is Money landing page - A static HTML/CSS/JS marketing site for a Chrome extension that converts prices to hours of work. Zero build step, zero dependencies.
 
-## Development Commands
+## Development
 
 ```bash
-# Development server with Turbopack
-npm run dev
+# Serve locally (any static server works)
+python3 -m http.server 8000
+# or
+npx serve .
 
-# Production build
-npm run build
-
-# Start production server
-npm start
-
-# Run linter
-npm run lint
+# Open in browser
+open index.html
 ```
 
 ## Architecture
 
 ### Tech Stack
-- **Framework**: Next.js 15.3 with App Router
-- **Language**: TypeScript with strict mode
-- **Styling**: Tailwind CSS v4 with CSS variables for theming
-- **Components**: Custom UI components using shadcn/ui patterns (Button, Card, Navbar, Footer)
-- **Icons**: Lucide React for consistent iconography
+- **HTML**: Single `index.html` file
+- **CSS**: Vanilla CSS with custom properties (`css/styles.css`)
+- **JavaScript**: Vanilla JS, no framework (`js/app.js`)
+- **Fonts**: Clash Display (local WOFF2), Geist (Google Fonts CDN)
 
 ### Project Structure
-- `app/` - Next.js App Router pages and layouts
-  - `page.tsx` - Main landing page with animated demo card showcasing price-to-time conversion
-  - `layout.tsx` - Root layout with font configuration
-- `components/ui/` - Reusable UI components following shadcn/ui patterns
-  - Components use class-variance-authority (CVA) for variant management
-  - Consistent use of `cn()` utility for className merging
-- `lib/utils.ts` - Utility functions including the `cn()` helper for Tailwind class merging
+```
+├── index.html          # Single-page HTML
+├── css/
+│   └── styles.css      # All styles (~400 lines)
+├── js/
+│   └── app.js          # All interactivity (~200 lines)
+├── fonts/
+│   └── ClashDisplay-Variable.woff2
+├── images/
+│   └── icon_640.png
+└── favicon.ico
+```
 
 ### Key Features
-- **Animated Demo Card**: Cycles through real product examples showing price-to-time conversions
-- **Responsive Design**: Mobile-first approach with breakpoint-specific layouts
-- **Theme System**: CSS variables-based theming with HSL color definitions
-- **Component Variants**: Button and Card components support multiple style variants via CVA
+- **Demo Card Carousel**: Auto-rotates every 3.5s, pauses on hover, keyboard navigation (arrow keys)
+- **Time Thieves Calculator**: Monthly/yearly toggle with animated counter
+- **Chrome Install Buttons**: Loading state with spinner, opens Chrome Web Store
 
-### Styling Conventions
-- Uses Tailwind CSS with custom theme extensions defined in `tailwind.config.ts`
-- Color system based on CSS variables (--primary, --secondary, --muted, etc.)
-- Consistent spacing and sizing using Tailwind's utility classes
-- Shadow effects for depth and hover states for interactivity
+### Styling Approach
+- CSS custom properties for colors, shadows, spacing
+- Mobile-first responsive design (768px, 1024px breakpoints)
+- No preprocessor, no build step
 
 ### External Integration
-- Chrome Web Store link: `https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en`
-- All CTAs open extension page in new tab via `window.open()`
+- Chrome Web Store: `https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en`
+- Google Fonts CDN for Geist font
 
-### Development Notes
-- Client-side rendering enabled with `"use client"` directive
-- React hooks for state management and effects
-- TypeScript strict mode enforced
-- ESLint configured with Next.js recommended rules
+### File Sizes
+- `index.html`: ~20KB
+- `css/styles.css`: ~28KB
+- `js/app.js`: ~12KB
+- `fonts/`: ~32KB
+- **Total**: ~100KB (vs 546MB with Next.js)
