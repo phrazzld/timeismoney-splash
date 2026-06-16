@@ -118,12 +118,18 @@ pre-commit:
 **Approach**: Define @theme in globals.css with OKLCH brand-tinted neutrals, semantic tokens (--color-surface, --color-foreground, etc.)
 **Effort**: 3h | **Impact**: Dark mode ready, themeable, modern Tailwind patterns
 
-### [INFRASTRUCTURE] Add Sentry Error Tracking
-**File**: New: sentry.client.config.ts, sentry.server.config.ts
+### [INFRASTRUCTURE] Canary error tracking and health checks
+**File**: `js/canary.js`, `api/health.js`, `api/canary/api/v1/errors.js`
 **Perspectives**: architecture-guardian
-**Why**: Production errors invisible until user reports - flying blind
-**Approach**: `npm install @sentry/nextjs`, configure client/server/edge
-**Effort**: 2h | **Impact**: Catch production errors before users complain
+**Why**: Production errors and uptime should be visible through Canary, without adding a framework or package manager.
+**Status**: Implemented in the static Vercel app. Keep the service-bound `CANARY_API_KEY` server-only.
+
+### [INFRASTRUCTURE] Add platform rate limiting for Canary relay
+**File**: Vercel project settings or edge/firewall config
+**Perspectives**: security-sentinel, observability-advocate
+**Why**: The in-process relay limiter is useful as a local guardrail but is not durable production abuse control for unauthenticated browser telemetry.
+**Approach**: Configure Vercel Firewall or an equivalent edge rate limit for `/api/canary/api/v1/errors`; keep browser-origin telemetry unauthenticated but bounded before it reaches the serverless function.
+**Effort**: 1h | **Impact**: Prevents relay spam from burning Canary ingest capacity.
 
 ### [ACCESSIBILITY] Add ARIA Attributes to Interactive Elements
 **File**: app/page.tsx:90-110, 208-218
