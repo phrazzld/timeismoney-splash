@@ -1,6 +1,7 @@
 const DEFAULT_SERVICE = 'timeismoney-splash';
 const DEFAULT_ENDPOINT = 'https://canary-obs.fly.dev';
 const DEFAULT_SITE_URL = 'https://www.timeismoney.works';
+const DEFAULT_SITE_ALIASES = ['https://timeismoney.works'];
 const MAX_BODY_BYTES = 32768;
 const LOCAL_RELAY_LIMIT = 30;
 const LOCAL_RELAY_WINDOW_MS = 60000;
@@ -125,6 +126,7 @@ function coercePayload(input, extraContext) {
 function allowedOrigins(req) {
   const origins = new Set();
   origins.add(DEFAULT_SITE_URL);
+  DEFAULT_SITE_ALIASES.forEach((origin) => origins.add(origin));
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     try {
       origins.add(new URL(process.env.NEXT_PUBLIC_SITE_URL).origin);
@@ -138,12 +140,33 @@ function allowedOrigins(req) {
   return origins;
 }
 
+function allowedHostnames(req) {
+  return new Set(
+    Array.from(allowedOrigins(req)).map((origin) => new URL(origin).host)
+  );
+}
+
 function isAllowedOrigin(value, origins) {
   try {
     return origins.has(new URL(value).origin);
   } catch {
     return false;
   }
+}
+
+function normalizeHost(value) {
+  return typeof value === 'string' ? value.toLowerCase() : '';
+}
+
+function requestHostsAreAllowed(req, allowed) {
+  const host = normalizeHost(req.headers.host);
+  const forwardedHost = normalizeHost(req.headers['x-forwarded-host']);
+
+  if (!host || !allowed.has(host)) return false;
+  if (forwardedHost && (!allowed.has(forwardedHost) || forwardedHost !== host)) {
+    return false;
+  }
+  return true;
 }
 
 function trustedRelayOrigin(req) {
@@ -156,6 +179,8 @@ function trustedRelayOrigin(req) {
   }
 
   const origins = allowedOrigins(req);
+  if (!requestHostsAreAllowed(req, allowedHostnames(req))) return false;
+
   if (req.headers.origin) return isAllowedOrigin(req.headers.origin, origins);
   if (req.headers.referer) return isAllowedOrigin(req.headers.referer, origins);
   return false;
