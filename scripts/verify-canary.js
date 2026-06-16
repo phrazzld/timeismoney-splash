@@ -62,6 +62,7 @@ async function verifyRelayRoute() {
       method: 'POST',
       url: '/api/canary/api/v1/errors?token=secret',
       headers: {
+        host: 'www.timeismoney.works',
         origin: 'https://www.timeismoney.works',
         'content-length': '230',
         'user-agent': 'node-test',
@@ -103,6 +104,7 @@ async function verifyRelayRoute() {
     {
       method: 'POST',
       headers: {
+        host: 'www.timeismoney.works',
         origin: 'https://evil.example',
         'content-length': '24',
         'x-vercel-forwarded-for': '127.0.0.2',
@@ -124,6 +126,39 @@ async function verifyRelayRoute() {
         'x-vercel-forwarded-for': '127.0.0.3',
       },
       body: { message: 'blocked host spoof' },
+    },
+    response
+  );
+  assert.equal(response.statusCode, 403);
+
+  response = makeResponse();
+  await relay(
+    {
+      method: 'POST',
+      headers: {
+        host: 'evil.example',
+        origin: 'https://www.timeismoney.works',
+        'content-length': '43',
+        'x-vercel-forwarded-for': '127.0.0.4',
+      },
+      body: { message: 'blocked canonical origin host spoof' },
+    },
+    response
+  );
+  assert.equal(response.statusCode, 403);
+
+  response = makeResponse();
+  await relay(
+    {
+      method: 'POST',
+      headers: {
+        host: 'evil.example',
+        'x-forwarded-host': 'www.timeismoney.works',
+        origin: 'https://www.timeismoney.works',
+        'content-length': '43',
+        'x-vercel-forwarded-for': '127.0.0.5',
+      },
+      body: { message: 'blocked forwarded host spoof' },
     },
     response
   );
