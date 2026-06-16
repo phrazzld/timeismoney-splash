@@ -10,12 +10,29 @@ Open `index.html` in a browser, or serve locally:
 python3 -m http.server 8000
 ```
 
+Verify the Canary health and relay functions:
+
+```bash
+node scripts/verify-canary.js
+```
+
+After a production deploy, verify live Canary ingest and readback:
+
+```bash
+CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
+```
+
 ## Structure
 
 ```
 ├── index.html      # Single-page HTML
 ├── css/styles.css  # Vanilla CSS
 ├── js/app.js       # Vanilla JavaScript
+├── js/canary.js    # Browser error observer
+├── scripts/verify-canary.js # Local Canary route verification
+├── scripts/smoke-canary-production.js # Production Canary smoke/readback
+├── api/health.js   # Vercel health endpoint
+├── api/canary/api/v1/errors.js # Browser error relay to Canary
 ├── fonts/          # Clash Display font
 └── images/         # Extension icon
 ```
@@ -26,7 +43,21 @@ python3 -m http.server 8000
 - Time thieves calculator with toggle
 - Responsive design (mobile-first)
 - Zero dependencies, zero build step
+- Canary error reporting and production health checks via Vercel functions
 
 ## Deploy
 
-Upload files to any static host (Vercel, Netlify, GitHub Pages, S3, etc.).
+Production deploys to Vercel. Canary observability requires Vercel functions
+or an equivalent server-side relay; static-only hosts can serve the page but
+cannot provide `/api/health` or the server-side Canary relay.
+
+Vercel production and preview deployments should define:
+
+- `CANARY_API_KEY` - service-bound ingest key for `timeismoney-splash`
+- `CANARY_ENDPOINT` - defaults to `https://canary-obs.fly.dev`
+- `CANARY_SERVICE_NAME` - defaults to `timeismoney-splash`
+- `NEXT_PUBLIC_SITE_URL` - canonical origin, `https://www.timeismoney.works`
+
+Production and preview `/api/health` are liveness/config checks and return
+`503` if Canary is not configured. Use `scripts/smoke-canary-production.js`
+after deploy to prove end-to-end Canary ingest.

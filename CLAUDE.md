@@ -16,6 +16,12 @@ npx serve .
 
 # Open in browser
 open index.html
+
+# Verify Canary health and relay behavior
+node scripts/verify-canary.js
+
+# Verify deployed Canary ingest and readback
+CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 ```
 
 ## Architecture
@@ -33,6 +39,12 @@ open index.html
 │   └── styles.css      # All styles (~400 lines)
 ├── js/
 │   └── app.js          # All interactivity (~200 lines)
+├── scripts/
+│   ├── verify-canary.js # Canary route verification
+│   └── smoke-canary-production.js # Production Canary smoke/readback
+├── api/
+│   ├── health.js       # Vercel health endpoint
+│   └── canary/api/v1/errors.js  # Browser error relay to Canary
 ├── fonts/
 │   └── ClashDisplay-Variable.woff2
 ├── images/
@@ -53,6 +65,7 @@ open index.html
 ### External Integration
 - Chrome Web Store: `https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en`
 - Google Fonts CDN for Geist font
+- Canary: `/api/health` and `/api/canary/api/v1/errors` on Vercel; keep `CANARY_API_KEY` server-only.
 
 ### File Sizes
 - `index.html`: ~20KB
