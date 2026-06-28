@@ -16,6 +16,12 @@ Verify the Canary health and relay functions:
 node scripts/verify-canary.js
 ```
 
+Run the full local CI gate before shipping:
+
+```bash
+node scripts/ci.js
+```
+
 After a production deploy, verify live Canary ingest and readback:
 
 ```bash
@@ -30,6 +36,7 @@ CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 ├── js/app.js       # Vanilla JavaScript
 ├── js/canary.js    # Browser error observer
 ├── scripts/verify-canary.js # Local Canary route verification
+├── scripts/ci.js # Local CI gate used by GitHub Actions
 ├── scripts/smoke-canary-production.js # Production Canary smoke/readback
 ├── api/health.js   # Vercel health endpoint
 ├── api/canary/api/v1/errors.js # Browser error relay to Canary

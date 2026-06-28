@@ -20,6 +20,9 @@ open index.html
 # Verify Canary health and relay behavior
 node scripts/verify-canary.js
 
+# Run the full local CI gate
+node scripts/ci.js
+
 # Verify deployed Canary ingest and readback
 CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 ```
@@ -41,6 +44,7 @@ CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 │   └── app.js          # All interactivity (~200 lines)
 ├── scripts/
 │   ├── verify-canary.js # Canary route verification
+│   ├── ci.js            # Local CI gate used by GitHub Actions
 │   └── smoke-canary-production.js # Production Canary smoke/readback
 ├── api/
 │   ├── health.js       # Vercel health endpoint

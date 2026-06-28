@@ -1,0 +1,198 @@
+#!/usr/bin/env node
+'use strict';
+
+const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const ROOT = path.resolve(__dirname, '..');
+
+const REQUIRED_FILES = [
+  'index.html',
+  'css/styles.css',
+  'js/app.js',
+  'js/canary.js',
+  'api/health.js',
+  'api/canary/api/v1/errors.js',
+  'scripts/verify-canary.js',
+  'scripts/smoke-canary-production.js',
+  'favicon.ico',
+  'fonts/ClashDisplay-Variable.woff2',
+  'images/icon_640.png',
+  'vercel.json',
+];
+
+const FORBIDDEN_DEPENDENCY_FILES = [
+  'package.json',
+  'package-lock.json',
+  'yarn.lock',
+  'pnpm-lock.yaml',
+  'bun.lock',
+  'bun.lockb',
+];
+
+function rootPath(relativePath) {
+  return path.join(ROOT, relativePath);
+}
+
+function requireFile(relativePath) {
+  const absolutePath = rootPath(relativePath);
+  if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isFile()) {
+    throw new Error(`missing required file: ${relativePath}`);
+  }
+}
+
+function readText(relativePath) {
+  return fs.readFileSync(rootPath(relativePath), 'utf8');
+}
+
+function listJavaScriptFiles(dir = ROOT) {
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((entry) => {
+      const absolutePath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name === '.git' || entry.name === 'node_modules') return [];
+        return listJavaScriptFiles(absolutePath);
+      }
+      if (!entry.isFile() || !entry.name.endsWith('.js')) return [];
+      return [path.relative(ROOT, absolutePath).split(path.sep).join(path.posix.sep)];
+    })
+    .sort();
+}
+
+function localReferencePath(reference, baseDir) {
+  const trimmed = reference.trim();
+  if (!trimmed || trimmed.startsWith('#')) return null;
+  if (trimmed.startsWith('//')) return null;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return null;
+
+  const withoutHash = trimmed.split('#')[0];
+  const pathname = withoutHash.split('?')[0];
+  if (!pathname) return null;
+
+  const normalized = pathname.startsWith('/')
+    ? path.posix.normalize(pathname.slice(1))
+    : path.posix.normalize(path.posix.join(baseDir, pathname));
+
+  if (!normalized || normalized === '.') return null;
+  if (
+    normalized === '..' ||
+    normalized.startsWith('../') ||
+    path.posix.isAbsolute(normalized)
+  ) {
+    throw new Error(`local reference escapes repository root: ${reference}`);
+  }
+
+  return normalized;
+}
+
+function assertNoDependencyBuildStep() {
+  FORBIDDEN_DEPENDENCY_FILES.forEach((relativePath) => {
+    if (fs.existsSync(rootPath(relativePath))) {
+      throw new Error(`unexpected dependency/build metadata: ${relativePath}`);
+    }
+  });
+
+  const trackedNodeModules = spawnSync('git', ['ls-files', 'node_modules'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
+  if (trackedNodeModules.status === 0 && trackedNodeModules.stdout.trim()) {
+    throw new Error('node_modules is tracked by git');
+  }
+}
+
+function assertStaticVercelConfig() {
+  const config = JSON.parse(readText('vercel.json'));
+  if (config.framework !== null) {
+    throw new Error('vercel.json must keep framework set to null');
+  }
+  if (config.outputDirectory !== '.') {
+    throw new Error('vercel.json must keep outputDirectory set to "."');
+  }
+  if (config.buildCommand !== null && config.buildCommand !== '') {
+    throw new Error('vercel.json must not add a build command');
+  }
+}
+
+function assertHtmlReferences() {
+  const html = readText('index.html');
+  const ids = new Set();
+  for (const match of html.matchAll(/\sid=["']([^"']+)["']/g)) {
+    ids.add(match[1]);
+  }
+
+  for (const match of html.matchAll(/\s(href|src)=["']([^"']+)["']/g)) {
+    const [, attribute, value] = match;
+    if (attribute === 'href' && value.startsWith('#')) {
+      const id = value.slice(1);
+      if (id && !ids.has(id)) {
+        throw new Error(`missing in-page anchor target: ${value}`);
+      }
+      continue;
+    }
+
+    const localPath = localReferencePath(value, '');
+    if (localPath) requireFile(localPath);
+  }
+}
+
+function assertCssReferences() {
+  const cssFiles = ['css/styles.css'];
+  cssFiles.forEach((cssFile) => {
+    const baseDir = path.posix.dirname(cssFile);
+    const css = readText(cssFile);
+    for (const match of css.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)/g)) {
+      const localPath = localReferencePath(match[2], baseDir);
+      if (localPath) requireFile(localPath);
+    }
+  });
+}
+
+function assertJavaScriptSyntax() {
+  listJavaScriptFiles().forEach((relativePath) => {
+    const result = spawnSync(process.execPath, ['--check', relativePath], {
+      cwd: ROOT,
+      encoding: 'utf8',
+    });
+    if (result.status !== 0) {
+      process.stderr.write(result.stdout);
+      process.stderr.write(result.stderr);
+      throw new Error(`JavaScript syntax check failed: ${relativePath}`);
+    }
+  });
+}
+
+function runNodeScript(relativePath) {
+  const result = spawnSync(process.execPath, [relativePath], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    stdio: 'pipe',
+  });
+
+  process.stdout.write(result.stdout);
+  process.stderr.write(result.stderr);
+
+  if (result.status !== 0) {
+    throw new Error(`command failed: node ${relativePath}`);
+  }
+}
+
+function step(name, fn) {
+  fn();
+  console.log(`[ok] ${name}`);
+}
+
+function main() {
+  step('required static files exist', () => REQUIRED_FILES.forEach(requireFile));
+  step('zero-dependency static-site contract is intact', assertNoDependencyBuildStep);
+  step('vercel static-host config is intact', assertStaticVercelConfig);
+  step('index.html local references resolve', assertHtmlReferences);
+  step('CSS local references resolve', assertCssReferences);
+  step('JavaScript parses', assertJavaScriptSyntax);
+  step('Canary routes preserve behavior', () => runNodeScript('scripts/verify-canary.js'));
+  console.log('timeismoney-splash CI gate passed');
+}
+
+main();
