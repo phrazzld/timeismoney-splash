@@ -14,7 +14,10 @@ const REQUIRED_FILES = [
   'js/canary.js',
   'api/health.js',
   'api/canary/api/v1/errors.js',
+  'server.js',
+  'Dockerfile',
   'scripts/verify-canary.js',
+  'scripts/verify-server.js',
   'scripts/smoke-canary-production.js',
   'favicon.ico',
   'fonts/ClashDisplay-Variable.woff2',
@@ -192,6 +195,9 @@ function main() {
   step('CSS local references resolve', assertCssReferences);
   step('JavaScript parses', assertJavaScriptSyntax);
   step('Canary routes preserve behavior', () => runNodeScript('scripts/verify-canary.js'));
+  step('DigitalOcean server adapter preserves behavior', () =>
+    runNodeScript('scripts/verify-server.js')
+  );
   console.log('timeismoney-splash CI gate passed');
 }
 
