@@ -22,7 +22,6 @@ const REQUIRED_FILES = [
   'favicon.ico',
   'fonts/ClashDisplay-Variable.woff2',
   'images/icon_640.png',
-  'vercel.json',
 ];
 
 const FORBIDDEN_DEPENDENCY_FILES = [
@@ -106,19 +105,6 @@ function assertNoDependencyBuildStep() {
   }
 }
 
-function assertStaticVercelConfig() {
-  const config = JSON.parse(readText('vercel.json'));
-  if (config.framework !== null) {
-    throw new Error('vercel.json must keep framework set to null');
-  }
-  if (config.outputDirectory !== '.') {
-    throw new Error('vercel.json must keep outputDirectory set to "."');
-  }
-  if (config.buildCommand !== null && config.buildCommand !== '') {
-    throw new Error('vercel.json must not add a build command');
-  }
-}
-
 function assertHtmlReferences() {
   const html = readText('index.html');
   const ids = new Set();
@@ -190,7 +176,6 @@ function step(name, fn) {
 function main() {
   step('required static files exist', () => REQUIRED_FILES.forEach(requireFile));
   step('zero-dependency static-site contract is intact', assertNoDependencyBuildStep);
-  step('vercel static-host config is intact', assertStaticVercelConfig);
   step('index.html local references resolve', assertHtmlReferences);
   step('CSS local references resolve', assertCssReferences);
   step('JavaScript parses', assertJavaScriptSyntax);

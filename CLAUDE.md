@@ -47,7 +47,7 @@ CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 │   ├── ci.js            # Local CI gate used by GitHub Actions
 │   └── smoke-canary-production.js # Production Canary smoke/readback
 ├── api/
-│   ├── health.js       # Vercel health endpoint
+│   ├── health.js       # DigitalOcean sidecar health endpoint
 │   └── canary/api/v1/errors.js  # Browser error relay to Canary
 ├── fonts/
 │   └── ClashDisplay-Variable.woff2
@@ -69,7 +69,7 @@ CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 ### External Integration
 - Chrome Web Store: `https://chromewebstore.google.com/detail/time-is-money/ooppbnomdcjmoepangldchpmjhkeendl?hl=en`
 - Google Fonts CDN for Geist font
-- Canary: `/api/health` and `/api/canary/api/v1/errors` on Vercel; keep `CANARY_API_KEY` server-only.
+- Canary: `/api/health` and `/api/canary/api/v1/errors` on the DigitalOcean sidecar; keep `CANARY_API_KEY` server-only.
 
 ### File Sizes
 - `index.html`: ~20KB

@@ -1,5 +1,5 @@
 const DEFAULT_SERVICE = 'timeismoney-splash';
-const DEFAULT_ENDPOINT = 'https://canary-obs.fly.dev';
+const DEFAULT_ENDPOINT = 'https://canary.mistystep.io';
 const DEFAULT_SITE_URL = 'https://www.timeismoney.works';
 const DEFAULT_SITE_ALIASES = ['https://timeismoney.works'];
 const MAX_BODY_BYTES = 32768;
@@ -134,9 +134,6 @@ function allowedOrigins(req) {
       // Optional config; ignore invalid values.
     }
   }
-  if (process.env.VERCEL_URL) {
-    origins.add('https://' + process.env.VERCEL_URL);
-  }
   return origins;
 }
 
@@ -186,10 +183,20 @@ function trustedRelayOrigin(req) {
   return false;
 }
 
+function lastForwardedAddress(value) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (typeof raw !== 'string') return null;
+  const addresses = raw
+    .split(',')
+    .map((address) => address.trim())
+    .filter(Boolean);
+  return addresses.length ? addresses[addresses.length - 1] : null;
+}
+
 function clientKey(req) {
   return (
-    req.headers['x-vercel-forwarded-for'] ||
-    req.headers['x-vercel-ip'] ||
+    req.headers['do-connecting-ip'] ||
+    lastForwardedAddress(req.headers['x-forwarded-for']) ||
     req.headers['cf-connecting-ip'] ||
     req.headers['x-real-ip'] ||
     'unknown'
@@ -270,7 +277,6 @@ async function forwardToCanary(payload) {
     service: process.env.CANARY_SERVICE_NAME || DEFAULT_SERVICE,
     environment:
       process.env.CANARY_ENVIRONMENT ||
-      process.env.VERCEL_ENV ||
       process.env.NODE_ENV ||
       'production',
     ...payload,

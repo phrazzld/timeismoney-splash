@@ -38,7 +38,7 @@ CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 ├── scripts/verify-canary.js # Local Canary route verification
 ├── scripts/ci.js # Local CI gate used by GitHub Actions
 ├── scripts/smoke-canary-production.js # Production Canary smoke/readback
-├── api/health.js   # Vercel health endpoint
+├── api/health.js   # DigitalOcean sidecar health endpoint
 ├── api/canary/api/v1/errors.js # Browser error relay to Canary
 ├── fonts/          # Clash Display font
 └── images/         # Extension icon
@@ -50,18 +50,18 @@ CANARY_READ_API_KEY=... node scripts/smoke-canary-production.js
 - Time thieves calculator with toggle
 - Responsive design (mobile-first)
 - Zero dependencies, zero build step
-- Canary error reporting and production health checks via Vercel functions
+- Canary error reporting and production health checks via the DigitalOcean sidecar
 
 ## Deploy
 
-Production deploys to Vercel. Canary observability requires Vercel functions
-or an equivalent server-side relay; static-only hosts can serve the page but
-cannot provide `/api/health` or the server-side Canary relay.
+Production runs on DigitalOcean App Platform: the static site and the Node
+sidecar in `server.js` jointly provide the page, `/api/health`, and the
+server-side Canary relay.
 
-Vercel production and preview deployments should define:
+The DigitalOcean sidecar should define:
 
 - `CANARY_API_KEY` - service-bound ingest key for `timeismoney-splash`
-- `CANARY_ENDPOINT` - defaults to `https://canary-obs.fly.dev`
+- `CANARY_ENDPOINT` - defaults to `https://canary.mistystep.io`
 - `CANARY_SERVICE_NAME` - defaults to `timeismoney-splash`
 - `NEXT_PUBLIC_SITE_URL` - canonical origin, `https://www.timeismoney.works`
 

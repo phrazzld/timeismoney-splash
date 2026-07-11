@@ -122,13 +122,13 @@ pre-commit:
 **File**: `js/canary.js`, `api/health.js`, `api/canary/api/v1/errors.js`
 **Perspectives**: architecture-guardian
 **Why**: Production errors and uptime should be visible through Canary, without adding a framework or package manager.
-**Status**: Implemented in the static Vercel app. Keep the service-bound `CANARY_API_KEY` server-only.
+**Status**: Implemented in the DigitalOcean static app plus sidecar. Keep the service-bound `CANARY_API_KEY` server-only.
 
 ### [INFRASTRUCTURE] Add platform rate limiting for Canary relay
-**File**: Vercel project settings or edge/firewall config
+**File**: DigitalOcean app settings or edge/firewall config
 **Perspectives**: security-sentinel, observability-advocate
 **Why**: The in-process relay limiter is useful as a local guardrail but is not durable production abuse control for unauthenticated browser telemetry.
-**Approach**: Configure Vercel Firewall or an equivalent edge rate limit for `/api/canary/api/v1/errors`; keep browser-origin telemetry unauthenticated but bounded before it reaches the serverless function.
+**Approach**: Configure an edge rate limit for `/api/canary/api/v1/errors`; keep browser-origin telemetry unauthenticated but bounded before it reaches the sidecar. The local guard keys first on DigitalOcean App Platform's `do-connecting-ip` header, so any future ingress change must preserve or deliberately replace that trust boundary.
 **Effort**: 1h | **Impact**: Prevents relay spam from burning Canary ingest capacity.
 
 ### [ACCESSIBILITY] Add ARIA Attributes to Interactive Elements
@@ -157,7 +157,7 @@ pre-commit:
 ## Soon (Exploring, 3-6 months)
 
 - **[PRODUCT] Email Capture / Lead Generation** - Exit intent popup, newsletter footer. Currently 98% of traffic leaves with no capture. ConvertKit/Buttondown integration (product-visionary)
-- **[PRODUCT] Analytics Tracking** - Plausible or Vercel Analytics. Can't measure conversion, traffic sources, or A/B test without data (product-visionary, architecture-guardian)
+- **[PRODUCT] Analytics Tracking** - Add portable analytics. Can't measure conversion, traffic sources, or A/B test without data (product-visionary, architecture-guardian)
 - **[INFRASTRUCTURE] Structured Logging (Pino)** - Replace console.log, add correlation IDs, log levels (architecture-guardian)
 - **[PRODUCT] Social Proof Enhancement** - Real-time install counter, recent user activity feed (product-visionary, user-experience-advocate)
 - **[DESIGN] Dark Mode Implementation** - Leverage @theme foundation once migrated (design-systems-architect)
