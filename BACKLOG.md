@@ -128,7 +128,7 @@ pre-commit:
 **File**: DigitalOcean app settings or edge/firewall config
 **Perspectives**: security-sentinel, observability-advocate
 **Why**: The in-process relay limiter is useful as a local guardrail but is not durable production abuse control for unauthenticated browser telemetry.
-**Approach**: Configure an edge rate limit for `/api/canary/api/v1/errors`; keep browser-origin telemetry unauthenticated but bounded before it reaches the sidecar.
+**Approach**: Configure an edge rate limit for `/api/canary/api/v1/errors`; keep browser-origin telemetry unauthenticated but bounded before it reaches the sidecar. The local guard keys first on DigitalOcean App Platform's `do-connecting-ip` header, so any future ingress change must preserve or deliberately replace that trust boundary.
 **Effort**: 1h | **Impact**: Prevents relay spam from burning Canary ingest capacity.
 
 ### [ACCESSIBILITY] Add ARIA Attributes to Interactive Elements

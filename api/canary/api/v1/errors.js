@@ -195,6 +195,7 @@ function lastForwardedAddress(value) {
 
 function clientKey(req) {
   return (
+    req.headers['do-connecting-ip'] ||
     lastForwardedAddress(req.headers['x-forwarded-for']) ||
     req.headers['cf-connecting-ip'] ||
     req.headers['x-real-ip'] ||
