@@ -5,7 +5,7 @@ const crypto = require('node:crypto');
 
 const SITE_URL = process.env.SITE_URL || 'https://www.timeismoney.works';
 const CANARY_ENDPOINT =
-  process.env.CANARY_ENDPOINT || 'https://canary-obs.fly.dev';
+  process.env.CANARY_ENDPOINT || 'https://canary.mistystep.io';
 const CANARY_SERVICE = process.env.CANARY_SERVICE_NAME || 'timeismoney-splash';
 const READ_KEY =
   process.env.CANARY_READ_API_KEY ||

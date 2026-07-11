@@ -28,6 +28,7 @@ function makeResponse() {
 }
 
 async function verifyHealthRoute() {
+  delete process.env.CANARY_ENDPOINT;
   const health = require('../api/health');
 
   delete process.env.CANARY_API_KEY;
@@ -48,6 +49,7 @@ async function verifyHealthRoute() {
 }
 
 async function verifyRelayRoute() {
+  delete process.env.CANARY_ENDPOINT;
   const relay = require('../api/canary/api/v1/errors');
   let forwarded;
 
@@ -67,7 +69,7 @@ async function verifyRelayRoute() {
         'content-length': '230',
         'user-agent': 'node-test',
         referer: 'https://www.timeismoney.works/?api_key=abc',
-        'x-vercel-forwarded-for': '127.0.0.1',
+        'x-forwarded-for': '127.0.0.1',
       },
       body: {
         message:
@@ -89,7 +91,7 @@ async function verifyRelayRoute() {
   );
 
   assert.equal(response.statusCode, 202);
-  assert.equal(forwarded.url, 'https://canary-obs.fly.dev/api/v1/errors');
+  assert.equal(forwarded.url, 'https://canary.mistystep.io/api/v1/errors');
   assert.equal(forwarded.body.service, 'timeismoney-splash');
   assert.equal(forwarded.body.message.includes('test@example.com'), false);
   assert.equal(forwarded.body.message.includes('Bearer abc123'), false);
@@ -107,13 +109,31 @@ async function verifyRelayRoute() {
         host: 'www.timeismoney.works',
         origin: 'https://evil.example',
         'content-length': '24',
-        'x-vercel-forwarded-for': '127.0.0.2',
+        'x-forwarded-for': '127.0.0.2',
       },
       body: { message: 'blocked' },
     },
     response
   );
   assert.equal(response.statusCode, 403);
+
+  for (let attempt = 1; attempt <= 31; attempt += 1) {
+    response = makeResponse();
+    await relay(
+      {
+        method: 'POST',
+        headers: {
+          host: 'www.timeismoney.works',
+          origin: 'https://www.timeismoney.works',
+          'content-length': '27',
+          'x-forwarded-for': `10.0.0.${attempt}, 198.51.100.10`,
+        },
+        body: { message: 'rate limit chain' },
+      },
+      response
+    );
+    assert.equal(response.statusCode, attempt <= 30 ? 202 : 429);
+  }
 
   response = makeResponse();
   await relay(
@@ -123,7 +143,7 @@ async function verifyRelayRoute() {
         host: 'evil.example',
         origin: 'https://evil.example',
         'content-length': '32',
-        'x-vercel-forwarded-for': '127.0.0.3',
+        'x-forwarded-for': '127.0.0.3',
       },
       body: { message: 'blocked host spoof' },
     },
@@ -139,7 +159,7 @@ async function verifyRelayRoute() {
         host: 'evil.example',
         origin: 'https://www.timeismoney.works',
         'content-length': '43',
-        'x-vercel-forwarded-for': '127.0.0.4',
+        'x-forwarded-for': '127.0.0.4',
       },
       body: { message: 'blocked canonical origin host spoof' },
     },
@@ -156,7 +176,7 @@ async function verifyRelayRoute() {
         'x-forwarded-host': 'www.timeismoney.works',
         origin: 'https://www.timeismoney.works',
         'content-length': '43',
-        'x-vercel-forwarded-for': '127.0.0.5',
+        'x-forwarded-for': '127.0.0.5',
       },
       body: { message: 'blocked forwarded host spoof' },
     },
